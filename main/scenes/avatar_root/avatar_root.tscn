@@ -1,0 +1,6 @@
+[gd_scene load_steps=2 format=3 uid="uid://dbuemci54ncn2"]
+
+[ext_resource type="Script" path="res://main/scenes/avatar_root/avatar_root.gd" id="1_gtop3"]
+
+[node name="AvatarScene" type="Node3D"]
+script = ExtResource("1_gtop3")

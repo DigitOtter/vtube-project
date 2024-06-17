@@ -1,0 +1,17 @@
+[gd_scene load_steps=3 format=3 uid="uid://d2tvvjidbuylc"]
+
+[ext_resource type="Script" path="res://effects/props_control/scenes/clickable_area_3d.gd" id="1_m7wfs"]
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_g3xsj"]
+margin = 0.0
+size = Vector3(1, 1, 0.01)
+
+[node name="ClickableArea3D" type="Area3D"]
+collision_layer = 3
+input_capture_on_drag = true
+monitoring = false
+monitorable = false
+script = ExtResource("1_m7wfs")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+shape = SubResource("BoxShape3D_g3xsj")

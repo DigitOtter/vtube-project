@@ -1,0 +1,6 @@
+[gd_scene load_steps=2 format=3 uid="uid://bframyapv5kse"]
+
+[ext_resource type="Script" path="res://avatar_select/avatar_select.gd" id="1_k37qv"]
+
+[node name="AvatarSelect" type="Node"]
+script = ExtResource("1_k37qv")

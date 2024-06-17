@@ -1,0 +1,60 @@
+[gd_scene load_steps=7 format=3 uid="uid://b7hlr6meefqd1"]
+
+[ext_resource type="Script" path="res://main/main.gd" id="1_kqe0r"]
+[ext_resource type="PackedScene" uid="uid://dbuemci54ncn2" path="res://main/scenes/avatar_root/avatar_root.tscn" id="4_iadoo"]
+[ext_resource type="PackedScene" uid="uid://b1qj5xipe11wv" path="res://main/scenes/post_processing.tscn" id="5_ii546"]
+[ext_resource type="PackedScene" uid="uid://dw3gfo2unxnp" path="res://main/scenes/orbital_camera.tscn" id="5_yy42a"]
+[ext_resource type="PackedScene" uid="uid://t613d0caqf5g" path="res://main/scenes/lighting.tscn" id="6_a44qy"]
+[ext_resource type="PackedScene" uid="uid://d1fs57g0uhl04" path="res://effects/post_processing/ascii_shading/ascii_shading.tscn" id="7_gm3tm"]
+
+[node name="Main" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+script = ExtResource("1_kqe0r")
+
+[node name="AvatarViewportContainer" type="SubViewportContainer" parent="."]
+unique_name_in_owner = true
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_right = -0.000732422
+grow_horizontal = 2
+grow_vertical = 2
+stretch = true
+
+[node name="AvatarViewport" type="SubViewport" parent="AvatarViewportContainer"]
+unique_name_in_owner = true
+transparent_bg = true
+handle_input_locally = false
+msaa_3d = 3
+use_occlusion_culling = true
+physics_object_picking = true
+physics_object_picking_sort = true
+size = Vector2i(1919, 1080)
+render_target_clear_mode = 2
+render_target_update_mode = 4
+
+[node name="AvatarScene" type="Node3D" parent="AvatarViewportContainer/AvatarViewport"]
+
+[node name="AvatarRoot" parent="AvatarViewportContainer/AvatarViewport/AvatarScene" instance=ExtResource("4_iadoo")]
+unique_name_in_owner = true
+
+[node name="OrbitalCamera" parent="AvatarViewportContainer/AvatarViewport/AvatarScene" instance=ExtResource("5_yy42a")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.64273, 1.31505)
+
+[node name="Lighting" parent="AvatarViewportContainer/AvatarViewport/AvatarScene" instance=ExtResource("6_a44qy")]
+
+[node name="PostProcessing" parent="." instance=ExtResource("5_ii546")]
+unique_name_in_owner = true
+layout_mode = 1
+mouse_filter = 2
+
+[node name="AsciiShading" parent="PostProcessing" instance=ExtResource("7_gm3tm")]
+layout_mode = 1

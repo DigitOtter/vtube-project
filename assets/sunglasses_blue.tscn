@@ -1,0 +1,8 @@
+[gd_scene load_steps=2 format=3 uid="uid://yeyyefnhkamu"]
+
+[ext_resource type="Texture2D" uid="uid://bpdeeae0atbvu" path="res://assets/extra/sunglasses blue sky.png" id="1_41p1h"]
+
+[node name="SunglassesBlue" type="Sprite3D"]
+transform = Transform3D(0.02, 0, 0, 0, 0.02, 0, 0, 0, 0.02, 0, 0, 0)
+texture = ExtResource("1_41p1h")
+region_rect = Rect2(0, 0, 887.342, 691.06)

@@ -1,0 +1,15 @@
+[gd_scene load_steps=3 format=3 uid="uid://bhjgcewilm6wg"]
+
+[ext_resource type="Script" path="res://gui/scenes/gui_window.gd" id="1_xio3d"]
+[ext_resource type="PackedScene" uid="uid://bru4ht08gj1on" path="res://gui/scenes/scrollable_elements.tscn" id="2_3qgey"]
+
+[node name="GuiWindow" type="Window"]
+disable_3d = true
+title = "GUI"
+initial_position = 4
+size = Vector2i(500, 200)
+visible = false
+popup_window = true
+script = ExtResource("1_xio3d")
+
+[node name="ScrollableWindow" parent="." instance=ExtResource("2_3qgey")]

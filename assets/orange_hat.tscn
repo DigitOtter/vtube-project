@@ -1,0 +1,8 @@
+[gd_scene load_steps=2 format=3 uid="uid://8tvkcgxlf64e"]
+
+[ext_resource type="Texture2D" uid="uid://t7xnwfb7xwdx" path="res://assets/extra/orange top alt.png" id="1_xcef8"]
+
+[node name="OrangeHat" type="Sprite3D"]
+transform = Transform3D(0.08, 0, 0, 0, 0.08, 0, 0, 0, 0.08, 0, 0, 0)
+texture = ExtResource("1_xcef8")
+region_rect = Rect2(0, 0, 887.342, 691.06)

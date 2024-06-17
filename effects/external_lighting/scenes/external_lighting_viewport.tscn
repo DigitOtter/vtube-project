@@ -1,0 +1,46 @@
+[gd_scene load_steps=6 format=3 uid="uid://256jl38xtujs"]
+
+[ext_resource type="Script" path="res://effects/external_lighting/scenes/external_lighting_viewport.gd" id="1_r2ac3"]
+[ext_resource type="Shader" path="res://effects/external_lighting/shaders/blur_lod_min_col.gdshader" id="2_ikvde"]
+[ext_resource type="Texture2D" uid="uid://bf8y7trqcviyh" path="res://effects/external_lighting/shaders/white.png" id="3_ipjqq"]
+
+[sub_resource type="TsvReceiveTexture" id="TsvReceiveTexture_13til"]
+shared_texture_name = "obs_shared"
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_xxkpd"]
+shader = ExtResource("2_ikvde")
+shader_parameter/blur = 5.315
+shader_parameter/min_col = Color(0, 0, 0, 1)
+
+[node name="ExternalLightingViewport" type="SubViewport"]
+disable_3d = true
+render_target_clear_mode = 2
+render_target_update_mode = 4
+script = ExtResource("1_r2ac3")
+
+[node name="ExternalTexture" type="TextureRect" parent="."]
+unique_name_in_owner = true
+texture_filter = 2
+texture_repeat = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+texture = SubResource("TsvReceiveTexture_13til")
+expand_mode = 1
+
+[node name="BackBufferCopy" type="BackBufferCopy" parent="."]
+z_as_relative = false
+copy_mode = 2
+
+[node name="BlurTexture" type="TextureRect" parent="."]
+unique_name_in_owner = true
+material = SubResource("ShaderMaterial_xxkpd")
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+texture = ExtResource("3_ipjqq")
+expand_mode = 1

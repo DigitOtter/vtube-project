@@ -1,0 +1,7 @@
+[gd_scene load_steps=2 format=3 uid="uid://t613d0caqf5g"]
+
+[ext_resource type="Script" path="res://main/scenes/lighting.gd" id="1_qqrpl"]
+
+[node name="Lighting" type="DirectionalLight3D"]
+transform = Transform3D(1, 0, 0, 0, 0.866025, 0.5, 0, -0.5, 0.866025, -1.19209e-07, 2.03097, 0.752802)
+script = ExtResource("1_qqrpl")

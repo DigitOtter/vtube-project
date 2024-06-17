@@ -1,0 +1,20 @@
+[gd_scene load_steps=2 format=3 uid="uid://cp0i2lvlhgljx"]
+
+[ext_resource type="Script" path="res://main/scenes/avatar_root/scenes/load_model_dialog.gd" id="1_uj81j"]
+
+[node name="LoadModelDialog" type="FileDialog"]
+disable_3d = true
+title = "Open a File"
+initial_position = 2
+size = Vector2i(600, 400)
+visible = true
+popup_window = true
+ok_button_text = "Open"
+dialog_hide_on_ok = true
+file_mode = 0
+access = 2
+use_native_dialog = true
+script = ExtResource("1_uj81j")
+
+[connection signal="close_requested" from="." to="." method="_on_close_requested"]
+[connection signal="file_selected" from="." to="." method="_on_file_selected"]

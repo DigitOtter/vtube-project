@@ -1,0 +1,19 @@
+[gd_scene load_steps=2 format=3 uid="uid://bjb7jvs12cg20"]
+
+[ext_resource type="Script" path="res://gui/scenes/controls/menu_select.gd" id="1_c2m2a"]
+
+[node name="MenuSelect" type="MenuBar"]
+anchors_preset = 14
+anchor_top = 0.5
+anchor_right = 1.0
+anchor_bottom = 0.5
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_vertical = 4
+script = ExtResource("1_c2m2a")
+
+[node name="PopupMenu" type="PopupMenu" parent="."]
+disable_3d = true
+title = "None"
+
+[connection signal="index_pressed" from="PopupMenu" to="." method="_on_popup_menu_index_pressed"]

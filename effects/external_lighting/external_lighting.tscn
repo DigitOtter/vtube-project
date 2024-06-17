@@ -1,0 +1,9 @@
+[gd_scene load_steps=3 format=3 uid="uid://b00a4ge4msp4y"]
+
+[ext_resource type="Script" path="res://effects/external_lighting/external_lighting.gd" id="1_flqpi"]
+[ext_resource type="PackedScene" uid="uid://256jl38xtujs" path="res://effects/external_lighting/scenes/external_lighting_viewport.tscn" id="2_x6jti"]
+
+[node name="ExternalLighting" type="Node"]
+script = ExtResource("1_flqpi")
+
+[node name="ExternalLightingViewport" parent="." instance=ExtResource("2_x6jti")]

@@ -1,0 +1,31 @@
+[gd_scene load_steps=2 format=3 uid="uid://bf1iiosvalvqb"]
+
+[ext_resource type="Script" path="res://gui/scenes/controls/slider.gd" id="1_7qwgw"]
+
+[node name="slider" type="HSplitContainer"]
+anchors_preset = 14
+anchor_top = 0.5
+anchor_right = 1.0
+anchor_bottom = 0.5
+offset_top = -15.5
+offset_bottom = 15.5
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_horizontal = 3
+size_flags_vertical = 4
+dragger_visibility = 1
+script = ExtResource("1_7qwgw")
+
+[node name="HSlider" type="HSlider" parent="."]
+custom_minimum_size = Vector2(142.5, 0)
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 4
+
+[node name="SpinBox" type="SpinBox" parent="."]
+layout_mode = 2
+size_flags_horizontal = 8
+size_flags_vertical = 4
+
+[connection signal="value_changed" from="HSlider" to="." method="_on_slider_value_changed"]
+[connection signal="value_changed" from="SpinBox" to="." method="_on_text_changed"]

@@ -1,0 +1,6 @@
+[gd_scene load_steps=2 format=3 uid="uid://bpnntcicb02go"]
+
+[ext_resource type="Script" path="res://effects/props_control/props_control.gd" id="1_e6g8x"]
+
+[node name="PropsControl" type="Node"]
+script = ExtResource("1_e6g8x")

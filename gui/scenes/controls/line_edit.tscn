@@ -1,0 +1,11 @@
+[gd_scene load_steps=2 format=3 uid="uid://d34awxh1sl3kn"]
+
+[ext_resource type="Script" path="res://gui/scenes/controls/line_edit.gd" id="1_2bucy"]
+
+[node name="line_edit" type="LineEdit"]
+anchors_preset = 10
+anchor_right = 1.0
+offset_bottom = 31.0
+grow_horizontal = 2
+size_flags_vertical = 4
+script = ExtResource("1_2bucy")

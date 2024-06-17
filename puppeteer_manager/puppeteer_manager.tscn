@@ -1,0 +1,6 @@
+[gd_scene load_steps=2 format=3 uid="uid://b7ahdufeqshgi"]
+
+[ext_resource type="Script" path="res://puppeteer_manager/puppeteer_manager.gd" id="1_e6mwt"]
+
+[node name="PuppeteerManager" type="Node"]
+script = ExtResource("1_e6mwt")

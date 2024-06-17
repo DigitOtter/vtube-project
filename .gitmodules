@@ -1,0 +1,23 @@
+[submodule "third_party/ControlCamera3D"]
+	path = third_party/ControlCamera3D
+	url = https://github.com/DigitOtter/ControlCamera3D.git
+[submodule "third_party/GDMP"]
+	path = third_party/GDMP
+	url = https://github.com/DigitOtter/GDMP.git
+[submodule "third_party/gd_texture_share_vk"]
+	path = third_party/gd_texture_share_vk
+	url = https://github.com/DigitOtter/gd_texture_share_vk.git
+[submodule "third_party/godot-vrm"]
+	path = third_party/godot-vrm
+	url = https://github.com/DigitOtter/godot-vrm.git
+[submodule "third_party/renik"]
+	path = third_party/renik
+	url = https://github.com/DigitOtter/renik.git
+	branch = custom
+[submodule "third_party/godot-vmc-lib"]
+	path = third_party/godot-vmc-lib
+	url = https://github.com/DigitOtter/godot-vmc-lib.git
+[submodule "third_party/godot"]
+	path = third_party/godot
+	url = https://github.com/DigitOtter/godot.git
+	branch = 4.2

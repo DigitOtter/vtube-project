@@ -1,0 +1,7 @@
+[gd_scene load_steps=2 format=3 uid="uid://bdvl3tslb0s25"]
+
+[ext_resource type="Texture2D" uid="uid://b6pt8ltdseqys" path="res://assets/extra/beard_ginger.png" id="1_cyxp7"]
+
+[node name="BeardGinger" type="Sprite3D"]
+transform = Transform3D(0.08, 0, 0, 0, 0.08, 0, 0, 0, 0.08, 0, 0, 0)
+texture = ExtResource("1_cyxp7")
