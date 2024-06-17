@@ -32,7 +32,7 @@ func _on_port_input_changed(data: float):
 	if self.vmc_receiver.port != new_port:
 		self.emit_signal(&"port_input_change", self.vmc_receiver.port, false)
 
-func _init_gui():
+func _add_gui():
 	var trackers_node = get_node(Trackers.TRACKERS_NODE_PATH)
 	var gui_elements: GuiElements = trackers_node.get_tracker_gui()
 	var elements: Array[GuiElements.ElementData] = []
@@ -51,13 +51,25 @@ func _init_gui():
 	
 	gui_elements.add_or_create_elements_to_tab_name(GUI_TAB_NAME, elements)
 
+func _remove_gui():
+	var trackers_node = get_node(Trackers.TRACKERS_NODE_PATH)
+	var gui_elements: GuiElements = trackers_node.get_tracker_gui()
+	gui_elements.remove_tab(GUI_TAB_NAME)
+
 func _on_avatar_loaded(avatar_scene: Node):
 	self.restart_tracker(avatar_scene)
 
 func _ready():
+	super()
+	
+	# Only start processing after tracker was started
+	self.set_process(false)
+	
 	if not self.is_ancestor_of(self.vmc_receiver):
 		self.add_child(self.vmc_receiver)
 		self.vmc_receiver.owner = self
+	
+	self._add_gui()
 
 func _process(delta):
 	# Forward bone_poses to puppeteer
@@ -102,9 +114,13 @@ func start_tracker(avatar_scene: Node) -> void:
 	animation_tracks.erase("RESET")
 	self.puppeteer_tracks.initialize(animations, animation_tracks, &"RESET")
 	
-	self._init_gui()
+	self.set_process(true)
 
 func stop_tracker():
+	self.set_process(false)
+	
+	self._remove_gui()
+	
 	var trackers_node = get_node(Trackers.TRACKERS_NODE_PATH)
 	trackers_node.get_tracker_gui().remove_tab(GUI_TAB_NAME)
 	

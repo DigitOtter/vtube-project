@@ -1,5 +1,16 @@
 class_name ModelImporter
 
+# GLTF import flags. We can't use EditorSceneFormatImporter flags directly as they are not exported.
+
+## EditorSceneFormatImporter.IMPORT_USE_NAMED_SKIN_BINDS
+const IMPORT_USE_NAMED_SKIN_BINDS: int = 16
+
+## EditorSceneFormatImporter.IMPORT_GENERATE_TANGENT_ARRAYS
+const IMPORT_GENERATE_TANGENT_ARRAYS: int = 8
+
+## EditorSceneFormatImporter.IMPORT_ANIMATION
+const IMPORT_ANIMATION: int = 2
+
 static func import_model_infer_extension(model_path: String) -> Node3D:
 	if model_path.ends_with(".vrm"):
 		return ModelImporter.import_model_vrm(model_path)
@@ -34,9 +45,10 @@ static func import_model_gltf(model_path: String) -> Node3D:
 	return ModelImporter._import_model_gltf(model_path, gltf)
 
 static func _import_model_gltf(model_path: String, gltf: GLTFDocument) -> Node3D:
-	var flags: int = EditorSceneFormatImporter.IMPORT_USE_NAMED_SKIN_BINDS | \
-		EditorSceneFormatImporter.IMPORT_GENERATE_TANGENT_ARRAYS | \
-		EditorSceneFormatImporter.IMPORT_ANIMATION
+	var flags: int = \
+		IMPORT_USE_NAMED_SKIN_BINDS | \
+		IMPORT_GENERATE_TANGENT_ARRAYS | \
+		IMPORT_ANIMATION
 	var state: GLTFState = GLTFState.new()
 	# HANDLE_BINARY_EMBED_AS_BASIS crashes on some files in 4.0 and 4.1
 	state.handle_binary_image = GLTFState.HANDLE_BINARY_EMBED_AS_UNCOMPRESSED  # GLTFState.HANDLE_BINARY_EXTRACT_TEXTURES

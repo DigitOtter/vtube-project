@@ -21,6 +21,12 @@ func _on_tree_exiting():
 func _ready():
 	self.connect(&"tree_exiting", self._on_tree_exiting)
 
+func add_gui():
+	pass
+
+func remove_gui():
+	pass
+
 ## Connect tracker to avatar_loaded. On load, the tracker is automatically
 ## reconfigured to target the new avatar.
 func init_tracker() -> void:
