@@ -1,0 +1,10 @@
+
+[dependencies]
+
+linux.x86_64 = {
+	"res://addons/texture_share_vk/libtexture_share_ipc.so" : "",
+	"res://addons/texture_share_vk/libtexture_share_vk_client.so" : "",
+	"res://addons/texture_share_vk/libTextureShareVkSetupCpp.so" : "",
+	"res://addons/texture_share_vk/libTextureShareVkClientCpp.so" : "",
+}
+

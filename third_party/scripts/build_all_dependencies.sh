@@ -1,14 +1,19 @@
 #!/bin/bash
 
 # Build godot
-scripts/build_godot.sh
+scripts/build_godot.sh "$@"
 
 # Build VMC lib
-scripts/build_godot_vmc_lib.sh
+scripts/build_godot_vmc_lib.sh "$@"
 
 # Build texture sharing lib
-scripts/build_gd_texture_share_vk.sh
+if [ "$1" != "-t" ]
+    then
+    scripts/build_texture_share_vk.sh "$@"
+fi
+
+# Build gd addon for texture sharing
+scripts/build_gd_texture_share_vk.sh "$@"
 
 # Guild GDMP
-scripts/build_gdmp.sh
-
+scripts/build_gdmp.sh "$@"
