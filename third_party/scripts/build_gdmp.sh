@@ -19,6 +19,7 @@ python -m venv venv
 
 # Build
 source "venv/bin/activate"
+python setup.py --godot-binary "../godot/bin/godot.linuxbsd.editor.x86_64"
 python build.py --type release desktop --output "$BUILD_DIR"
 deactivate
 
