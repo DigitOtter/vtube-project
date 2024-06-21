@@ -2,7 +2,7 @@
 
 [ext_resource type="Script" path="res://effects/external_lighting/scenes/external_lighting_viewport.gd" id="1_r2ac3"]
 [ext_resource type="Shader" path="res://effects/external_lighting/shaders/blur_lod_min_col.gdshader" id="2_ikvde"]
-[ext_resource type="Texture2D" uid="uid://bf8y7trqcviyh" path="res://effects/external_lighting/shaders/white.png" id="3_ipjqq"]
+[ext_resource type="Texture2D" uid="uid://k18f4uvg7csu" path="res://effects/external_lighting/shaders/white.png" id="3_ipjqq"]
 
 [sub_resource type="TsvReceiveTexture" id="TsvReceiveTexture_13til"]
 shared_texture_name = "obs_shared"

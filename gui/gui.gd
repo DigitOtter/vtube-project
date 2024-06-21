@@ -18,3 +18,6 @@ func _ready():
 ## Access to GUI tab elements
 func get_gui_elements() -> GuiElements:
 	return $GuiWindow.get_gui_elements()
+
+func open_gui_window():
+	$GuiWindow.open_window()

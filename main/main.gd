@@ -10,6 +10,13 @@ func _input(event):
 
 func _ready():
 	get_tree().get_root().set_transparent_background(true)
+	
+	# Open gui once program has finished loading
+	var root_node: = get_node("/root")
+	root_node.connect("ready", func():
+		var gui := get_node(Gui.GUI_NODE_PATH)
+		gui.call_deferred("open_gui_window")
+	)
 
 func get_avatar_viewport() -> SubViewport:
 	return %AvatarViewport
