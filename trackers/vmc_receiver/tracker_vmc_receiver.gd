@@ -1,10 +1,6 @@
 class_name TrackerVmcReceiver
 extends TrackerBase
 
-const VMC_BONE_CONTROL: GDScript = preload("./scripts/VMCControl/VMCBoneControl.gd")
-const VMC_BLEND_SHAPE_CONTROL: GDScript = preload("./scripts/VMCControl/VMCBlendShapeControl.gd")
-const VMC_CAMERA_CONTROL: GDScript = preload("./scripts/VMCControl/VMCCameraControl.gd")
-
 const GUI_TAB_NAME := &"Vmc Receiver"
 
 signal port_input_change(data: float, propagate: bool)
