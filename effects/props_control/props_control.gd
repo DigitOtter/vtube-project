@@ -103,18 +103,31 @@ func update_prop_list(asset_list: Array[String]):
 func _on_selected_prop_changed(selected_prop: String):
 	self._prop_file_to_create = selected_prop
 
-func _load_props(prop_data: Array[String]) -> String:
-	# First value is "prop_to_load"
-	var prop_to_load: String = prop_data[0]
-	
+## Adds loaded props to save_data. Appended dictionary is of the form
+## { 
+##   'loaded_props': Array[String] (created with SerializePropData.serialize_prop())
+## }
+func _save_props(save_data: Dictionary):
+	var prop_data: Dictionary = {}
 	var avatar_scene_node: Node = get_node(Main.MAIN_NODE_PATH).get_avatar_root_node()
-	for pdat in prop_data.slice(1):
+	var ser: Array[String] = []
+	for prop in self._available_props:
+		ser.append(SerializePropData.serialize_prop(avatar_scene_node, prop))
+	
+	save_data['loaded_props'] = ser
+
+func _load_props(load_data: Dictionary) -> void:
+	var sel_prop = load_data.get("selected", null)
+	if sel_prop:
+		self._prop_file_to_create = sel_prop
+	
+	var props_data: Array[String] = load_data.get('loaded_props', [])
+	var avatar_scene_node: Node = get_node(Main.MAIN_NODE_PATH).get_avatar_root_node()
+	for pdat in props_data:
 		var deser_dat: Dictionary = SerializePropData.deserialize_prop(avatar_scene_node, pdat)
 		var prop: Node3D = self._load_prop(deser_dat["asset_file"], deser_dat["mtp"])
 		if prop:
 			prop.triangle_transform = deser_dat["triangle_transform"]
-	
-	return prop_to_load
 
 func _init_gui():
 	var tab_elements: Array[GuiElements.ElementData] = []
@@ -135,13 +148,7 @@ func _init_gui():
 	prop_selection.Name = "Current Prop"
 	prop_selection.OnDataChangedCallable = self._on_selected_prop_changed
 	prop_selection.SetDataSignal = [ self, "change_prop_to_create_sig"]
-	prop_selection.OnSaveData = func(val: String) -> Array[String]:
-		var avatar_scene_node: Node = get_node(Main.MAIN_NODE_PATH).get_avatar_root_node()
-		var ser: Array[String] = [ val ]
-		for prop in self._available_props:
-			ser.append(SerializePropData.serialize_prop(avatar_scene_node, prop))
-		
-		return ser
+	prop_selection.OnSaveData = self._save_props
 	
 	var prop_selection_data: GuiElements.MenuSelectData = GuiElements.MenuSelectData.new()
 	prop_selection_data.Items = AssetManager.list_available_assets()

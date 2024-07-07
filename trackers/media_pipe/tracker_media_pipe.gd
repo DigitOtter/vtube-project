@@ -1,6 +1,8 @@
 class_name TrackerMediaPipe
 extends TrackerBase
 
+const TRACKER_NAME := &"MediaPipe"
+
 class InitialPoses:
 	var head:= Transform3D.IDENTITY
 	var hip:= Transform3D.IDENTITY
@@ -23,6 +25,9 @@ var initial_right_foot := Transform3D.IDENTITY
 
 ## Either null or Transform3D
 var _media_pipe_base_head_pose = null
+
+static func get_type_name() -> StringName:
+	return &"MediaPipe"
 
 func _setup_ik(avatar_root: Node) -> Error:
 	var skeleton = avatar_root.find_child("GeneralSkeleton", false)
@@ -75,11 +80,11 @@ func _setup_puppeteers(avatar_scene: Node):
 	# Remove old puppeteers
 	if self.puppeteer_track:
 		puppeteer_manager.remove_puppeteer(self.puppeteer_track)
-	self.puppeteer_track = puppeteer_manager.request_new_puppeteer(self, PuppeteerBase.Type.TRACK_TREE)
+	self.puppeteer_track = puppeteer_manager.request_new_puppeteer(self, PuppeteerBase.Type.TRACK_TREE, "blend_shapes")
 	
 	if self.puppeteer_skeleton:
 		puppeteer_manager.remove_puppeteer(self.puppeteer_skeleton)
-	self.puppeteer_skeleton = puppeteer_manager.request_new_puppeteer(self, PuppeteerBase.Type.SKELETON_IK)
+	self.puppeteer_skeleton = puppeteer_manager.request_new_puppeteer(self, PuppeteerBase.Type.SKELETON_IK, "skel")
 	
 	# Initialize skeleton and blendshape puppeteers
 	# TODO: For now, only one avatar is loaded. Maybe change this in the future?
@@ -110,32 +115,6 @@ func stop_tracker() -> void:
 func set_media_pipe_base_head():
 	self._media_pipe_base_head_pose = null
 
-static func compute_gaze_blend_shapes(blend_shapes: Array[MediaPipeCategory]) -> Array[PuppeteerTrackTree.TrackTarget]:
-	const TrackTarget = PuppeteerTrackTree.TrackTarget
-	var gaze: Array[float] = MediaPipe.get_gaze_direction(blend_shapes)
-	var gaze_shapes: Array[PuppeteerTrackTree.TrackTarget] = [
-		TrackTarget.new(), TrackTarget.new(), TrackTarget.new(), TrackTarget.new()
-	]
-	gaze_shapes[0].name = "lookdown"
-	gaze_shapes[1].name = "lookleft"
-	gaze_shapes[2].name = "lookright"
-	gaze_shapes[3].name = "lookup"
-	
-	if gaze[0] < 0:
-		gaze_shapes[1].target = -gaze[0]
-		gaze_shapes[2].target = 0
-	else:
-		gaze_shapes[1].target = 0
-		gaze_shapes[2].target = gaze[0]
-	if gaze[1] < 0:
-		gaze_shapes[0].target = -gaze[1]
-		gaze_shapes[3].target = 0
-	else:
-		gaze_shapes[0].target = 0
-		gaze_shapes[3].target = gaze[1]
-	
-	return gaze_shapes
-
 func handle_mediapipe(projection: Projection, blend_shapes: Array[MediaPipeCategory]) -> void:
 	var tx := Transform3D(projection).inverse()
 	
@@ -153,10 +132,4 @@ func handle_mediapipe(projection: Projection, blend_shapes: Array[MediaPipeCateg
 	self.puppeteer_track.call_deferred(
 		"set_track_targets_mp", 
 		blend_shapes
-	)
-	
-	var gaze_shapes := self.compute_gaze_blend_shapes(blend_shapes)
-	self.puppeteer_track.call_deferred(
-		"set_track_targets",
-		gaze_shapes
 	)

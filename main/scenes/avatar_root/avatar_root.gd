@@ -27,7 +27,7 @@ func _on_model_file_selected(model_path: String):
 		self._load_avatar_dialog.queue_free()
 		self._load_avatar_dialog = null
 	
-	if model_path:
+	if not model_path.is_empty():
 		self.load_model(model_path)
 
 func _init_gui():

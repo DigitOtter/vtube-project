@@ -82,16 +82,6 @@ static func start(_data: Resource) -> AbstractTracker:
 	
 	return r
 
-static func get_gaze_direction(categories: Array[MediaPipeCategory]) -> Array[float]:
-	# LookDown: 11,12 (L,R)
-	# LookIn:   13,14 (L,R)
-	# LookOut:  15,16 (L,R)
-	# LookUp:   17,18 (L,R)
-	var horizontal_ratio: float = (categories[13].score + categories[16].score/2) - (categories[15].score + categories[14].score/2)
-	var vertical_ratio: float =   (categories[17].score + categories[18].score/2) - (categories[11].score + categories[12].score/2)
-	
-	return [ horizontal_ratio, vertical_ratio ]
-
 func stop() -> Error:
 	_camera_helper.close()
 	

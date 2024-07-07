@@ -19,8 +19,8 @@ config/features=PackedStringArray("4.2")
 AvatarSelect="*res://avatar_select/avatar_select.tscn"
 AssetManager="*res://asset_manager/asset_manager.gd"
 Gui="*res://gui/gui.tscn"
-PuppeteerManager="*res://puppeteer_manager/puppeteer_manager.tscn"
 Trackers="*res://trackers/trackers.tscn"
+PuppeteerManager="*res://puppeteer_manager/puppeteer_manager.tscn"
 Effects="*res://effects/effects.tscn"
 
 [display]

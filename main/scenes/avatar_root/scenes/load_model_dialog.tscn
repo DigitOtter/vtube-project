@@ -16,5 +16,5 @@ access = 2
 use_native_dialog = true
 script = ExtResource("1_uj81j")
 
-[connection signal="close_requested" from="." to="." method="_on_close_requested"]
+[connection signal="canceled" from="." to="." method="_on_canceled"]
 [connection signal="file_selected" from="." to="." method="_on_file_selected"]

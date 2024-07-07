@@ -2,6 +2,7 @@ class_name TrackerVmcReceiver
 extends TrackerBase
 
 const GUI_TAB_NAME := &"Vmc Receiver"
+const TRACKER_NAME := &"VmcReceiver"
 
 signal port_input_change(data: float, propagate: bool)
 
@@ -19,6 +20,9 @@ var vmc_receiver: VmcReceiver = VmcReceiver.new()
 var puppeteer_skeleton: PuppeteerSkeletonDirect = null
 var puppeteer_tracks: PuppeteerTrackTree = null
 
+static func get_type_name() -> StringName:
+	return &"VmcReceiver"
+
 func _on_port_input_changed(data: float):
 	var new_port := roundi(data)
 	if new_port > 0 and new_port < 65536:
@@ -28,36 +32,10 @@ func _on_port_input_changed(data: float):
 	if self.vmc_receiver.port != new_port:
 		self.emit_signal(&"port_input_change", self.vmc_receiver.port, false)
 
-func _add_gui():
-	var trackers_node = get_node(Trackers.TRACKERS_NODE_PATH)
-	var gui_elements: GuiElements = trackers_node.get_tracker_gui()
-	var elements: Array[GuiElements.ElementData] = []
-	
-	var port_input := GuiElements.ElementData.new()
-	port_input.Name = "Port Input"
-	port_input.OnDataChangedCallable = self._on_port_input_changed
-	port_input.SetDataSignal = [ self, &"port_input_change" ]
-	port_input.Data = GuiElements.SliderData.new()
-	(port_input.Data as GuiElements.SliderData).Default  = self.vmc_receiver.port
-	(port_input.Data as GuiElements.SliderData).Step     = 1
-	(port_input.Data as GuiElements.SliderData).MinValue = 1
-	(port_input.Data as GuiElements.SliderData).MaxValue = 65535
-	
-	elements.append(port_input)
-	
-	gui_elements.add_or_create_elements_to_tab_name(GUI_TAB_NAME, elements)
-
-func _remove_gui():
-	var trackers_node = get_node(Trackers.TRACKERS_NODE_PATH)
-	var gui_elements: GuiElements = trackers_node.get_tracker_gui()
-	gui_elements.remove_tab(GUI_TAB_NAME)
-
 func _on_avatar_loaded(avatar_scene: Node):
 	self.restart_tracker(avatar_scene)
 
 func _ready():
-	super()
-	
 	# Only start processing after tracker was started
 	self.set_process(false)
 	
@@ -65,7 +43,7 @@ func _ready():
 		self.add_child(self.vmc_receiver)
 		self.vmc_receiver.owner = self
 	
-	self._add_gui()
+	super()
 
 func _process(delta):
 	# Forward bone_poses to puppeteer
@@ -81,17 +59,40 @@ func _process(delta):
 		bs[name] = bs.get(vmc_name, 0.0)
 	self.puppeteer_tracks.set_track_targets_dict(self.vmc_receiver.blend_shapes)
 
+func add_gui():
+	var trackers_node = get_node(Trackers.TRACKERS_NODE_PATH)
+	var gui_elements: GuiElements = trackers_node.get_tracker_gui()
+	var elements: Array[GuiElements.ElementData] = []
+	
+	var port_input := GuiElements.ElementData.new()
+	port_input.Name = "Port Input"
+	port_input.OnDataChangedCallable = self._on_port_input_changed
+	port_input.SetDataSignal = [ self, &"port_input_change" ]
+	port_input.Data = GuiElements.SliderData.new()
+	(port_input.Data as GuiElements.SliderData).Default  = self.vmc_receiver.port
+	(port_input.Data as GuiElements.SliderData).Step     = 1
+	(port_input.Data as GuiElements.SliderData).MinValue = 1
+	(port_input.Data as GuiElements.SliderData).MaxValue = 65535
+	elements.append(port_input)
+	
+	gui_elements.add_or_create_elements_to_tab_name(GUI_TAB_NAME, elements)
+
+func remove_gui():
+	var trackers_node = get_node(Trackers.TRACKERS_NODE_PATH)
+	var gui_elements: GuiElements = trackers_node.get_tracker_gui()
+	gui_elements.remove_tab(GUI_TAB_NAME)
+
 func start_tracker(avatar_scene: Node) -> void:
 	var puppeteer_manager = get_node(PuppeteerManager.PUPPETEER_MANAGER_NODE_PATH)
 	if self.puppeteer_skeleton:
 		puppeteer_manager.remove_puppeteer(self.puppeteer_skeleton)
 	self.puppeteer_skeleton = \
-		puppeteer_manager.request_new_puppeteer(self, PuppeteerBase.Type.SKELETON_DIRECT)
+		puppeteer_manager.request_new_puppeteer(self, PuppeteerBase.Type.SKELETON_DIRECT, "skel")
 	
 	if self.puppeteer_tracks:
 		puppeteer_manager.remove_puppeteer(self.puppeteer_tracks)
 	self.puppeteer_tracks = \
-		puppeteer_manager.request_new_puppeteer(self, PuppeteerBase.Type.TRACK_TREE)
+		puppeteer_manager.request_new_puppeteer(self, PuppeteerBase.Type.TRACK_TREE, "blend_shapes")
 	
 	# Setup skeleton puppeteer
 	# TODO: What happens if there are multiple avatars?
@@ -111,11 +112,11 @@ func start_tracker(avatar_scene: Node) -> void:
 	self.puppeteer_tracks.initialize(animations, animation_tracks, &"RESET")
 	
 	self.set_process(true)
+	
+	super(avatar_scene)
 
 func stop_tracker():
 	self.set_process(false)
-	
-	self._remove_gui()
 	
 	var trackers_node = get_node(Trackers.TRACKERS_NODE_PATH)
 	trackers_node.get_tracker_gui().remove_tab(GUI_TAB_NAME)

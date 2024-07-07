@@ -9,19 +9,26 @@ enum Type {
 	TRACK_TREE,
 }
 
-static func create_new(type: Type) -> PuppeteerBase:
+static func _gen_name(tracker_name: String, puppeteer_name: String) -> String:
+	return "%s:%s" % [ tracker_name, puppeteer_name ]
+
+static func create_new(type: Type, tracker_name: String, puppeteer_name: String) -> PuppeteerBase:
+	var puppeteer: PuppeteerBase = null
 	if type == Type.SKELETON_DIRECT:
-		return PuppeteerSkeletonDirect.new()
+		puppeteer = PuppeteerSkeletonDirect.new()
 	elif type == Type.SKELETON_IK:
-		return PuppeteerSkeletonIk.new()
+		puppeteer = PuppeteerSkeletonIk.new()
 	elif type == Type.BLEND_SHAPES_DIRECT:
-		return PuppeteerBlendShapesDirect.new()
+		puppeteer = PuppeteerBlendShapesDirect.new()
 	elif type == Type.TRACK_DIRECT:
-		return PuppeteerTracksDirect.new()
+		puppeteer = PuppeteerTracksDirect.new()
 	elif type == Type.TRACK_TREE:
-		return PuppeteerTrackTree.new()
+		puppeteer = PuppeteerTrackTree.new()
 	
-	return null
+	if puppeteer:
+		puppeteer.name = PuppeteerBase._gen_name(tracker_name, puppeteer_name)
+	
+	return puppeteer
 
 static func get_vrm_animation_player(avatar_root: Node) -> AnimationPlayer:
 	return avatar_root.find_child("AnimationPlayer")
@@ -31,6 +38,17 @@ static func get_vrm_bone_mappings(avatar_root: Node) -> BoneMap:
 		return avatar_root.vrm_meta.humanoid_bone_mapping
 	
 	return null
+
+func _ready():
+	# Add GUI on creation, remove on deletion
+	self.add_gui()
+	self.connect(&"tree_exiting", self.remove_gui)
+
+func add_gui():
+	pass
+
+func remove_gui():
+	pass
 
 func update_puppet(_delta: float) -> void:
 	pass

@@ -6,6 +6,6 @@ func _on_file_selected(path):
 	self.emit_signal("model_file_selected", path)
 	self.hide()
 
-func _on_close_requested():
+func _on_canceled():
 	self.emit_signal("model_file_selected", "")
 	self.hide()

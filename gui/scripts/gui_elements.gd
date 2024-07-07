@@ -65,12 +65,15 @@ class ElementData:
 	## Should return the value to save (of the form OnSaveData(gui_value: <ValueType>) -> <ValueType>)
 	var OnSaveData: Callable
 
+# Name of element. Used during save/load
+var element_name: String = ""
+
 func _add_elements_to_tab(tab_node: Node, elements: Array[ElementData], tab_name: String):
 	for element_data in elements:
 		var element_node: Node = null
 		if element_data.Data is SliderData:
 			element_node = self._create_slider_element(element_data, tab_name)
-		if element_data.Data is ButtonData:
+		elif element_data.Data is ButtonData:
 			element_node = self._create_button_element(element_data, tab_name)
 		elif element_data.Data is CheckBoxData:
 			element_node = self._create_checkbox_element(element_data, tab_name)
@@ -194,6 +197,7 @@ func _create_gui_elements_element(element: ElementData, tab_name: String):
 	assert(element.Data is GuiElementsData)
 	var gui_elements: GuiElements = element.Data.GuiElementsNode
 	gui_elements.name = &"GuiElements" # Rename so that scrollable_elements.gd can properly find new node
+	gui_elements.element_name = tab_name + "/" + element.Name
 	
 	# TODO: Use a better method than creating and replacing GuiElements node
 	var scrollable_elements := SCROLLABLE_ELEMENTS_NODE.instantiate()
@@ -308,7 +312,7 @@ func push_tab_to_front(tab_name: String) -> bool:
 ## Calls each control element's [method ElementData.OnLoadData]. 
 ## For each control element, we look for a key in [param data] with node.element_name
 ## and pass that to the element.
-func load_data(data: Dictionary):
+func load_data(data: Dictionary) -> void:
 	var load_node_data_fcn: Callable = func(node: Node):
 		# Check that this is an element node
 		if not node.has_method("load_data"):
@@ -316,7 +320,7 @@ func load_data(data: Dictionary):
 		
 		# Get saved data
 		var node_data = data.get(node.element_name)
-		if not node_data:
+		if node_data == null:
 			return
 		
 		node.load_data(node_data)

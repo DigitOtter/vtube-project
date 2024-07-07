@@ -1,0 +1,17 @@
+[gd_scene load_steps=2 format=3 uid="uid://by5g6aq84uq"]
+
+[ext_resource type="Script" path="res://main/scenes/config_loader.gd" id="1_0n7rh"]
+
+[node name="ConfigLoader" type="FileDialog"]
+disable_3d = true
+title = "Open a File"
+initial_position = 2
+size = Vector2i(600, 400)
+visible = true
+popup_window = true
+ok_button_text = "Open"
+dialog_hide_on_ok = true
+file_mode = 0
+access = 2
+use_native_dialog = true
+script = ExtResource("1_0n7rh")

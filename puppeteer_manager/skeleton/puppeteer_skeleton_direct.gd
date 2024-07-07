@@ -60,7 +60,6 @@ func update_puppet(delta: float):
 			self.skeleton.set_bone_pose_rotation(self._goggles_idx, Quaternion(self._goggles_on_pose.basis))
 		else:
 			self.skeleton.reset_bone_pose(self._goggles_idx)
-
 	
 	# TODO: Add bone stiffness and/or compare to vmc_receiver.t?
 	for bone_name in self.bone_poses:

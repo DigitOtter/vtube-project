@@ -14,6 +14,8 @@ var _registered_trackers: Dictionary = {}
 
 var _puppeteers:    Array[PuppeteerBase] = []
 
+var _puppeteer_gui_elements := GuiElements.new()
+
 ## This function is connected to each tracker's tree_exiting signal
 func _on_tracker_exit(tracker: TrackerBase):
 	self.remove_tracker_puppeteers(tracker)
@@ -41,17 +43,34 @@ func _get_or_add_tracker(tracker: TrackerBase) -> Array:
 func _on_avatar_loaded(avatar_root: Node):
 	self.emit_signal(&"puppeteer_ready", avatar_root)
 
+func _init_gui():
+	var gui_elements: GuiElements = get_node(Gui.GUI_NODE_PATH).get_gui_elements()
+	var elements: Array[GuiElements.ElementData] = []
+	
+	var gui_elements_data := GuiElements.ElementData.new()
+	gui_elements_data.Name = "Puppeteer Settings"
+	gui_elements_data.Data = GuiElements.GuiElementsData.new()
+	gui_elements_data.Data.GuiElementsNode = self._puppeteer_gui_elements 
+	elements.append(gui_elements_data)
+	
+	gui_elements.add_element_tab("Puppeteers", elements)
+
 func _ready():
 	var main_node: Main = get_node(Main.MAIN_NODE_PATH)
 	main_node.connect_avatar_loaded(self._on_avatar_loaded)
+	
+	self._init_gui()
 
 func _process(delta):
 	# Process all puppeteers in order
 	for p in self._puppeteers:
 		p.update_puppet(delta)
 
-func request_new_puppeteer(tracker: TrackerBase, type: PuppeteerBase.Type) -> PuppeteerBase:
-	var new_puppeteer: PuppeteerBase = PuppeteerBase.create_new(type)
+func request_new_puppeteer(
+		tracker: TrackerBase, 
+		type: PuppeteerBase.Type,
+		name: String) -> PuppeteerBase:
+	var new_puppeteer: PuppeteerBase = PuppeteerBase.create_new(type, tracker.name, name)
 	if not new_puppeteer:
 		return null
 	
@@ -81,3 +100,6 @@ func remove_tracker_puppeteers(tracker: TrackerBase):
 func update_puppeteer_order():
 	# TODO
 	pass
+
+func get_puppeteer_gui() -> GuiElements:
+	return self._puppeteer_gui_elements

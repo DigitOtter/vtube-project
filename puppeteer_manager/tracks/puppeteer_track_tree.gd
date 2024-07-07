@@ -14,7 +14,12 @@ class BlendData:
 	var rate: float = 0.1 * 60
 	var target: float = 0.0
 
+signal toggle_gaze_update(toggle: bool, propagate: bool)
+
 var animation_tree:= AnimationTree.new()
+
+var _gaze_computation := GazeComputation.new()
+var _compute_gaze := false
 
 ## Contains all blend nodes. Each element links a track_name to its corresponding node and blend rate
 ## Elements should be of the form StringName: BlendData
@@ -41,6 +46,28 @@ static func _add_empty_anim_node(blend_tree: AnimationNodeBlendTree, node_name: 
 func _ready():
 	self.add_child(self.animation_tree)
 	self.animation_tree.owner = self
+	
+	super()
+
+func add_gui():
+	var gui_elements: GuiElements = get_node(PuppeteerManager.PUPPETEER_MANAGER_NODE_PATH).get_puppeteer_gui()
+	var elements: Array[GuiElements.ElementData] = []
+	
+	var gaze_strength := GuiElements.ElementData.new()
+	gaze_strength.Name = "Compute Gaze"
+	gaze_strength.OnDataChangedCallable = func(toggle: bool): self._compute_gaze = toggle
+	gaze_strength.SetDataSignal = [ self, &"toggle_gaze_update" ]
+	gaze_strength.Data = GuiElements.CheckBoxData.new()
+	gaze_strength.Data.Default = self._compute_gaze
+	elements.append(gaze_strength)
+	
+	elements.append_array(self._gaze_computation.generate_gui_elements())
+	
+	gui_elements.add_or_create_elements_to_tab_name(self.name, elements)
+
+func remove_gui():
+	var gui_elements: GuiElements = get_node(PuppeteerManager.PUPPETEER_MANAGER_NODE_PATH).get_puppeteer_gui()
+	gui_elements.remove_tab(self.name)
 
 ## Initialize the animation_tree. If reset_track is set, this puppeteer will reset the puppet
 ## before applying any other blend_tracks.
@@ -100,7 +127,23 @@ func set_track_targets_mp(track_targets: Array[MediaPipeCategory]) -> void:
 		if blend_data: 
 			blend_data.target = t.score
 
+func enable_gaze_update(enable: bool):
+	self.emit_signal(&"toggle_gaze_update", true, true)
+
+func set_horizontal_gaze_strength(val: float):
+	self._gaze_computation.emit_signal(&"set_horizontal_gaze_strength", val, true)
+
+func set_vertical_gaze_strength(val: float):
+	self._gaze_computation.emit_signal(&"set_vertical_gaze_strength", val, true)
+
+func update_gaze_from_perfect_sync():
+	var gazes := self._gaze_computation.compute_gaze_from_blend_shapes(self._blend_nodes)
+	self.set_track_targets(gazes)
+
 func update_puppet(delta: float) -> void:
+	if self._compute_gaze:
+		self.update_gaze_from_perfect_sync()
+	
 	for bd: BlendData in self._blend_nodes.values():
 		var add: float = lerpf(self.animation_tree.get(bd.param), bd.target, bd.rate * delta)
 		self.animation_tree.set(bd.param, add)

@@ -3,18 +3,16 @@ extends Node
 
 const TRACKERS_NODE_PATH = "/root/Trackers"
 
-const VMC_RECEIVER_NAME = &"VmcReceiver"
-const MEDIA_PIPE_NAME = &"MediaPipe"
-
 signal toggle_vmc_receiver(enabled: bool, propagate: bool)
 signal toggle_media_pipe(enabled: bool, propagate: bool)
 
 var _tracker_gui_elements := GuiElements.new()
 
-func _on_tracker_toggle(enabled: bool, tracker: GDScript, tracker_name: StringName):
+func _on_tracker_toggle(enabled: bool, tracker_type: TrackerBase.Type):
+	var tracker_name := TrackerBase.get_tracker_name(tracker_type)
 	var tracker_node: TrackerBase = self.find_child(tracker_name)
 	if enabled and not tracker_node:
-		tracker_node = tracker.new()
+		tracker_node = TrackerBase.create_new(tracker_type)
 		tracker_node.name = tracker_name
 		self.add_child(tracker_node)
 		tracker_node.owner = self
@@ -22,12 +20,12 @@ func _on_tracker_toggle(enabled: bool, tracker: GDScript, tracker_name: StringNa
 	elif tracker_node:
 		tracker_node.queue_free()
 
-func _init_tracker_gui(tracker_name: StringName, tracker: GDScript, tracker_toggle_signal: StringName, 
+func _init_tracker_gui(tracker_type: TrackerBase.Type, tracker_toggle_signal: StringName, 
 					   default_enable: bool = false) -> GuiElements.ElementData:
 	var tracker_checkbox: GuiElements.ElementData = GuiElements.ElementData.new()
-	tracker_checkbox.Name = tracker_name + " Enabled"
+	tracker_checkbox.Name = TrackerBase.get_tracker_name(tracker_type) + " Enabled"
 	tracker_checkbox.OnDataChangedCallable = func(enabled: bool):
-		self._on_tracker_toggle(enabled, tracker, tracker_name)
+		self._on_tracker_toggle(enabled, tracker_type)
 	tracker_checkbox.SetDataSignal = [ self, tracker_toggle_signal ]
 	tracker_checkbox.Data = GuiElements.CheckBoxData.new()
 	tracker_checkbox.Data.Default = default_enable
@@ -35,9 +33,10 @@ func _init_tracker_gui(tracker_name: StringName, tracker: GDScript, tracker_togg
 	return tracker_checkbox
 
 func _init_gui():
+	var gui_elements: GuiElements = get_node(Gui.GUI_NODE_PATH).get_gui_elements()
 	var elements: Array[GuiElements.ElementData] = []
-	elements.append(self._init_tracker_gui(VMC_RECEIVER_NAME, TrackerVmcReceiver, &"toggle_vmc_receiver", false))
-	elements.append(self._init_tracker_gui(MEDIA_PIPE_NAME, TrackerMediaPipe, &"toggle_media_pipe", false))
+	elements.append(self._init_tracker_gui(TrackerBase.Type.VMC_RECEIVER, &"toggle_vmc_receiver", false))
+	elements.append(self._init_tracker_gui(TrackerBase.Type.MEDIA_PIPE, &"toggle_media_pipe", false))
 	
 	var gui_elements_data := GuiElements.ElementData.new()
 	gui_elements_data.Name = "Tracker Settings"
@@ -45,7 +44,7 @@ func _init_gui():
 	gui_elements_data.Data.GuiElementsNode = self._tracker_gui_elements 
 	elements.append(gui_elements_data)
 	
-	Gui.get_gui_elements().add_element_tab("Trackers", elements)
+	gui_elements.add_element_tab("Trackers", elements)
 
 func _on_avatar_loaded(avatar_root: Node):
 	# Restart all trackers
