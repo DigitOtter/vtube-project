@@ -5,16 +5,17 @@ const MAIN_NODE_PATH: NodePath = "/root/Main"
 const CONFIG_GUI_TAB_NAME := &"Config"
 const CONFIG_LOADER_NODE := preload("./scenes/config_loader.tscn")
 
-signal save_config(toggled: bool, propagate: bool)
-signal load_config(toggled: bool, propagate: bool)
-signal save_file_change(name: String, propagate: bool)
+signal save_config_toggle(toggled: bool, propagate: bool)
+signal load_config_toggle(toggled: bool, propagate: bool)
+
+## Default path that all dialogs should open at
+var _default_dialog_path: String = OS.get_executable_path()
 
 func _on_config_file_selected(file_name: String, config_loader: ConfigLoader):
-	var gui: GuiElements = self.get_node(Gui.GUI_NODE_PATH).get_gui_elements()
 	if config_loader.is_save_mode():
-		config_loader.save_config(file_name, gui)
+		self.save_config(file_name)
 	else:
-		config_loader.load_config(file_name, gui)
+		self.load_config(file_name)
 
 func _on_config_dialog_canceled(config_loader: ConfigLoader):
 	# We're checking owner instead of the parent because, for some reason,
@@ -36,15 +37,21 @@ func _on_config_pressed(toggle: bool, save_config: bool):
 		self.add_child(config_loader)
 		config_loader.owner = self
 		
+		config_loader.root_subfolder = self.get_default_config_dialog_path()
+		
 		# Connect signals
 		config_loader.connect(&"canceled", func(): self._on_config_dialog_canceled(config_loader))
 		config_loader.connect(&"file_selected", func(file): self._on_config_file_selected(file, config_loader))
 	
-	# Set save/load mode
+	# Set save/load mode of dialog
 	if save_config: 
 		config_loader.set_save_mode()
 	else:
 		config_loader.set_load_mode()
+
+func _init_input():
+	InputSetup.set_input_default_key("save_config", KEY_S, true)
+	InputSetup.set_input_default_key("load_config", KEY_L, true)
 
 func _init_gui():
 	var gui: GuiElements = self.get_node(Gui.GUI_NODE_PATH).get_gui_elements()
@@ -53,29 +60,47 @@ func _init_gui():
 	var save_button := GuiElements.ElementData.new()
 	save_button.Name = "Save Configuration"
 	save_button.OnDataChangedCallable = func(toggle: bool): self._on_config_pressed(toggle, true)
-	save_button.SetDataSignal = [ self, &"save_config" ]
+	save_button.SetDataSignal = [ self, &"save_config_toggle" ]
 	save_button.Data = GuiElements.ButtonData.new()
 	(save_button.Data as GuiElements.ButtonData).Text = save_button.Name
 	
 	var load_button := GuiElements.ElementData.new()
 	load_button.Name = "Load Configuration"
 	load_button.OnDataChangedCallable = func(toggle: bool): self._on_config_pressed(toggle, false)
-	load_button.SetDataSignal = [ self, &"load_config" ]
+	load_button.SetDataSignal = [ self, &"load_config_toggle" ]
 	load_button.Data = GuiElements.ButtonData.new()
 	(load_button.Data as GuiElements.ButtonData).Text = load_button.Name
 	
 	elements.append_array([save_button, load_button])
 	gui.add_or_create_elements_to_tab_name(CONFIG_GUI_TAB_NAME, elements)
+	#gui.push_tab_to_front(CONFIG_GUI_TAB_NAME)
+
+func _init_default_dialog_path():
+	var path: String = OS.get_executable_path()
+	
+	# Remove executable name
+	var split = path.rsplit("/", true, 1)
+	if not split.is_empty():
+		path = split[0]
+	
+	# If vtube_project is started in a Flatpak, set the home directory as default
+	if path.begins_with("/app"):
+		self._default_dialog_path = "~"
+	else:
+		self._default_dialog_path = path
 
 func _input(event):
-	if event.is_action_pressed("save_avatar"):
-		var data: Dictionary = Gui.get_gui_elements().save_data()
-		print(data)
+	if event.is_action_pressed(&"save_config"):
+		self.emit_signal(&"save_config_toggle", true, true)
+	elif event.is_action_pressed(&"load_config"):
+		self.emit_signal(&"load_config_toggle", true, true)
 
 func _ready():
 	get_tree().get_root().set_transparent_background(true)
 	
+	self._init_default_dialog_path()
 	self._init_gui()
+	self._init_input()
 	
 	# Open gui once program has finished loading
 	var root_node: = get_node("/root")
@@ -104,3 +129,17 @@ func get_avatar_root_node() -> Node:
 
 func get_post_processing_node() -> Control:
 	return %PostProcessing
+
+func set_default_config_dialog_path(path: String):
+	self._default_dialog_path = path
+
+func get_default_config_dialog_path():
+	return self._default_dialog_path
+
+func load_config(file_name: String):
+	var gui: GuiElements = self.get_node(Gui.GUI_NODE_PATH).get_gui_elements()
+	ConfigLoader.load_config(file_name, gui)
+
+func save_config(file_name: String):
+	var gui: GuiElements = self.get_node(Gui.GUI_NODE_PATH).get_gui_elements()
+	ConfigLoader.save_config(file_name, gui)

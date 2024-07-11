@@ -13,7 +13,10 @@ var on_load_data_fcn: Callable
 
 func _on_external_data_changed(new_val: bool, propagate: bool):
 	if propagate:
-		self.set_pressed(new_val)
+		#self.set_pressed(new_val)
+		# TODO: For some reason, set_pressed doesn't emit a signal, so do that manually
+		if new_val:
+			self._on_pressed()
 	else:
 		self.set_pressed_no_signal(new_val)
 

@@ -1,9 +1,7 @@
-[gd_scene load_steps=4 format=3 uid="uid://bru4ht08gj1on"]
+[gd_scene load_steps=3 format=3 uid="uid://bru4ht08gj1on"]
 
 [ext_resource type="Script" path="res://gui/scenes/scrollable_elements.gd" id="1_4t0of"]
-[ext_resource type="Script" path="res://gui/scripts/gui_elements.gd" id="1_7860k"]
-
-[sub_resource type="Theme" id="Theme_u3eoq"]
+[ext_resource type="PackedScene" uid="uid://dec2qsec6dth6" path="res://gui/scenes/gui_elements.tscn" id="2_3rvyw"]
 
 [node name="ScrollableElements" type="ScrollContainer"]
 anchors_preset = 15
@@ -15,9 +13,5 @@ size_flags_horizontal = 3
 size_flags_vertical = 3
 script = ExtResource("1_4t0of")
 
-[node name="GuiElements" type="TabContainer" parent="."]
+[node name="GuiElements" parent="." instance=ExtResource("2_3rvyw")]
 layout_mode = 2
-size_flags_horizontal = 3
-size_flags_vertical = 3
-theme = SubResource("Theme_u3eoq")
-script = ExtResource("1_7860k")
