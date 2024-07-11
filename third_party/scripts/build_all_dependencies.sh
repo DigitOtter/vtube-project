@@ -9,7 +9,6 @@ scripts/build_godot_vmc_lib.sh "$@"
 # Build texture sharing lib
 if [ "$1" != "-t" ]
 then
-    echo "!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!" "$@"
     scripts/build_texture_share_vk.sh "$@"
 fi
 
