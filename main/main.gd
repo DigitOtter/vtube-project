@@ -78,8 +78,8 @@ func _init_gui():
 func _init_default_dialog_path():
 	var path: String = OS.get_executable_path()
 	
-	# Remove executable name
-	var split = path.rsplit("/", true, 1)
+	# Remove executable name from end of path
+	var split = path.rsplit("/", false, 1)
 	if not split.is_empty():
 		path = split[0]
 	

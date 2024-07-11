@@ -17,10 +17,19 @@ func _on_load_model_request(toggled: bool):
 	if self._load_avatar_dialog:
 		return
 	
-	var main: Main = get_node(Main.MAIN_NODE_PATH)
-	
 	self._load_avatar_dialog = LOAD_AVATAR_DIALOG.instantiate()
-	self._load_avatar_dialog.root_subfolder = main.get_default_config_dialog_path()
+	
+	# Set dialog path
+	var config_path: String
+	if not self._loaded_model_path.is_empty():
+		# If a model has already been loaded, set it as currently selected
+		self._load_avatar_dialog.current_path = self._loaded_model_path
+	else:
+		# If no model was loaded yet, use default dialog path
+		var main: Main = get_node(Main.MAIN_NODE_PATH)
+		self._load_avatar_dialog.current_dir = main.get_default_config_dialog_path()
+	
+	self._load_avatar_dialog.current_dir = config_path
 	self._load_avatar_dialog.connect("model_file_selected", _on_model_file_selected)
 	
 	self.add_child(self._load_avatar_dialog)
