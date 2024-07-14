@@ -19,7 +19,7 @@ config/features=PackedStringArray("4.2")
 AvatarSelect="*res://avatar_select/avatar_select.tscn"
 AssetManager="*res://asset_manager/asset_manager.gd"
 Gui="*res://gui/gui.tscn"
-Trackers="*res://trackers/trackers.tscn"
+TrackerManager="*res://tracker_manager/tracker_manager.tscn"
 PuppeteerManager="*res://puppeteer_manager/puppeteer_manager.tscn"
 Effects="*res://effects/effects.tscn"
 
@@ -35,6 +35,10 @@ window/per_pixel_transparency/allowed=true
 [editor_plugins]
 
 enabled=PackedStringArray("res://addons/control_camera3d/plugin.cfg", "res://addons/vrm/plugin.cfg")
+
+[gui]
+
+theme/custom="res://gui/themes/default.theme"
 
 [input]
 

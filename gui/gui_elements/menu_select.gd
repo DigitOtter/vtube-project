@@ -1,9 +1,6 @@
-extends MenuBar
+extends GuiElementBase
 
 signal menu_item_selected
-
-# Name of element. Used during save/load
-var element_name: String = ""
 
 # Callable of the form on_save_data_fcn(gui_value: Dictionary{"menu_packed": PackedScene, "selected": String})
 var on_save_data_fcn: Callable
@@ -16,15 +13,15 @@ var on_load_data_fcn: Callable
 ## Signals
 func _on_popup_menu_index_pressed(index):
 	var selected_item: String = $PopupMenu.get_item_text(index)
-	self.set_menu_title(0, selected_item)
-	self.emit_signal("menu_item_selected", selected_item)
+	(self as Control as MenuBar).set_menu_title(0, selected_item)
+	self.emit_signal(&"menu_item_selected", selected_item)
 
 func _on_external_data_changed(selected_menu_item: String, propagate: bool):
 	for i in range(0, $PopupMenu.item_count):
 		if $PopupMenu.get_item_text(i) == selected_menu_item:
-			self.set_menu_title(0, selected_menu_item)
+			(self as Control as MenuBar).set_menu_title(0, selected_menu_item)
 			if propagate:
-				self.emit_signal("menu_item_selected", selected_menu_item)
+				self.emit_signal(&"menu_item_selected", selected_menu_item)
 			break
 
 func _on_update_menu(menu_items: Array[String], default_selection: int):
@@ -40,13 +37,13 @@ func setup_menu(menu_items: Array[String], default_selection: int):
 		$PopupMenu.add_item(item)
 	
 	if default_selection >= 0:
-		self.set_menu_title(0, menu_items[default_selection])
+		(self as Control as MenuBar).set_menu_title(0, menu_items[default_selection])
 
 func serialize_menu() -> Dictionary:
 	var packed_scene: PackedScene = PackedScene.new()
 	packed_scene.pack($PopupMenu)
 	
-	return { "menu_packed": packed_scene, "selected": self.get_menu_title(0) }
+	return { "menu_packed": packed_scene, "selected": (self as Control as MenuBar).get_menu_title(0) }
 
 func save_data():
 	var save_value = self.serialize_menu()
@@ -70,6 +67,6 @@ func load_data(stored_value):
 	var popup_menu: PopupMenu = packed_scene.instantiate()
 	self.add_child(popup_menu)
 	popup_menu.owner = self
-	popup_menu.connect("index_pressed", self._on_popup_menu_index_pressed)
+	popup_menu.connect(&"index_pressed", self._on_popup_menu_index_pressed)
 	
 	self._on_external_data_changed(sel_val, true)

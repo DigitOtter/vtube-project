@@ -50,30 +50,30 @@ func _on_config_pressed(toggle: bool, save_config: bool):
 		config_loader.set_load_mode()
 
 func _init_input():
-	InputSetup.set_input_default_key("save_config", KEY_S, true)
-	InputSetup.set_input_default_key("load_config", KEY_L, true)
+	InputSetup.set_input_default_key(&"save_config", KEY_S, true)
+	InputSetup.set_input_default_key(&"load_config", KEY_L, true)
 
 func _init_gui():
-	var gui: GuiElements = self.get_node(Gui.GUI_NODE_PATH).get_gui_elements()
-	var elements: Array[GuiElements.ElementData] = []
+	var gui_menu: GuiTabMenuBase = self.get_node(Gui.GUI_NODE_PATH).get_gui_menu()
+	var elements: Array[GuiElement.ElementData] = []
 	
-	var save_button := GuiElements.ElementData.new()
+	var save_button := GuiElement.ElementData.new()
 	save_button.Name = "Save Configuration"
 	save_button.OnDataChangedCallable = func(toggle: bool): self._on_config_pressed(toggle, true)
 	save_button.SetDataSignal = [ self, &"save_config_toggle" ]
-	save_button.Data = GuiElements.ButtonData.new()
-	(save_button.Data as GuiElements.ButtonData).Text = save_button.Name
+	save_button.Data = GuiElement.ButtonData.new()
+	(save_button.Data as GuiElement.ButtonData).Text = save_button.Name
 	
-	var load_button := GuiElements.ElementData.new()
+	var load_button := GuiElement.ElementData.new()
 	load_button.Name = "Load Configuration"
 	load_button.OnDataChangedCallable = func(toggle: bool): self._on_config_pressed(toggle, false)
 	load_button.SetDataSignal = [ self, &"load_config_toggle" ]
-	load_button.Data = GuiElements.ButtonData.new()
-	(load_button.Data as GuiElements.ButtonData).Text = load_button.Name
+	load_button.Data = GuiElement.ButtonData.new()
+	(load_button.Data as GuiElement.ButtonData).Text = load_button.Name
 	
 	elements.append_array([save_button, load_button])
-	gui.add_or_create_elements_to_tab_name(CONFIG_GUI_TAB_NAME, elements)
-	#gui.push_tab_to_front(CONFIG_GUI_TAB_NAME)
+	gui_menu.add_elements_to_tab(CONFIG_GUI_TAB_NAME, elements)
+	#gui_menu.push_tab_to_front(CONFIG_GUI_TAB_NAME)
 
 func _init_default_dialog_path():
 	var path: String = OS.get_executable_path()
@@ -104,9 +104,9 @@ func _ready():
 	
 	# Open gui once program has finished loading
 	var root_node: = get_node("/root")
-	root_node.connect("ready", func():
+	root_node.connect(&"ready", func():
 		var gui := get_node(Gui.GUI_NODE_PATH)
-		gui.call_deferred("open_gui_window")
+		gui.call_deferred(&"open_gui_window")
 	)
 
 func get_avatar_viewport() -> SubViewport:
@@ -116,10 +116,10 @@ func get_avatar_viewport_container() -> SubViewportContainer:
 	return %AvatarViewportContainer
 
 func connect_avatar_loaded(fcn: Callable) -> Error:
-	return %AvatarRoot.connect("avatar_loaded", fcn)
+	return %AvatarRoot.connect(&"avatar_loaded", fcn)
 
 func connect_avatar_unloaded(fcn: Callable) -> Error:
-	return %AvatarRoot.connect("avatar_unloaded", fcn)
+	return %AvatarRoot.connect(&"avatar_unloaded", fcn)
 
 func is_avatar_loaded() -> bool:
 	return %AvatarRoot.is_avatar_loaded()
@@ -137,9 +137,9 @@ func get_default_config_dialog_path():
 	return self._default_dialog_path
 
 func load_config(file_name: String):
-	var gui: GuiElements = self.get_node(Gui.GUI_NODE_PATH).get_gui_elements()
+	var gui: GuiTabMenuBase = self.get_node(Gui.GUI_NODE_PATH).get_gui_menu()
 	ConfigLoader.load_config(file_name, gui)
 
 func save_config(file_name: String):
-	var gui: GuiElements = self.get_node(Gui.GUI_NODE_PATH).get_gui_elements()
+	var gui: GuiTabMenuBase = self.get_node(Gui.GUI_NODE_PATH).get_gui_menu()
 	ConfigLoader.save_config(file_name, gui)

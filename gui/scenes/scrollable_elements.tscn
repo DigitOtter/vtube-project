@@ -1,7 +1,7 @@
 [gd_scene load_steps=3 format=3 uid="uid://bru4ht08gj1on"]
 
 [ext_resource type="Script" path="res://gui/scenes/scrollable_elements.gd" id="1_4t0of"]
-[ext_resource type="PackedScene" uid="uid://dec2qsec6dth6" path="res://gui/scenes/gui_elements.tscn" id="2_3rvyw"]
+[ext_resource type="PackedScene" uid="uid://64rxt3cw54os" path="res://gui/gui_side_menu/gui_side_menu.tscn" id="2_c5y84"]
 
 [node name="ScrollableElements" type="ScrollContainer"]
 anchors_preset = 15
@@ -13,5 +13,5 @@ size_flags_horizontal = 3
 size_flags_vertical = 3
 script = ExtResource("1_4t0of")
 
-[node name="GuiElements" parent="." instance=ExtResource("2_3rvyw")]
+[node name="GuiSideMenu" parent="." instance=ExtResource("2_c5y84")]
 layout_mode = 2

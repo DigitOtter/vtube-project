@@ -1,6 +1,6 @@
 [gd_scene load_steps=2 format=3 uid="uid://bf1iiosvalvqb"]
 
-[ext_resource type="Script" path="res://gui/scenes/controls/slider.gd" id="1_7qwgw"]
+[ext_resource type="Script" path="res://gui/gui_elements/slider.gd" id="1_7qwgw"]
 
 [node name="slider" type="HSplitContainer"]
 anchors_preset = 14

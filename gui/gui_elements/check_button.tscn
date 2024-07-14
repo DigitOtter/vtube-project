@@ -1,6 +1,6 @@
 [gd_scene load_steps=2 format=3 uid="uid://b0xneof3ggld7"]
 
-[ext_resource type="Script" path="res://gui/scenes/controls/check_button.gd" id="1_k0n72"]
+[ext_resource type="Script" path="res://gui/gui_elements/check_button.gd" id="1_k0n72"]
 
 [node name="check_button" type="CheckButton"]
 anchors_preset = 4
@@ -12,3 +12,4 @@ offset_bottom = 12.0
 grow_vertical = 2
 size_flags_vertical = 4
 script = ExtResource("1_k0n72")
+element_name = null

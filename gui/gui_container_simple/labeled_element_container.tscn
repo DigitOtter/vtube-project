@@ -1,0 +1,16 @@
+[gd_scene load_steps=2 format=3 uid="uid://bnfn7dc58lab3"]
+
+[ext_resource type="Script" path="res://gui/gui_container_simple/labeled_element_container.gd" id="1_bsut0"]
+
+[node name="LabeledElementContainer" type="HSplitContainer"]
+anchors_preset = 10
+anchor_right = 1.0
+offset_bottom = 23.0
+grow_horizontal = 2
+size_flags_vertical = 4
+dragger_visibility = 1
+script = ExtResource("1_bsut0")
+
+[node name="Label" type="Label" parent="."]
+layout_mode = 2
+vertical_alignment = 1

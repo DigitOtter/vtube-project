@@ -60,27 +60,27 @@ func _process(delta):
 	self.puppeteer_tracks.set_track_targets_dict(self.vmc_receiver.blend_shapes)
 
 func add_gui():
-	var trackers_node = get_node(Trackers.TRACKERS_NODE_PATH)
-	var gui_elements: GuiElements = trackers_node.get_tracker_gui()
-	var elements: Array[GuiElements.ElementData] = []
+	var trackers_node = get_node(TrackerManager.TRACKER_MANAGER_NODE_PATH)
+	var gui_menu: GuiTabMenuBase = trackers_node.get_tracker_gui()
+	var elements: Array[GuiElement.ElementData] = []
 	
-	var port_input := GuiElements.ElementData.new()
+	var port_input := GuiElement.ElementData.new()
 	port_input.Name = "Port Input"
 	port_input.OnDataChangedCallable = self._on_port_input_changed
 	port_input.SetDataSignal = [ self, &"port_input_change" ]
-	port_input.Data = GuiElements.SliderData.new()
-	(port_input.Data as GuiElements.SliderData).Default  = self.vmc_receiver.port
-	(port_input.Data as GuiElements.SliderData).Step     = 1
-	(port_input.Data as GuiElements.SliderData).MinValue = 1
-	(port_input.Data as GuiElements.SliderData).MaxValue = 65535
+	port_input.Data = GuiElement.SliderData.new()
+	(port_input.Data as GuiElement.SliderData).Default  = self.vmc_receiver.port
+	(port_input.Data as GuiElement.SliderData).Step     = 1
+	(port_input.Data as GuiElement.SliderData).MinValue = 1
+	(port_input.Data as GuiElement.SliderData).MaxValue = 65535
 	elements.append(port_input)
 	
-	gui_elements.add_or_create_elements_to_tab_name(GUI_TAB_NAME, elements)
+	gui_menu.add_elements_to_tab(GUI_TAB_NAME, elements)
 
 func remove_gui():
-	var trackers_node = get_node(Trackers.TRACKERS_NODE_PATH)
-	var gui_elements: GuiElements = trackers_node.get_tracker_gui()
-	gui_elements.remove_tab(GUI_TAB_NAME)
+	var trackers_node = get_node(TrackerManager.TRACKER_MANAGER_NODE_PATH)
+	var gui_menu: GuiElements = trackers_node.get_tracker_gui()
+	gui_menu.remove_tab(GUI_TAB_NAME)
 
 func start_tracker(avatar_scene: Node) -> void:
 	var puppeteer_manager = get_node(PuppeteerManager.PUPPETEER_MANAGER_NODE_PATH)
@@ -118,7 +118,7 @@ func start_tracker(avatar_scene: Node) -> void:
 func stop_tracker():
 	self.set_process(false)
 	
-	var trackers_node = get_node(Trackers.TRACKERS_NODE_PATH)
+	var trackers_node = get_node(TrackerManager.TRACKER_MANAGER_NODE_PATH)
 	trackers_node.get_tracker_gui().remove_tab(GUI_TAB_NAME)
 	
 	super()

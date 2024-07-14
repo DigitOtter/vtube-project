@@ -1,9 +1,6 @@
-extends Node
+extends GuiContainerBase
 
 signal value_changed
-
-# Name of element. Used during save/load
-var element_name: String = ""
 
 # Callable of the form on_save_data_fcn(gui_value: float)
 var on_save_data_fcn: Callable

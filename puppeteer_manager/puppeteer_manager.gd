@@ -1,3 +1,4 @@
+#class_name PuppeteerManager
 extends Node
 
 const PUPPETEER_MANAGER_NODE_PATH: NodePath = "/root/PuppeteerManager"
@@ -14,7 +15,7 @@ var _registered_trackers: Dictionary = {}
 
 var _puppeteers:    Array[PuppeteerBase] = []
 
-var _puppeteer_gui_elements := GuiElements.new()
+var _puppeteer_gui_menu := Gui.GUI_TAB_MENU_SCENE.instantiate()
 
 ## This function is connected to each tracker's tree_exiting signal
 func _on_tracker_exit(tracker: TrackerBase):
@@ -44,16 +45,16 @@ func _on_avatar_loaded(avatar_root: Node):
 	self.emit_signal(&"puppeteer_ready", avatar_root)
 
 func _init_gui():
-	var gui_elements: GuiElements = get_node(Gui.GUI_NODE_PATH).get_gui_elements()
-	var elements: Array[GuiElements.ElementData] = []
+	var gui_menu: GuiTabMenuBase = get_node(Gui.GUI_NODE_PATH).get_gui_menu()
+	var elements: Array[GuiElement.ElementData] = []
 	
-	var gui_elements_data := GuiElements.ElementData.new()
-	gui_elements_data.Name = "Puppeteer Settings"
-	gui_elements_data.Data = GuiElements.GuiElementsData.new()
-	gui_elements_data.Data.GuiElementsNode = self._puppeteer_gui_elements 
-	elements.append(gui_elements_data)
+	var puppeteer_menu_data := GuiElement.ElementData.new()
+	puppeteer_menu_data.Name = "Puppeteer Settings"
+	puppeteer_menu_data.Data = GuiElement.GuiTabMenuData.new()
+	puppeteer_menu_data.Data.GuiTabMenuNode = self._puppeteer_gui_menu 
+	elements.append(puppeteer_menu_data)
 	
-	gui_elements.add_element_tab("Puppeteers", elements)
+	gui_menu.add_elements_to_tab("Puppeteers", elements)
 
 func _ready():
 	var main_node: Main = get_node(Main.MAIN_NODE_PATH)
@@ -101,5 +102,5 @@ func update_puppeteer_order():
 	# TODO
 	pass
 
-func get_puppeteer_gui() -> GuiElements:
-	return self._puppeteer_gui_elements
+func get_puppeteer_gui() -> GuiTabMenuBase:
+	return self._puppeteer_gui_menu

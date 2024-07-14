@@ -1,6 +1,6 @@
 [gd_scene load_steps=2 format=3 uid="uid://w6jycwtfu6xb"]
 
-[ext_resource type="Script" path="res://gui/scenes/controls/button.gd" id="1_6cse7"]
+[ext_resource type="Script" path="res://gui/gui_elements/button.gd" id="1_6cse7"]
 
 [node name="Button" type="Button"]
 anchors_preset = 4
@@ -11,7 +11,6 @@ offset_right = 8.0
 offset_bottom = 4.0
 grow_vertical = 2
 size_flags_vertical = 4
-toggle_mode = true
 script = ExtResource("1_6cse7")
 
 [connection signal="pressed" from="." to="." method="_on_pressed"]

@@ -43,29 +43,30 @@ func _on_model_file_selected(model_path: String):
 		self.load_model(model_path)
 
 func _init_gui():
-	var button_model_load: GuiElements.ElementData = GuiElements.ElementData.new()
+	var button_model_load := GuiElement.ElementData.new()
 	button_model_load.Name = "Load Model"
 	button_model_load.OnDataChangedCallable = self._on_load_model_request
 	button_model_load.SetDataSignal = [self, "open_dialog_requested"]
 	button_model_load.OnSaveData = func(_val: bool) -> String:
 		return self._loaded_model_path
 	button_model_load.OnLoadData = func(model_path: String) -> bool:
-		self.load_model(model_path)
+		if not model_path.is_empty():
+			self.load_model(model_path)
 		return false
 	
-	var button_data: GuiElements.ButtonData = GuiElements.ButtonData.new()
+	var button_data := GuiElement.ButtonData.new()
 	button_data.Text = "Load Model"
 	button_model_load.Data = button_data
 	
-	Gui.get_gui_elements().add_or_create_elements_to_tab_name("Model Control", [ button_model_load ])
-	Gui.get_gui_elements().push_tab_to_front("Model Control")
+	Gui.get_gui_menu().add_elements_to_tab("Model Control", [ button_model_load ])
+	Gui.get_gui_menu().push_tab_to_front("Model Control")
 
 func _ready():
 	self._init_gui()
 	#self.emit_signal("avatar_loaded", self)
 
 func open_load_model_dialog():
-	self.emit_signal("open_dialog_requested", true, true)
+	self.emit_signal(&"open_dialog_requested", true, true)
 
 func load_model(model_path: String):
 	var avatar_model: Node3D = ModelImporter.import_model_infer_extension(model_path)
@@ -79,7 +80,7 @@ func load_model(model_path: String):
 	
 	self._loaded_model_path = model_path
 	
-	self.emit_signal("avatar_loaded", self)
+	self.emit_signal(&"avatar_loaded", self)
 
 func unload_model():
 	# Remove old avatar
@@ -88,7 +89,7 @@ func unload_model():
 		self.remove_child(child)
 		child.queue_free()
 	
-	self.emit_signal("avatar_unloaded", self)
+	self.emit_signal(&"avatar_unloaded", self)
 
 func is_avatar_loaded() -> bool:
 	return !self._loaded_model_path.is_empty()

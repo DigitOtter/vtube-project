@@ -50,24 +50,24 @@ func _ready():
 	super()
 
 func add_gui():
-	var gui_elements: GuiElements = get_node(PuppeteerManager.PUPPETEER_MANAGER_NODE_PATH).get_puppeteer_gui()
-	var elements: Array[GuiElements.ElementData] = []
+	var gui_menu: GuiTabMenuBase = get_node(PuppeteerManager.PUPPETEER_MANAGER_NODE_PATH).get_puppeteer_gui()
+	var elements: Array[GuiElement.ElementData] = []
 	
-	var gaze_strength := GuiElements.ElementData.new()
+	var gaze_strength := GuiElement.ElementData.new()
 	gaze_strength.Name = "Compute Gaze"
 	gaze_strength.OnDataChangedCallable = func(toggle: bool): self._compute_gaze = toggle
 	gaze_strength.SetDataSignal = [ self, &"toggle_gaze_update" ]
-	gaze_strength.Data = GuiElements.CheckBoxData.new()
+	gaze_strength.Data = GuiElement.CheckBoxData.new()
 	gaze_strength.Data.Default = self._compute_gaze
 	elements.append(gaze_strength)
 	
 	elements.append_array(self._gaze_computation.generate_gui_elements())
 	
-	gui_elements.add_or_create_elements_to_tab_name(self.name, elements)
+	gui_menu.add_elements_to_tab(self.name, elements)
 
 func remove_gui():
-	var gui_elements: GuiElements = get_node(PuppeteerManager.PUPPETEER_MANAGER_NODE_PATH).get_puppeteer_gui()
-	gui_elements.remove_tab(self.name)
+	var gui_menu: GuiTabMenuBase = get_node(PuppeteerManager.PUPPETEER_MANAGER_NODE_PATH).get_puppeteer_gui()
+	gui_menu.remove_tab(self.name)
 
 ## Initialize the animation_tree. If reset_track is set, this puppeteer will reset the puppet
 ## before applying any other blend_tracks.
@@ -79,7 +79,7 @@ func initialize(animations: AnimationPlayer, blend_tracks: Array[String], reset_
 	if !reset_track.is_empty():
 		base_node_name = PuppeteerTrackTree._add_anim_node(blend_tree, ANIMATION_NODE_PREFIX + reset_track, reset_track)
 	else:
-		base_node_name = PuppeteerTrackTree._add_empty_anim_node(blend_tree, "EmptyStart")
+		base_node_name = PuppeteerTrackTree._add_empty_anim_node(blend_tree, &"EmptyStart")
 	
 	var add_node_name: StringName = &""
 	var new_anim_node_name: StringName = &""
@@ -102,7 +102,7 @@ func initialize(animations: AnimationPlayer, blend_tracks: Array[String], reset_
 		base_node_name = add_node_name
 	
 	# Connect the last add node to the tree's output
-	blend_tree.connect_node("output", 0, add_node_name)
+	blend_tree.connect_node(&"output", 0, add_node_name)
 	
 	self.animation_tree.tree_root = blend_tree
 

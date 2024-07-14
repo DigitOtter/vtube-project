@@ -34,8 +34,8 @@ var _goggles_on_pose: Transform3D = Transform3D(
 	Basis(	Quaternion.from_euler(Vector3(25.5/180.0*PI, 0.0, 0.0))),
 			Vector3(0.0, 0.10, -0.01))
 
-func initialize(skeleton: Skeleton3D, bone_mapping: BoneMap):
-	self.skeleton = skeleton
+func initialize(puppet_skeleton: Skeleton3D, bone_mapping: BoneMap):
+	self.skeleton = puppet_skeleton
 	
 	# Invert bone mapping
 	self.vmc_to_bone_idx.clear()
@@ -51,7 +51,7 @@ func initialize(skeleton: Skeleton3D, bone_mapping: BoneMap):
 	
 	self._goggles_idx = self.skeleton.find_bone('goggles')
 
-func update_puppet(delta: float):
+func update_puppet(_delta: float):
 	if self.goggle_toggle:
 		self.goggle_toggle = false
 		self._goggle_on = !self._goggle_on

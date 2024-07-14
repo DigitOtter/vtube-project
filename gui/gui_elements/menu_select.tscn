@@ -1,6 +1,6 @@
 [gd_scene load_steps=2 format=3 uid="uid://bjb7jvs12cg20"]
 
-[ext_resource type="Script" path="res://gui/scenes/controls/menu_select.gd" id="1_c2m2a"]
+[ext_resource type="Script" path="res://gui/gui_elements/menu_select.gd" id="1_c2m2a"]
 
 [node name="MenuSelect" type="MenuBar"]
 anchors_preset = 14

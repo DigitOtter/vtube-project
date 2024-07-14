@@ -1,0 +1,6 @@
+[gd_scene load_steps=2 format=3 uid="uid://b4rgmyge7rmjf"]
+
+[ext_resource type="Script" path="res://tracker_manager/tracker_manager.gd" id="1_jiro1"]
+
+[node name="Trackers" type="Node"]
+script = ExtResource("1_jiro1")

@@ -1,7 +1,4 @@
-extends LineEdit
-
-# Name of element. Used during save/load
-var element_name: String = ""
+extends GuiElementBase
 
 # Callable of the form on_save_data_fcn(gui_value: String) 
 var on_save_data_fcn: Callable
@@ -10,10 +7,10 @@ var on_save_data_fcn: Callable
 var on_load_data_fcn: Callable
 
 func _on_external_data_changed(new_val: String, propagate: bool):
-	self.set_text(new_val)
+	(self as Control as CheckButton).set_text(new_val)
 	
 	if propagate:
-		self.emit_signal("text_changed", self.text)
+		self.emit_signal(&"text_changed", self.text)
 
 func save_data():
 	var save_value = self.text

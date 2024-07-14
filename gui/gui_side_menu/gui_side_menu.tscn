@@ -1,0 +1,37 @@
+[gd_scene load_steps=2 format=3 uid="uid://64rxt3cw54os"]
+
+[ext_resource type="Script" path="res://gui/gui_side_menu/gui_side_menu.gd" id="1_2kj25"]
+
+[node name="GuiSideMenu" type="HSplitContainer"]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+dragger_visibility = 1
+script = ExtResource("1_2kj25")
+
+[node name="TabListMagin" type="MarginContainer" parent="."]
+layout_mode = 2
+theme_override_constants/margin_left = 4
+theme_override_constants/margin_top = 4
+theme_override_constants/margin_right = 2
+theme_override_constants/margin_bottom = 4
+
+[node name="TabList" type="VBoxContainer" parent="TabListMagin"]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="ContainersMargin" type="MarginContainer" parent="."]
+layout_mode = 2
+theme_override_constants/margin_left = 2
+theme_override_constants/margin_top = 4
+theme_override_constants/margin_right = 4
+theme_override_constants/margin_bottom = 4
+
+[node name="Containers" type="ScrollContainer" parent="ContainersMargin"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3

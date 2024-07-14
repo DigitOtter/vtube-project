@@ -130,27 +130,27 @@ func _load_props(load_data: Dictionary) -> void:
 			prop.triangle_transform = deser_dat["triangle_transform"]
 
 func _init_gui():
-	var tab_elements: Array[GuiElements.ElementData] = []
+	var tab_elements: Array[GuiElement.ElementData] = []
 	
 	# Prop loading
-	var prop_loading: GuiElements.ElementData = GuiElements.ElementData.new()
+	var prop_loading := GuiElement.ElementData.new()
 	prop_loading.Name = "Load prop"
 	prop_loading.OnDataChangedCallable = self._on_prop_load_requested
 	prop_loading.SetDataSignal = [ self, "load_prop_signal" ]
-	var prop_loading_data: GuiElements.ButtonData = GuiElements.ButtonData.new()
+	var prop_loading_data := GuiElement.ButtonData.new()
 	prop_loading_data.Text = "Load Property"
 	prop_loading.Data = prop_loading_data
 	
 	tab_elements.append(prop_loading)
 	
 	# Prop selection
-	var prop_selection: GuiElements.ElementData = GuiElements.ElementData.new()
+	var prop_selection := GuiElement.ElementData.new()
 	prop_selection.Name = "Current Prop"
 	prop_selection.OnDataChangedCallable = self._on_selected_prop_changed
 	prop_selection.SetDataSignal = [ self, "change_prop_to_create_sig"]
 	prop_selection.OnSaveData = self._save_props
 	
-	var prop_selection_data: GuiElements.MenuSelectData = GuiElements.MenuSelectData.new()
+	var prop_selection_data := GuiElement.MenuSelectData.new()
 	prop_selection_data.Items = AssetManager.list_available_assets()
 	if prop_selection_data.Items.is_empty():
 		prop_selection_data.Default = -1
@@ -163,8 +163,8 @@ func _init_gui():
 	
 	tab_elements.append(prop_selection)
 	
-	var gui_elements: GuiElements = get_node(Gui.GUI_NODE_PATH).get_gui_elements()
-	gui_elements.add_element_tab(GUI_TAB_NAME, tab_elements)
+	var gui_menu: GuiTabMenuBase = get_node(Gui.GUI_NODE_PATH).get_gui_menu()
+	gui_menu.add_elements_to_tab(GUI_TAB_NAME, tab_elements)
 
 func _highlight_prop(prop: Node3D):
 	if prop is Sprite3D:

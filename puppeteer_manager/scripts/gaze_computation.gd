@@ -64,46 +64,46 @@ func _apply_gaze_parameters(gaze: Array[float]) -> void:
 	gaze[0] = clampf(gaze[0] * self._horizontal_gaze_strength + self._horizontal_gaze_offset, 0.0, 1.0)
 	gaze[1] = clampf(gaze[1] * self._vertical_gaze_strength + self._vertical_gaze_offset, 0.0, 1.0)
 
-func generate_gui_elements() -> Array[GuiElements.ElementData]:
-	var elements: Array[GuiElements.ElementData] = []
-	var horizontal_strength := GuiElements.ElementData.new()
+func generate_gui_elements() -> Array[GuiElement.ElementData]:
+	var elements: Array[GuiElement.ElementData] = []
+	var horizontal_strength := GuiElement.ElementData.new()
 	horizontal_strength.Name = "Horizontal Gaze Strength"
 	horizontal_strength.OnDataChangedCallable = func(val: float): self._horizontal_gaze_strength = val
 	horizontal_strength.SetDataSignal = [ self, &"set_horizontal_gaze_strength"]
-	horizontal_strength.Data = GuiElements.SliderData.new()
+	horizontal_strength.Data = GuiElement.SliderData.new()
 	horizontal_strength.Data.Default = self._horizontal_gaze_strength
 	horizontal_strength.Data.MaxValue = 5.0
 	horizontal_strength.Data.MinValue = 0.0
 	horizontal_strength.Data.Step = 0.1
 	elements.append(horizontal_strength)
 	
-	var vertical_strength := GuiElements.ElementData.new()
+	var vertical_strength := GuiElement.ElementData.new()
 	vertical_strength.Name = "Vertical Gaze Strength"
 	vertical_strength.OnDataChangedCallable = func(val: float): self._vertical_gaze_strength = val
 	vertical_strength.SetDataSignal = [ self, &"set_vertical_gaze_strength"]
-	vertical_strength.Data = GuiElements.SliderData.new()
+	vertical_strength.Data = GuiElement.SliderData.new()
 	vertical_strength.Data.Default = self._vertical_gaze_strength
 	vertical_strength.Data.MaxValue = 5.0
 	vertical_strength.Data.MinValue = 0.0
 	vertical_strength.Data.Step = 0.1
 	elements.append(vertical_strength)
 	
-	var horizontal_offset := GuiElements.ElementData.new()
+	var horizontal_offset := GuiElement.ElementData.new()
 	horizontal_offset.Name = "Horizontal Gaze Offset"
 	horizontal_offset.OnDataChangedCallable = func(val: float): self._horizontal_gaze_offset = val
 	horizontal_offset.SetDataSignal = [ self, &"set_horizontal_gaze_offset"]
-	horizontal_offset.Data = GuiElements.SliderData.new()
+	horizontal_offset.Data = GuiElement.SliderData.new()
 	horizontal_offset.Data.Default = self._horizontal_gaze_offset
 	horizontal_offset.Data.MaxValue = 1.0
 	horizontal_offset.Data.MinValue = -1.0
 	horizontal_offset.Data.Step = 0.01
 	elements.append(horizontal_offset)
 	
-	var vertical_offset := GuiElements.ElementData.new()
+	var vertical_offset := GuiElement.ElementData.new()
 	vertical_offset.Name = "Vertical Gaze Offset"
 	vertical_offset.OnDataChangedCallable = func(val: float): self._vertical_gaze_offset = val
 	vertical_offset.SetDataSignal = [ self, &"set_vertical_gaze_offset"]
-	vertical_offset.Data = GuiElements.SliderData.new()
+	vertical_offset.Data = GuiElement.SliderData.new()
 	vertical_offset.Data.Default = self._vertical_gaze_offset
 	vertical_offset.Data.MaxValue = 1.0
 	vertical_offset.Data.MinValue = -1.0
