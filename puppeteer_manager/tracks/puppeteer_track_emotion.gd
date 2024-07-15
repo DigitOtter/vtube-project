@@ -34,7 +34,7 @@ func remove_gui():
 
 func _add_emotion_to_gui(emotion_name: String, enabled_by_default: bool = false):
 	# Create new signal for this emotion
-	var signal_name := "emotion_{}_toggled".format([emotion_name])
+	var signal_name := "emotion_{}_toggle".format([emotion_name], "{}")
 	self.add_user_signal(signal_name,[
 		{ "name": "enable",    "type": TYPE_BOOL },
 		{ "name": "propagate", "type": TYPE_BOOL },

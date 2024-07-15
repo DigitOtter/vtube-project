@@ -1,13 +1,16 @@
-class_name  TrackerBase
+class_name TrackerBase
 extends Node
 
 enum Type {
+	EMPTY,
 	MEDIA_PIPE,
 	VMC_RECEIVER,
 }
 
 static func _get_tracker_class(type: Type):
-	if type == Type.MEDIA_PIPE:
+	if type == Type.EMPTY:
+		return TrackerEmpty
+	elif type == Type.MEDIA_PIPE:
 		return TrackerMediaPipe
 	elif type == Type.VMC_RECEIVER:
 		return TrackerVmcReceiver
@@ -22,11 +25,8 @@ static func get_tracker_name(type: Type) -> StringName:
 	return &""
 
 static func create_new(type: Type) -> TrackerBase:
-	var tracker: TrackerBase = null
-	if type == Type.MEDIA_PIPE:
-		tracker = TrackerMediaPipe.new()
-	elif type == Type.VMC_RECEIVER:
-		tracker = TrackerVmcReceiver.new()
+	var tracker_class = TrackerBase._get_tracker_class(type)
+	var tracker: TrackerBase = tracker_class.new() if tracker_class != null else null
 	
 	if tracker:
 		tracker.name = TrackerBase.get_tracker_name(type)

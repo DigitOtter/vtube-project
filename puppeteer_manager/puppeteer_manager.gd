@@ -15,47 +15,52 @@ signal toggle_emotion_control(enable: bool, propagate: bool)
 ## Should have the form TrackerBase: Array[ PuppeteerBase ]
 var _registered_trackers: Dictionary = {}
 
-var _puppeteers:    Array[PuppeteerBase] = []
-
 var _puppeteer_gui_menu := Gui.GUI_TAB_MENU_SCENE.instantiate()
 var _emotion_control_enabled: bool = false
+
+## Puppeteers that should run after all trackers
+var _post_puppeteers: TrackerEmpty = TrackerBase.create_new(TrackerBase.Type.EMPTY)
+
+var _emotion_puppeteer: PuppeteerTrackEmotion = null
 
 ## This function is connected to each tracker's tree_exiting signal
 func _on_tracker_exit(tracker: TrackerBase):
 	self.remove_tracker_puppeteers(tracker)
 
-## Remove puppeteer from tree and from _puppeteers. Should be called after all references to
+## Remove puppeteer from tree. Should be called after all references to
 ## puppeteer have been removed from _registered_trackers.
 func _remove_puppeteer_from_tree(puppeteer: PuppeteerBase):
 	puppeteer.owner = null
 	if puppeteer.get_parent() == self:
 		self.remove_child(puppeteer)
-	self._puppeteers.erase(puppeteer)
 	puppeteer.queue_free()
 
-func _get_or_add_tracker(tracker: TrackerBase) -> Array:
-	var reg_puppeteers = self._registered_trackers.get(tracker)
-	if not reg_puppeteers:
-		reg_puppeteers = []
+func _get_or_add_tracker(tracker: TrackerBase) -> Array[PuppeteerBase]:
+	var reg_puppeteers = self._registered_trackers.get(tracker, null)
+	if reg_puppeteers == null:
+		reg_puppeteers = [] as Array[PuppeteerBase]
 		self._registered_trackers[tracker] = reg_puppeteers
 		
 		# Ensure that puppeteers are removed when the associated tracker is deleted
 		tracker.connect(&"tree_exiting", func(): self._on_tracker_exit(tracker))
+		
+		# Ensure that post_puppeteers are placed after other trackers
+		var puppeteers = self._registered_trackers.get(self._post_puppeteers, [])
+		self._registered_trackers.erase(self._post_puppeteers)
+		self._registered_trackers[self._post_puppeteers] = puppeteers
 	
 	return reg_puppeteers
 
 func _setup_emotion_control(avatar_root: Node):
-	var emotion_puppeteer: PuppeteerTrackEmotion = self.find_child(EMOTION_CONTROL_NODE_NAME, false)
-	if emotion_puppeteer:
-		self.remove_puppeteer(emotion_puppeteer)
+	if self._emotion_puppeteer:
+		self.remove_puppeteer(self._emotion_puppeteer)
+		self._emotion_puppeteer = null
 	if not self._emotion_control_enabled or not avatar_root:
 		return
 	
-	emotion_puppeteer = self.request_new_puppeteer(null, 
-												   PuppeteerBase.Type.TRACK_EMOTION, 
-												   EMOTION_CONTROL_NODE_NAME)
-	emotion_puppeteer.name = EMOTION_CONTROL_NODE_NAME
-	self.move_child(emotion_puppeteer, -1)
+	self._emotion_puppeteer = self.request_new_puppeteer(self._post_puppeteers, 
+														 PuppeteerBase.Type.TRACK_EMOTION, 
+														 EMOTION_CONTROL_NODE_NAME)
 	
 	var anim_player: AnimationPlayer = avatar_root.find_child("AnimationPlayer", true)
 	
@@ -67,7 +72,7 @@ func _setup_emotion_control(avatar_root: Node):
 		if tn.to_lower() in emotion_list:
 			available_emotions.append(tn)
 
-	emotion_puppeteer.initialize(anim_player, available_emotions)
+	self._emotion_puppeteer.initialize(anim_player, available_emotions)
 
 func _on_avatar_loaded(avatar_root: Node):
 	self.emit_signal(&"puppeteer_ready", avatar_root)
@@ -105,18 +110,24 @@ func _ready():
 	var main_node: Main = get_node(Main.MAIN_NODE_PATH)
 	main_node.connect_avatar_loaded(self._on_avatar_loaded)
 	
+	self._post_puppeteers.name = "Post"
+	self.add_tracker(self._post_puppeteers)
+	
 	self._init_gui()
 
 func _process(delta):
 	# Process all puppeteers in order
-	for p in self._puppeteers:
+	for p: PuppeteerBase in self.get_children():
 		p.update_puppet(delta)
+
+func add_tracker(tracker: TrackerBase):
+	self._get_or_add_tracker(tracker)
 
 func request_new_puppeteer(
 		tracker: TrackerBase, 
 		type: PuppeteerBase.Type,
 		puppeteer_name: String) -> PuppeteerBase:
-	var tracker_name: String = tracker.name if tracker else ""
+	var tracker_name: StringName = tracker.name if tracker else &""
 	var new_puppeteer: PuppeteerBase = PuppeteerBase.create_new(type, tracker_name, puppeteer_name)
 	if not new_puppeteer:
 		return null
@@ -125,10 +136,11 @@ func request_new_puppeteer(
 		var reg_puppeteers = self._get_or_add_tracker(tracker)
 		reg_puppeteers.append(new_puppeteer)
 	
-	self._puppeteers.append(new_puppeteer)
-	
 	self.add_child(new_puppeteer)
 	new_puppeteer.owner = self
+	
+	# Insert at correct position
+	self.update_puppeteer_order()
 	
 	return new_puppeteer
 
@@ -147,8 +159,12 @@ func remove_tracker_puppeteers(tracker: TrackerBase):
 		self._remove_puppeteer_from_tree(p)
 
 func update_puppeteer_order():
-	# TODO
-	pass
+	var puppeteer_id: int = 0
+	for tracker_puppeteers: Array[PuppeteerBase] in self._registered_trackers.values():
+		for p in tracker_puppeteers:
+			self.move_child(p, puppeteer_id)
+			puppeteer_id += 1
+	
 
 func get_puppeteer_gui() -> GuiTabMenuBase:
 	return self._puppeteer_gui_menu
