@@ -35,9 +35,9 @@ static func get_gaze_direction_from_blend_shapes(blend_nodes: Dictionary) -> Arr
 	
 	return [ horizontal_ratio, vertical_ratio ]
 
-static func _compute_gaze(gaze: Array[float]) -> Array[PuppeteerTrackTree.TrackTarget]:
-	const TrackTarget = PuppeteerTrackTree.TrackTarget
-	var gaze_shapes: Array[PuppeteerTrackTree.TrackTarget] = [
+static func _compute_gaze(gaze: Array[float]) -> Array[TrackUtils.TrackTarget]:
+	const TrackTarget = TrackUtils.TrackTarget
+	var gaze_shapes: Array[TrackUtils.TrackTarget] = [
 		TrackTarget.new(), TrackTarget.new(), TrackTarget.new(), TrackTarget.new()
 	]
 	gaze_shapes[0].name = "lookdown"
@@ -61,8 +61,8 @@ static func _compute_gaze(gaze: Array[float]) -> Array[PuppeteerTrackTree.TrackT
 	return gaze_shapes
 
 func _apply_gaze_parameters(gaze: Array[float]) -> void:
-	gaze[0] = clampf(gaze[0] * self._horizontal_gaze_strength + self._horizontal_gaze_offset, 0.0, 1.0)
-	gaze[1] = clampf(gaze[1] * self._vertical_gaze_strength + self._vertical_gaze_offset, 0.0, 1.0)
+	gaze[0] = clampf(gaze[0] * self._horizontal_gaze_strength + self._horizontal_gaze_offset, -1.0, 1.0)
+	gaze[1] = clampf(gaze[1] * self._vertical_gaze_strength + self._vertical_gaze_offset,     -1.0, 1.0)
 
 func generate_gui_elements() -> Array[GuiElement.ElementData]:
 	var elements: Array[GuiElement.ElementData] = []
@@ -112,14 +112,14 @@ func generate_gui_elements() -> Array[GuiElement.ElementData]:
 	
 	return elements
 
-func compute_gaze_from_mp(blend_shapes: Array[MediaPipeCategory]) -> Array[PuppeteerTrackTree.TrackTarget]:
+func compute_gaze_from_mp(blend_shapes: Array[MediaPipeCategory]) -> Array[TrackUtils.TrackTarget]:
 	var gaze := GazeComputation.get_gaze_direction_from_mp(blend_shapes)
 	self._apply_gaze_parameters(gaze)
 	return GazeComputation._compute_gaze(gaze)
 
 ## Computes gaze direction from PerfectSync blendshapes
 ## Input is PuppeteerTrackTree._blend_nodes
-func compute_gaze_from_blend_shapes(blend_nodes: Dictionary) -> Array[PuppeteerTrackTree.TrackTarget]:
+func compute_gaze_from_blend_shapes(blend_nodes: Dictionary) -> Array[TrackUtils.TrackTarget]:
 	var gaze := GazeComputation.get_gaze_direction_from_blend_shapes(blend_nodes)
 	self._apply_gaze_parameters(gaze)
 	return GazeComputation._compute_gaze(gaze)

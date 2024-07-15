@@ -37,4 +37,4 @@ func set_target_basis(basis: Basis):
 	self.global_target.basis = basis
 
 func set_target_rotation(euler: Vector3):
-	self.global_target.basis.from_euler(euler)
+	self.global_target.basis = Basis.from_euler(euler)

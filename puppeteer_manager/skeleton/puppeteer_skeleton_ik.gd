@@ -243,7 +243,7 @@ func initialize(skeleton_node: Skeleton3D, ik_target_bone_names: IkTargetBoneNam
 	self._align_target_with_skeleton()
 	self.set_reset_poses()
 
-func update_puppet(delta: float):
+func update_puppet(_delta: float):
 	self.ren_ik.update_ik()
 
 func set_reset_poses():

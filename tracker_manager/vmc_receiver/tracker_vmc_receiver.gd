@@ -45,7 +45,7 @@ func _ready():
 	
 	super()
 
-func _process(delta):
+func _process(_delta):
 	# Forward bone_poses to puppeteer
 	# TODO: This is not thread-safe. In the future, should the VmcReceiver be altered to run in a
 	# separate thread, duplicate bone_poses in the thread instead of using a reference here
@@ -55,8 +55,8 @@ func _process(delta):
 	# TODO: Use key-value pair once implemented
 	var bs := self.vmc_receiver.blend_shapes
 	for vmc_name in self.vmc_renames:
-		var name = self.vmc_renames[vmc_name]
-		bs[name] = bs.get(vmc_name, 0.0)
+		var new_name = self.vmc_renames[vmc_name]
+		bs[new_name] = bs.get(vmc_name, 0.0)
 	self.puppeteer_tracks.set_track_targets_dict(self.vmc_receiver.blend_shapes)
 
 func add_gui():

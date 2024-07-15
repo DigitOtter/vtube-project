@@ -96,10 +96,10 @@ func initialize(anim_player: AnimationPlayer, reset_track: StringName = "RESET",
 	self.reset_track = reset_track
 
 func populate_tracks(animations: AnimationPlayer, animation_tracks: Array[String]):
-	for name in animation_tracks:
-		var animation = animations.get_animation(name)
-		var split = name.split('/', true, 1)
-		var vrm_name: String = split[split.size()-1] if split.size() > 0 else name
+	for track_name in animation_tracks:
+		var animation = animations.get_animation(track_name)
+		var split = track_name.split('/', true, 1)
+		var vrm_name: String = split[split.size()-1] if split.size() > 0 else track_name
 		vrm_name = vrm_name.to_lower()
 		
 		var morphs = self._tracks.get(vrm_name, null)

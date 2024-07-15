@@ -1,3 +1,4 @@
+class_name GuiContainerSimple
 extends GuiContainerBase
 
 const LABELED_ELEMENT_CONTAINER_NODE := preload("./labeled_element_container.tscn")
@@ -6,7 +7,7 @@ const LABELED_ELEMENT_CONTAINER_CLASS: GDScript = preload("./labeled_element_con
 static func _iterate_children(node: Node, fcn: Callable):
 	for child in node.get_children():
 		fcn.call(child)
-		_iterate_children(child, fcn)
+		GuiContainerSimple._iterate_children(child, fcn)
 
 func _create_element_container(label_name: String, 
 							   element_data: ElementData) -> Node:
@@ -61,7 +62,7 @@ func load_data(data: Dictionary) -> void:
 		node.load_data(node_data)
 	
 	# Call load_node_data_fcn on all child nodes
-	_iterate_children(self, load_node_data_fcn)
+	GuiContainerSimple._iterate_children(self, load_node_data_fcn)
 
 ## Calls each control element's [method ElementData.OnSaveData]. The results are
 ## stored in a dictionary, with the format node.element_name: node.save_data()
@@ -77,6 +78,6 @@ func save_data() -> Dictionary:
 		data[node.element_name] = val
 	
 	# Call save_node_data_fcn on all child nodes
-	_iterate_children(self, save_node_data_fcn)
+	GuiContainerSimple._iterate_children(self, save_node_data_fcn)
 	
 	return data

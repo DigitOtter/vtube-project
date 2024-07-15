@@ -23,7 +23,7 @@ func _ready():
 	self.connect(&"text_changed", _on_text_changed)
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
-func _process(delta):
+func _process(_delta):
 	pass
 
 func save_data():

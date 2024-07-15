@@ -53,7 +53,7 @@ func _on_avatar_loaded(avatar_root: Node):
 			var c = child as TrackerBase
 			c.restart_tracker(avatar_root)
 
-func _on_avatar_unloaded(avatar_root: Node):
+func _on_avatar_unloaded(_avatar_root: Node):
 	# Stop all trackers
 	for child in self.get_children():
 		if child is TrackerBase:

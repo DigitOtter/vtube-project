@@ -7,10 +7,14 @@ enum Type {
 	BLEND_SHAPES_DIRECT,
 	TRACK_DIRECT,
 	TRACK_TREE,
+	TRACK_EMOTION,
 }
 
 static func _gen_name(tracker_name: String, puppeteer_name: String) -> String:
-	return "%s:%s" % [ tracker_name, puppeteer_name ]
+	if !tracker_name.is_empty():
+		return "%s:%s" % [ tracker_name, puppeteer_name ]
+	else:
+		return puppeteer_name
 
 static func create_new(type: Type, tracker_name: String, puppeteer_name: String) -> PuppeteerBase:
 	var puppeteer: PuppeteerBase = null
@@ -24,6 +28,8 @@ static func create_new(type: Type, tracker_name: String, puppeteer_name: String)
 		puppeteer = PuppeteerTracksDirect.new()
 	elif type == Type.TRACK_TREE:
 		puppeteer = PuppeteerTrackTree.new()
+	elif type == Type.TRACK_EMOTION:
+		puppeteer = PuppeteerTrackEmotion.new()
 	
 	if puppeteer:
 		puppeteer.name = PuppeteerBase._gen_name(tracker_name, puppeteer_name)

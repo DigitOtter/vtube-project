@@ -108,7 +108,6 @@ func _on_selected_prop_changed(selected_prop: String):
 ##   'loaded_props': Array[String] (created with SerializePropData.serialize_prop())
 ## }
 func _save_props(save_data: Dictionary):
-	var prop_data: Dictionary = {}
 	var avatar_scene_node: Node = get_node(Main.MAIN_NODE_PATH).get_avatar_root_node()
 	var ser: Array[String] = []
 	for prop in self._available_props:
