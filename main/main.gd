@@ -3,7 +3,9 @@ extends Node
 
 const MAIN_NODE_PATH: NodePath = "/root/Main"
 const CONFIG_GUI_TAB_NAME := &"Config"
-const CONFIG_LOADER_NODE := preload("./scenes/config_loader.tscn")
+
+const CONFIG_DIALOG_SCRIPT: GDScript = preload("./scripts/config_loader.gd")
+const CONFIG_DIALOG_NODE_NAME := &"ConfigLoader"
 
 signal save_config_toggle(toggled: bool, propagate: bool)
 signal load_config_toggle(toggled: bool, propagate: bool)
@@ -17,37 +19,42 @@ func _on_config_file_selected(file_name: String, config_loader: ConfigLoader):
 	else:
 		self.load_config(file_name)
 
-func _on_config_dialog_canceled(config_loader: ConfigLoader):
-	# We're checking owner instead of the parent because, for some reason,
-	# the dialog is cancelled twice before the node can be removed from the tree, 
-	# causing a node busy error.
-	if config_loader.owner == self:
-		config_loader.owner = null
-		config_loader.hide()
-		self.remove_child(config_loader)
-		config_loader.queue_free()
+#func _on_config_dialog_canceled(config_loader: ConfigLoader):
+	## We're checking owner instead of the parent because, for some reason,
+	## the dialog is cancelled twice before the node can be removed from the tree, 
+	## causing a node busy error.
+	#if config_loader.owner == self:
+		#config_loader.owner = null
+		#config_loader.hide()
+		#self.remove_child(config_loader)
+		#config_loader.queue_free()
 
-func _on_config_pressed(toggle: bool, save_config: bool):
+## Open config file dialog. If [param_name save_mode] is true, save the config. Else, load it.
+func _on_config_pressed(toggle: bool, save_mode: bool):
 	if not toggle:
 		return
 	
-	var config_loader: ConfigLoader = self.find_child("ConfigLoader", false)
+	var config_loader: ConfigLoader = self.find_child(CONFIG_DIALOG_NODE_NAME, false)
 	if not config_loader:
-		config_loader = CONFIG_LOADER_NODE.instantiate()
+		var file_dialog_close = Gui.FILE_DIALOG_CLOSE_SCENE.instantiate()
+		file_dialog_close.set_script(CONFIG_DIALOG_SCRIPT)
+		config_loader = file_dialog_close
+		config_loader.name = CONFIG_DIALOG_NODE_NAME
 		self.add_child(config_loader)
 		config_loader.owner = self
 		
-		config_loader.root_subfolder = self.get_default_config_dialog_path()
+		config_loader.initialize(
+			func(selected_file: String):
+				self._on_config_file_selected(selected_file, config_loader),
+			func(config_dir: String):
+				self._default_dialog_path = config_dir + "/",
+			save_mode
+		)
 		
-		# Connect signals
-		config_loader.connect(&"canceled", func(): self._on_config_dialog_canceled(config_loader))
-		config_loader.connect(&"file_selected", func(file): self._on_config_file_selected(file, config_loader))
-	
-	# Set save/load mode of dialog
-	if save_config: 
-		config_loader.set_save_mode()
-	else:
-		config_loader.set_load_mode()
+		config_loader.current_dir = self.get_default_config_dialog_path()
+	else:	
+		# Set save/load mode of dialog
+		config_loader.set_save_file_mode(save_mode)
 
 func _init_input():
 	InputSetup.set_input_default_key(&"save_config", KEY_S, true)
@@ -83,7 +90,7 @@ func _init_default_dialog_path():
 	if not split.is_empty():
 		path = split[0]
 	
-	# If vtube_project is started in a Flatpak, set the home directory as default
+	# If vtube_project is started in a Flatpak, set user's home directory as default
 	if path.begins_with("/app"):
 		self._default_dialog_path = "~"
 	else:

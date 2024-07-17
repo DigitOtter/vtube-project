@@ -42,7 +42,7 @@ static func setup_animation_tree(blend_tree: AnimationNodeBlendTree,
 	else:
 		base_node_name = add_empty_anim_node(blend_tree, &"EmptyStart")
 	
-	var add_node_name: StringName = &""
+	var add_node_name: StringName = base_node_name
 	var new_anim_node_name: StringName = &""
 	
 	# For each track, add and connect one animation_node with the "add" port of one add_node

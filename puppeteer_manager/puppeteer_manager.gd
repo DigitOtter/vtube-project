@@ -18,9 +18,12 @@ var _registered_trackers: Dictionary = {}
 var _puppeteer_gui_menu := Gui.GUI_TAB_MENU_SCENE.instantiate()
 var _emotion_control_enabled: bool = false
 
+## Puppeteers that should run before all trackers
+var _pre_puppeteers: TrackerEmpty = TrackerBase.create_new(TrackerBase.Type.EMPTY)
+var _track_reset: PuppeteerTrackReset = null
+
 ## Puppeteers that should run after all trackers
 var _post_puppeteers: TrackerEmpty = TrackerBase.create_new(TrackerBase.Type.EMPTY)
-
 var _emotion_puppeteer: PuppeteerTrackEmotion = null
 
 ## This function is connected to each tracker's tree_exiting signal
@@ -45,11 +48,24 @@ func _get_or_add_tracker(tracker: TrackerBase) -> Array[PuppeteerBase]:
 		tracker.connect(&"tree_exiting", func(): self._on_tracker_exit(tracker))
 		
 		# Ensure that post_puppeteers are placed after other trackers
-		var puppeteers = self._registered_trackers.get(self._post_puppeteers, [])
+		var puppeteers = self._registered_trackers.get(self._post_puppeteers, [] as Array[PuppeteerBase])
 		self._registered_trackers.erase(self._post_puppeteers)
 		self._registered_trackers[self._post_puppeteers] = puppeteers
 	
 	return reg_puppeteers
+
+func _setup_track_reset(avatar_root: Node):
+	if self._track_reset:
+		self.remove_puppeteer(self._track_reset)
+		self._track_reset = null
+	if not avatar_root:
+		return
+	
+	self._track_reset = self.request_new_puppeteer(self._pre_puppeteers,
+												   PuppeteerBase.Type.TRACK_RESET,
+												   "TrackReset")
+	var anim_player: AnimationPlayer = avatar_root.find_child("AnimationPlayer", true)
+	self._track_reset.initialize(anim_player, &"RESET")
 
 func _setup_emotion_control(avatar_root: Node):
 	if self._emotion_puppeteer:
@@ -110,7 +126,10 @@ func _ready():
 	var main_node: Main = get_node(Main.MAIN_NODE_PATH)
 	main_node.connect_avatar_loaded(self._on_avatar_loaded)
 	
-	self._post_puppeteers.name = "Post"
+	self._pre_puppeteers.name = &"Pre"
+	self.add_tracker(self._pre_puppeteers)
+	
+	self._post_puppeteers.name = &"Post"
 	self.add_tracker(self._post_puppeteers)
 	
 	self._init_gui()

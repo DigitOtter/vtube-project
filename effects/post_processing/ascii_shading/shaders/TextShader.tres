@@ -1,6 +1,6 @@
 [gd_resource type="VisualShader" load_steps=40 format=3 uid="uid://c6xmm7v0op1ie"]
 
-[ext_resource type="Texture2D" uid="uid://dbpmxbpki3ojp" path="res://effects/post_processing/ascii_shading/shaders/ascii-sample-texture.png" id="1_6hbby"]
+[ext_resource type="Texture2D" uid="uid://kwswc4pntm7j" path="res://effects/post_processing/ascii_shading/shaders/ascii-sample-texture.png" id="1_6hbby"]
 [ext_resource type="Texture2D" uid="uid://d3880tk5vv6ea" path="res://effects/post_processing/ascii_shading/shaders/ShaderCurve.tres" id="2_pidiu"]
 
 [sub_resource type="VisualShaderNodeVectorOp" id="VisualShaderNodeVectorOp_1r1x1"]

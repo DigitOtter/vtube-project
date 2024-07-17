@@ -5,6 +5,7 @@ enum Type {
 	SKELETON_DIRECT,
 	SKELETON_IK,
 	BLEND_SHAPES_DIRECT,
+	TRACK_RESET,
 	TRACK_DIRECT,
 	TRACK_TREE,
 	TRACK_EMOTION,
@@ -24,6 +25,8 @@ static func create_new(type: Type, tracker_name: String, puppeteer_name: String)
 		puppeteer = PuppeteerSkeletonIk.new()
 	elif type == Type.BLEND_SHAPES_DIRECT:
 		puppeteer = PuppeteerBlendShapesDirect.new()
+	elif type == Type.TRACK_RESET:
+		puppeteer = PuppeteerTrackReset.new()
 	elif type == Type.TRACK_DIRECT:
 		puppeteer = PuppeteerTracksDirect.new()
 	elif type == Type.TRACK_TREE:

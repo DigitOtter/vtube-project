@@ -1,44 +1,41 @@
 extends Node
 
-const LOAD_AVATAR_DIALOG = preload("./scenes/load_model_dialog.tscn")
 const MODEL_IMPORTER = preload("./scripts/model_importer.gd")
+const MODEL_LOADER_NODE_NAME := &"ModelLoaderDialog"
 
 signal open_dialog_requested(toggle: bool, propagate: bool)
 signal avatar_loaded(avatar_node: Node)
 signal avatar_unloaded(avatar_node: Node)
 
-var _load_avatar_dialog: FileDialog = null
 var _loaded_model_path: String = ""
 
 func _on_load_model_request(toggled: bool):
 	if not toggled:
 		return
 	
-	if self._load_avatar_dialog:
-		return
-	
-	self._load_avatar_dialog = LOAD_AVATAR_DIALOG.instantiate()
-	
-	# Set dialog path
-	if not self._loaded_model_path.is_empty():
-		# If a model has already been loaded, set it as currently selected
-		self._load_avatar_dialog.current_path = self._loaded_model_path
-	else:
-		# If no model was loaded yet, use default dialog path
-		var main: Main = get_node(Main.MAIN_NODE_PATH)
-		self._load_avatar_dialog.current_dir = main.get_default_config_dialog_path()
-	
-	self._load_avatar_dialog.connect("model_file_selected", _on_model_file_selected)
-	
-	self.add_child(self._load_avatar_dialog)
+	var load_avatar_dialog: FileDialogClose = self.find_child(MODEL_LOADER_NODE_NAME, false)
+	if not load_avatar_dialog:
+		load_avatar_dialog = Gui.FILE_DIALOG_CLOSE_SCENE.instantiate()
+		load_avatar_dialog.name = MODEL_LOADER_NODE_NAME
+		self.add_child(load_avatar_dialog)
+		load_avatar_dialog.owner = self
+		load_avatar_dialog.initialize(
+			self._on_model_file_selected,
+			Callable(),
+			false
+		)
+		
+		# Set dialog path
+		if not self._loaded_model_path.is_empty():
+			# If a model has already been loaded, set it as currently selected
+			load_avatar_dialog.current_path = self._loaded_model_path
+		else:
+			# If no model was loaded yet, use default dialog path
+			var main: Main = get_node(Main.MAIN_NODE_PATH)
+			load_avatar_dialog.current_dir = main.get_default_config_dialog_path()
 
 func _on_model_file_selected(model_path: String):
-	if self._load_avatar_dialog:
-		self._load_avatar_dialog.queue_free()
-		self._load_avatar_dialog = null
-	
-	if not model_path.is_empty():
-		self.load_model(model_path)
+	self.load_model(model_path)
 
 func _init_gui():
 	var button_model_load := GuiElement.ElementData.new()

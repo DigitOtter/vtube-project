@@ -1,14 +1,5 @@
 class_name ConfigLoader
-extends FileDialog
-
-func set_save_mode():
-	self.file_mode = FileDialog.FILE_MODE_SAVE_FILE
-
-func set_load_mode():
-	self.file_mode = FileDialog.FILE_MODE_OPEN_FILE
-
-func is_save_mode() -> bool:
-	return self.file_mode == FileDialog.FILE_MODE_SAVE_FILE
+extends FileDialogClose
 
 static func save_config(file_name: String, gui_menu: GuiTabMenuBase) -> Error:
 	var gui_data: Dictionary = gui_menu.save_data()
@@ -31,3 +22,6 @@ static func load_config(file_name: String, gui_menu: GuiTabMenuBase) -> Error:
 	gui_menu.load_data(load_data)
 	
 	return Error.OK
+
+func is_save_mode() -> bool:
+	return self.file_mode == FileDialogClose.FILE_MODE_SAVE_FILE
