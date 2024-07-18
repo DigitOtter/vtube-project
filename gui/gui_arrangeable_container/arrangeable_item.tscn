@@ -1,0 +1,39 @@
+[gd_scene load_steps=2 format=3 uid="uid://cemgd07rwffke"]
+
+[ext_resource type="Script" path="res://gui/gui_arrangeable_container/arrangeable_item.gd" id="1_br06m"]
+
+[node name="ArrangeableItem" type="HBoxContainer"]
+anchors_preset = 14
+anchor_top = 0.5
+anchor_right = 1.0
+anchor_bottom = 0.5
+offset_top = -11.5
+offset_bottom = 11.5
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_br06m")
+
+[node name="Label" type="Label" parent="."]
+layout_mode = 2
+size_flags_horizontal = 0
+text = "fdsa"
+vertical_alignment = 1
+
+[node name="VBoxContainer" type="VBoxContainer" parent="."]
+layout_mode = 2
+size_flags_horizontal = 8
+size_flags_vertical = 4
+
+[node name="MoveUp" type="Button" parent="VBoxContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_vertical = 8
+text = "⯅"
+flat = true
+
+[node name="MoveDown" type="Button" parent="VBoxContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_vertical = 0
+text = "⯆"
+flat = true

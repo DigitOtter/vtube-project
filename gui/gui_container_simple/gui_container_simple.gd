@@ -9,6 +9,12 @@ static func _iterate_children(node: Node, fcn: Callable):
 		fcn.call(child)
 		GuiContainerSimple._iterate_children(child, fcn)
 
+func _find_element_container(element_name: String) -> LABELED_ELEMENT_CONTAINER_CLASS:
+	for single_container: LABELED_ELEMENT_CONTAINER_CLASS in self.get_children():
+		if single_container.get_element_name() == element_name:
+			return single_container
+	return null
+
 func _create_element_container(label_name: String, 
 							   element_data: ElementData) -> Node:
 	var element_node = GuiElementBase.create_element(element_data)
@@ -31,19 +37,41 @@ func _create_element_container(label_name: String,
 	return container
 
 ## Add element
-func add_element(element: ElementData):
+func add_element(element: ElementData) -> GuiElementBase:
 	var element_container = self._create_element_container(element.Name, element)
 	self.add_child(element_container)
 	element_container.owner = self
+	return element_container.get_child(1)
 
 ## Remove element
 func remove_element(element_name: String):
-	var element_container := self as Control as VBoxContainer
-	for single_container: LABELED_ELEMENT_CONTAINER_CLASS in element_container.get_children():
-		if single_container.get_element_name() == element_name:
-			element_container.remove_child(single_container)
-			single_container.owner = null
-			single_container.queue_free()
+	var container: LABELED_ELEMENT_CONTAINER_CLASS = self._find_element_container(element_name)
+	if not container:
+		return
+	self.remove_child(container)
+	container.owner = null
+	container.queue_free()
+
+## Get number of elements in container
+func get_element_count() -> int:
+	return self.get_child_count()
+
+## Get elements in container
+func get_elements() -> Array[GuiElementBase]:
+	var elements: Array[GuiElementBase] = []
+	for c: LABELED_ELEMENT_CONTAINER_CLASS in self.get_children():
+		assert(c.get_child_count() == 2)
+		var e: GuiElementBase = c.get_child(1)
+		elements.push_back(e)
+	return elements
+
+## Move element to new position
+func move_element(element_name: String, pos: int) -> bool:
+	var container: LABELED_ELEMENT_CONTAINER_CLASS = self._find_element_container(element_name)
+	if not container: 
+		return false
+	self.move_child(container, pos)
+	return true
 
 ## Calls each control element's [method ElementData.OnLoadData]. 
 ## For each control element, we look for a key in [param data] with node.element_name

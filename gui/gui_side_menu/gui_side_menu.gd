@@ -4,7 +4,7 @@ extends GuiTabMenuBase
 const TAB_ITEM_NODE := preload("./tab_item.tscn")
 const TAB_ITEM_CLASS: GDScript = preload("./tab_item.gd")
 
-const GUI_CONTAINER_NODE := preload("../gui_container_simple/gui_container_simple.tscn")
+const GUI_CONTAINER_NODE := preload("../gui_arrangeable_container/gui_arrangeable_container.tscn")
 
 func _find_tab_item(tab_name: String) -> TAB_ITEM_CLASS:
 	var tab_list: VBoxContainer = %TabList

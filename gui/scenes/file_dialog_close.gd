@@ -2,6 +2,8 @@
 class_name FileDialogClose
 extends FileDialog
 
+const FILE_DIALOG_CLOSE_NODE := preload("./file_dialog_close.tscn")
+
 ## Called when a file is selected. Should be of the form func(file_path: String)
 var _user_on_file_selected: Callable
 

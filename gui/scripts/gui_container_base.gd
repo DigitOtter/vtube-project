@@ -19,6 +19,18 @@ func add_element(element: GuiElement.ElementData) -> GuiElementBase:
 func remove_element(element_name: String):
 	pass
 
+## Get number of elements in container
+func get_element_count() -> int:
+	return -1
+
+## Get elements in container
+func get_elements() -> Array[GuiElementBase]:
+	return []
+
+## Move element to new position
+func move_element(element_name: String, pos: int) -> bool:
+	return false
+
 ## Calls each control element's [method ElementData.OnLoadData]. 
 ## For each control element, we look for a key in [param data] with node.element_name
 ## and pass that to the element.
