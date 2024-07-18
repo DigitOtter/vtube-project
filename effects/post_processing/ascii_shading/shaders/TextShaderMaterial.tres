@@ -1,7 +1,7 @@
 [gd_resource type="ShaderMaterial" load_steps=3 format=3 uid="uid://cypxe62r5fxen"]
 
 [ext_resource type="Shader" uid="uid://c6xmm7v0op1ie" path="res://effects/post_processing/ascii_shading/shaders/TextShader.tres" id="1_2vqdp"]
-[ext_resource type="Texture2D" uid="uid://dbpmxbpki3ojp" path="res://effects/post_processing/ascii_shading/shaders/ascii-sample-texture.png" id="2_62kht"]
+[ext_resource type="Texture2D" uid="uid://kwswc4pntm7j" path="res://effects/post_processing/ascii_shading/shaders/ascii-sample-texture.png" id="2_62kht"]
 
 [resource]
 resource_local_to_scene = true
