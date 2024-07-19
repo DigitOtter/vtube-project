@@ -74,16 +74,16 @@ func move_element(element_name: String, pos: int) -> bool:
 	return true
 
 ## Calls each control element's [method ElementData.OnLoadData]. 
-## For each control element, we look for a key in [param data] with node.element_name
+## For each control element, we look for a key in [param data] with node.get_element_name()
 ## and pass that to the element.
 func load_data(data: Dictionary) -> void:
 	var load_node_data_fcn: Callable = func(node: Node):
 		# Check that this is an element node
-		if not node.has_method(&"load_data"):
+		if not node is GuiElementBase:
 			return
 		
 		# Get saved data
-		var node_data = data.get(node.element_name)
+		var node_data = data.get(node.get_element_name())
 		if node_data == null:
 			return
 		
@@ -93,17 +93,17 @@ func load_data(data: Dictionary) -> void:
 	GuiContainerSimple._iterate_children(self, load_node_data_fcn)
 
 ## Calls each control element's [method ElementData.OnSaveData]. The results are
-## stored in a dictionary, with the format node.element_name: node.save_data()
+## stored in a dictionary, with the format node.get_element_name(): node.save_data()
 ## for each element.  
-func save_data() -> Dictionary:
+func save_data():
 	var data: Dictionary = {}
 	var save_node_data_fcn: Callable = func(node: Node):
 		# Check that this is an element node
-		if not node.has_method(&"save_data"):
+		if not node is GuiElementBase:
 			return
 		
 		var val = node.save_data()
-		data[node.element_name] = val
+		data[node.get_element_name()] = val
 	
 	# Call save_node_data_fcn on all child nodes
 	GuiContainerSimple._iterate_children(self, save_node_data_fcn)

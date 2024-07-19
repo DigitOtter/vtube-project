@@ -1,7 +1,7 @@
 extends HBoxContainer
 
 func add_gui_element(element: Control):
-	if self.get_child_count() >= 2:
+	if self.get_child_count() > 2:
 		push_warning("Node already contains a gui element")
 	self.add_child(element)
 	self.move_child(element, 1)
@@ -22,7 +22,7 @@ func get_element_name() -> String:
 	if not element_node or not element_node is GuiElementBase:
 		return ""
 	
-	return (element_node as GuiElementBase).element_name
+	return (element_node as GuiElementBase).get_element_name()
 
 func get_move_up_button() -> Button:
 	return %MoveUp

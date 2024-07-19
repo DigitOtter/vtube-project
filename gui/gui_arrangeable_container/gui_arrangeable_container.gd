@@ -43,7 +43,7 @@ func _find_element_container(element: String) -> ARRANGEABLE_ITEM_CLASS:
 	return null
 
 func _ready():
-	self.element_name = &"ArrangeableList"
+	self.set_element_name("ArrangeableList")
 
 ## Create a new tab with the given input elements
 func add_element(element: GuiElement.ElementData) -> GuiElementBase:
@@ -53,8 +53,6 @@ func add_element(element: GuiElement.ElementData) -> GuiElementBase:
 	
 	# Connect arrange buttons
 	var up_button := element_container.get_move_up_button()
-	print(element_container.get_child_count())
-	print(element_container.get_child(2))
 	up_button.connect(&"pressed", func():
 		self._on_move_item_up(element_container))
 	var down_button := element_container.get_move_down_button()
@@ -91,11 +89,15 @@ func move_element(element_name: String, pos: int) -> bool:
 	self.move_child(element, pos)
 	return true
 
+# Name of element. Used during save/load
+func get_element_name() -> String:
+	return self.element_name
+
 ## Load data from variant
 func load_data(data: Dictionary) -> void:
 	var elements := self.get_elements()
 	for e: GuiElementBase in elements:
-		var element_data = data.get(e.element_name, null)
+		var element_data = data.get(e.get_element_name(), null)
 		if element_data != null:
 			e.load_data(element_data)
 
@@ -107,7 +109,7 @@ func save_data():
 	for e: GuiElementBase in elements:
 		var element_data = e.save_data()
 		if element_data != null:
-			data[e.element_name] = element_data
+			data[e.get_element_name()] = element_data
 	
 	return data
 

@@ -5,7 +5,7 @@ extends Node
 ## Manages the GUI subwindow. [kbd]gui_open[/kbd] opens the window.
 
 const GUI_NODE_PATH: NodePath = "/root/Gui"
-const GUI_TAB_MENU_SCENE := preload("./scenes/gui_elements.tscn")
+const GUI_TAB_MENU_SCENE := preload("./gui_tab_menu/gui_tab_menu.tscn")
 const FILE_DIALOG_CLOSE_SCENE := preload("./scenes/file_dialog_close.tscn")
 
 func _init_input():

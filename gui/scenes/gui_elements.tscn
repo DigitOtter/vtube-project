@@ -1,8 +1,0 @@
-[gd_scene load_steps=2 format=3 uid="uid://dec2qsec6dth6"]
-
-[ext_resource type="Script" path="res://gui/scenes/gui_elements.gd" id="1_oio26"]
-
-[node name="GuiElements" type="TabContainer"]
-size_flags_horizontal = 3
-size_flags_vertical = 3
-script = ExtResource("1_oio26")

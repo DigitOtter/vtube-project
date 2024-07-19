@@ -5,4 +5,4 @@ func get_element_name() -> String:
 		return ""
 	
 	var element: GuiElementBase = self.get_child(1)
-	return element.element_name
+	return element.get_element_name()

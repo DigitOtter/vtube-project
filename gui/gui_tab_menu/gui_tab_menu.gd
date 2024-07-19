@@ -1,4 +1,4 @@
-class_name GuiElements
+class_name GuiTabMenu
 extends GuiTabMenuBase
 
 const GUI_CONTAINER_NODE := preload("../gui_container_simple/gui_container_simple.tscn")
@@ -20,8 +20,9 @@ func _find_tab(tab_name: String) -> GuiContainerBase:
 	return tab_container.get_tab_control(tab_id)
 
 ## Create new tab for menu
-func create_tab(tab_name: String) -> GuiContainerBase:
-	var element_container: GuiContainerBase = GUI_CONTAINER_NODE.instantiate()
+func create_tab(tab_name: String, element_container: GuiContainerBase = null) -> GuiContainerBase:
+	if not element_container:
+		element_container = GUI_CONTAINER_NODE.instantiate()
 	
 	# Add new tab to self
 	self.add_child(element_container)
@@ -75,7 +76,7 @@ func push_tab_to_front(tab_name: String) -> void:
 	return
 
 ## Calls each control element's [method ElementData.OnLoadData]. 
-## For each control element, we look for a key in [param data] with node.element_name
+## For each control element, we look for a key in [param data] with node.get_element_name()
 ## and pass that to the element.
 func load_data(data: Dictionary) -> void:
 	var tab_container: TabContainer = self as Node
@@ -89,7 +90,7 @@ func load_data(data: Dictionary) -> void:
 		container.load_data(tab_data)
 
 ## Calls each control element's [method ElementData.OnSaveData]. The results are
-## stored in a dictionary, with the format {node.element_name: node.save_data()}
+## stored in a dictionary, with the format {node.get_element_name(): node.save_data()}
 ## for each element.  
 func save_data():
 	var data: Dictionary = {}

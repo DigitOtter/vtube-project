@@ -1,6 +1,20 @@
 class_name GuiTabMenuBase
 extends GuiElementBase
 
+enum Type {
+	TAB,
+	SIDE
+}
+
+static func create_new(type: Type):
+	var menu: GuiTabMenuBase = null
+	if type == Type.TAB:
+		menu = load("../gui_tab_menu/gui_tab_menu.tscn").instantiate()
+	elif type == Type.SIDE:
+		menu = load("../gui_side_menu/gui_side_menu.tscn").instantiate()
+	
+	return menu
+
 ## Get tab or create it if it doesn't exist yet
 func get_or_create_tab(tab_name: String) -> GuiContainerBase:
 	var tab := self.get_tab(tab_name)
@@ -46,7 +60,7 @@ func push_tab_to_front(_tab_name: String) -> void:
 func load_data(_data: Dictionary) -> void:
 	pass
 
-## Save data to dictionary. Elements in data should be of the form "$tab_name/$element_name": Variant
+## Save data to dictionary. Elements in data should be of the form "$element_name": Variant
 ## for each element in the menu. The function should call element_node.save_data() for each element
 ## Return value should be of the form 
 ## { self.name: { 

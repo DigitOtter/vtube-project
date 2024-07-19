@@ -4,7 +4,7 @@ extends GuiTabMenuBase
 const TAB_ITEM_NODE := preload("./tab_item.tscn")
 const TAB_ITEM_CLASS: GDScript = preload("./tab_item.gd")
 
-const GUI_CONTAINER_NODE := preload("../gui_arrangeable_container/gui_arrangeable_container.tscn")
+const GUI_CONTAINER_NODE := preload("../gui_container_simple/gui_container_simple.tscn")
 
 func _find_tab_item(tab_name: String) -> TAB_ITEM_CLASS:
 	var tab_list: VBoxContainer = %TabList
@@ -205,7 +205,7 @@ func push_tab_to_front(tab_name: String) -> void:
 	containers.move_child(tab_container, 0)
 
 ## Calls each control element's [method ElementData.OnLoadData]. 
-## For each control element, we look for a key in [param data] with node.element_name
+## For each control element, we look for a key in [param data] with node.get_element_name()
 ## and pass that to the element.
 func load_data(data: Dictionary) -> void:
 	var tab_list: VBoxContainer = %TabList
@@ -219,7 +219,7 @@ func load_data(data: Dictionary) -> void:
 		container.load_data(container_data)
 
 ## Calls each control element's [method ElementData.OnSaveData]. The results are
-## stored in a dictionary, with the format {node.element_name: node.save_data()}
+## stored in a dictionary, with the format {node.get_element_name(): node.save_data()}
 ## for each element.  
 func save_data():
 	var data: Dictionary = {}

@@ -79,7 +79,7 @@ func add_gui():
 
 func remove_gui():
 	var trackers_node = get_node(TrackerManager.TRACKER_MANAGER_NODE_PATH)
-	var gui_menu: GuiElements = trackers_node.get_tracker_gui()
+	var gui_menu: GuiTabMenuBase = trackers_node.get_tracker_gui()
 	gui_menu.remove_tab(GUI_TAB_NAME)
 
 func start_tracker(avatar_scene: Node) -> void:

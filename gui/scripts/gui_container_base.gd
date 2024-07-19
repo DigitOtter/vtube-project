@@ -1,7 +1,21 @@
 class_name GuiContainerBase
 extends GuiElementBase
 
+enum Type {
+	SIMPLE,
+	ARRANGEABLE
+}
+
 const ElementData = GuiElement.ElementData
+
+static func create_new(type: Type) -> GuiContainerBase:
+	var container: GuiContainerBase = null
+	if type == Type.SIMPLE:
+		container = load("../gui_container_simple/gui_container_simple.tscn").instantiate()
+	elif type == Type.ARRANGEABLE:
+		container = load("../gui_arrangeable_container/gui_arrangeable_container.tscn").instantiate()
+	
+	return container
 
 func add_elements(elements: Array[GuiElement.ElementData]) -> Array[GuiElementBase]:
 	var new_elements: Array[GuiElementBase] = []
@@ -28,17 +42,17 @@ func get_elements() -> Array[GuiElementBase]:
 	return []
 
 ## Move element to new position
-func move_element(element_name: String, pos: int) -> bool:
+func move_element(_element_name: String, pos: int) -> bool:
 	return false
 
 ## Calls each control element's [method ElementData.OnLoadData]. 
-## For each control element, we look for a key in [param data] with node.element_name
+## For each control element, we look for a key in [param data] with node.get_element_name()
 ## and pass that to the element.
 func load_data(data: Dictionary) -> void:
 	pass
 
 ## Calls each control element's [method ElementData.OnSaveData]. The results are
-## stored in a dictionary, with the format node.element_name: node.save_data()
+## stored in a dictionary, with the format node.get_element_name(): node.save_data()
 ## for each element.  
 func save_data():
 	return null

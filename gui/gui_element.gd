@@ -70,7 +70,7 @@ static func _connect_element_signals(element: Node, data_changed_signal: String,
 	if element_data.SetDataSignal:
 		element_data.SetDataSignal[0].connect(element_data.SetDataSignal[1], element._on_external_data_changed)
 	
-	element.element_name = element_data.Name
+	element.set_element_name(element_data.Name)
 	element.on_save_data_fcn = element_data.OnSaveData
 	element.on_load_data_fcn = element_data.OnLoadData
 
@@ -156,7 +156,7 @@ static func _create_gui_tab_menu_element(element: ElementData):
 	assert(element.Data is GuiTabMenuData)
 	var gui_container: GuiTabMenuBase = element.Data.GuiTabMenuNode
 	gui_container.name = &"GuiSideMenu" # Rename so that scrollable_elements.gd can properly find new node
-	gui_container.element_name = element.Name
+	gui_container.set_element_name(element.Name)
 	
 	# TODO: Use a better method than creating and replacing GuiSideMenu node
 	var scrollable_elements := SCROLLABLE_ELEMENTS_NODE.instantiate()
