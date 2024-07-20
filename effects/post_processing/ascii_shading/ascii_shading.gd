@@ -7,9 +7,6 @@ const ASCII_SHADER_MATERIAL: ShaderMaterial = preload("./shaders/TextShaderMater
 signal ascii_color_toggled
 signal ascii_pixelization_changed
 
-var _color_enabled: bool = true
-var _pixelization: float = 75.0
-
 ## Generate effect data. This is used by [PostProcessingManager] to create effect nodes on demand
 static func generate_effect_data() -> PostProcessingData:
 	var effect_data := PostProcessingData.new()
@@ -22,14 +19,10 @@ static func create() -> PostProcessingBase:
 	return preload("./ascii_shading.tscn").instantiate()
 
 func _on_color_toggle(enable: bool):
-	self._color_enabled = enable
-	if self.material:
-		self.material.set_shader_parameter(&"color", enable)
+	self.material.set_shader_parameter(&"color", enable)
 
 func _on_pixelization_change(pixelization_amount: float):
-	self._pixelization = pixelization_amount
-	if self.material:
-		self.material.set_shader_parameter(&"pixelization", pixelization_amount)
+	self.material.set_shader_parameter(&"pixelization", pixelization_amount)
 
 func _init_gui(gui_menu: GuiTabMenuBase):
 	# Toggle Color
@@ -37,12 +30,8 @@ func _init_gui(gui_menu: GuiTabMenuBase):
 	color_toggle.Name = "Enable Color"
 	color_toggle.OnDataChangedCallable = self._on_color_toggle
 	color_toggle.SetDataSignal = [ self, &"ascii_color_toggled" ]
-	color_toggle.OnLoadData = func(enabled: bool) -> bool: 
-		self._color_enabled = enabled
-		return self._color_enabled
-	color_toggle.OnSaveData = func(_enabled: bool) -> bool: return self._color_enabled
 	var color_toggle_data := GuiElement.CheckBoxData.new()
-	color_toggle_data.Default = self._color_enabled
+	color_toggle_data.Default = self.material.get_shader_parameter(&"color")
 	color_toggle.Data = color_toggle_data
 	
 	# Set _pixelization
@@ -50,12 +39,8 @@ func _init_gui(gui_menu: GuiTabMenuBase):
 	pixelization_range.Name = "Pixelization"
 	pixelization_range.OnDataChangedCallable = self._on_pixelization_change
 	pixelization_range.SetDataSignal = [ self, &"ascii_pixelization_changed" ]
-	pixelization_range.OnLoadData = func(pixelization_amount: float) -> float: 
-		self._pixelization = pixelization_amount
-		return self._pixelization
-	pixelization_range.OnSaveData = func(_pixelization_amount: float) -> float: return self._pixelization
 	var pixelization_range_data := GuiElement.SliderData.new()
-	pixelization_range_data.Default  = self._pixelization
+	pixelization_range_data.Default  = self.material.get_shader_parameter(&"pixelization")
 	pixelization_range_data.Step     = 1
 	pixelization_range_data.MinValue = 0
 	pixelization_range_data.MaxValue = 1000
