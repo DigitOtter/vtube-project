@@ -12,11 +12,11 @@ var _user_on_cancelled: Callable
 
 var _destroy_on_close: bool = true
 
-func _set_file_mode(dialog_mode: FileDialog.FileMode, title: String = ""):
+func _set_file_mode(dialog_mode: FileDialog.FileMode, window_title: String = ""):
 	self.title = ""
 	self.file_mode = dialog_mode
 	if not title.is_empty():
-		self.title = title
+		self.title = window_title
 
 func _finish_dialog():
 	self.hide()
@@ -46,18 +46,18 @@ func _on_canceled():
 func initialize(on_file_selected: Callable, 
 				on_cancelled: Callable, 
 				save_mode: bool = false,
-				title: String = "",
+				window_title: String = "",
 				destroy_on_close: bool = true):
 	self._user_on_file_selected = on_file_selected
 	self._user_on_cancelled = on_cancelled
 	
 	self._destroy_on_close = destroy_on_close
 	
-	self.set_save_file_mode(save_mode, title)
+	self.set_save_file_mode(save_mode, window_title)
 
 ## Sets dialog to either save (if [param_name save_mode] is true) or load a file
-func set_save_file_mode(save_mode: bool, title: String = ""):
+func set_save_file_mode(save_mode: bool, window_title: String = ""):
 	if save_mode:
-		self._set_file_mode(FileDialog.FILE_MODE_SAVE_FILE, title)
+		self._set_file_mode(FileDialog.FILE_MODE_SAVE_FILE, window_title)
 	else:
-		self._set_file_mode(FileDialog.FILE_MODE_OPEN_FILE, title)
+		self._set_file_mode(FileDialog.FILE_MODE_OPEN_FILE, window_title)

@@ -54,7 +54,7 @@ func _init_gui():
 	button_model_load.Data = button_data
 	
 	Gui.get_gui_menu().add_elements_to_tab("Model Control", [ button_model_load ])
-	Gui.get_gui_menu().push_tab_to_front("Model Control")
+	Gui.get_gui_menu().move_tab("Model Control", 0)
 
 func _ready():
 	self._init_gui()

@@ -58,20 +58,25 @@ func select_tab(tab_name: String) -> bool:
 	return true
 
 ## Push tab to front of tab menu
-func push_tab_to_front(tab_name: String) -> void:
-	var tab_container: TabContainer = self as Node
+func move_tab(tab_name: String, pos: int) -> void:
+	var tabs: TabContainer = self as Node
 	
 	var tab_id: int = -1
-	for i in range(0, tab_container.get_tab_count()):
-		if tab_container.get_tab_title(i) == tab_name:
-			tab_id = i
+	var tab_container: GuiElementBase = null
+	for id in range(0, tabs.get_tab_count()):
+		if tabs.get_tab_title(id) == tab_name:
+			tab_id = id
+			tab_container = tabs.get_tab_control(id)
 			break
 	
 	if tab_id < 0:
 		return
 	
-	tab_container.get_tab_bar().move_tab(tab_id, 0)
-	self.move_child(self.get_child(tab_id), 0)
+	while pos < 0:
+		pos = tabs.get_tab_count() + pos
+	
+	tabs.get_tab_bar().move_tab(tab_id, pos)
+	self.move_child(tab_container, pos)
 	
 	return
 

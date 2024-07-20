@@ -184,25 +184,25 @@ func select_tab(tab_name: String) -> bool:
 	return true
 
 ## Push tab to front of tab menu
-func push_tab_to_front(tab_name: String) -> void:
+func move_tab(tab_name: String, pos: int) -> void:
 	var tab_id: int = self._find_tab_id(tab_name)
 	
-	# Move tab_item to front
+	# Move tab_item to pos
 	var tab_list: VBoxContainer = %TabList
 	var tab_item: TAB_ITEM_CLASS = tab_list.get_child(tab_id)
 	assert(tab_item)
-	tab_list.move_child(tab_item, 0)
+	tab_list.move_child(tab_item, pos)
 	
 	# Update tab_ids
 	for id in range(0, tab_list.get_child_count()):
 		var item: TAB_ITEM_CLASS = tab_list.get_child(id)
 		item.tab_id = id
 	
-	# Move corresponding container to front
+	# Move corresponding container to pos
 	var containers: Control = %Containers
 	var tab_container = containers.get_child(tab_id)
 	assert(tab_container)
-	containers.move_child(tab_container, 0)
+	containers.move_child(tab_container, pos)
 
 ## Calls each control element's [method ElementData.OnLoadData]. 
 ## For each control element, we look for a key in [param data] with node.get_element_name()

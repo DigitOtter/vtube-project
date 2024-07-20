@@ -4,6 +4,9 @@ extends GuiContainerBase
 const ARRANGEABLE_ITEM_NODE := preload("./arrangeable_item.tscn")
 const ARRANGEABLE_ITEM_CLASS: GDScript = preload("./arrangeable_item.gd")
 
+## Signals that an element has changed position
+signal element_moved(element_name: String, new_pos: int)
+
 func _create_element_container(label_name: String, 
 							   element_data: ElementData) -> ARRANGEABLE_ITEM_CLASS:
 	var element_node = GuiElementBase.create_element(element_data)
@@ -24,17 +27,21 @@ func _create_element_container(label_name: String,
 	
 	return container
 
+func _move_item(item: ARRANGEABLE_ITEM_CLASS, pos: int):
+	self.move_child(item, pos)
+	self.emit_signal(&"element_moved", item.get_element_name(), item.get_index())
+
 func _on_move_item_up(item: ARRANGEABLE_ITEM_CLASS):
 	var idx: int = item.get_index()
 	if idx <= 0:
 		return
-	self.move_child(item, idx-1)
+	self._move_item(item, idx-1)
 
 func _on_move_item_down(item: ARRANGEABLE_ITEM_CLASS):
 	var idx: int = item.get_index()
 	if idx >= self.get_child_count()-1:
 		return
-	self.move_child(item, idx+1)
+	self._move_item(item, idx+1)
 
 func _find_element_container(element: String) -> ARRANGEABLE_ITEM_CLASS:
 	for single_container: ARRANGEABLE_ITEM_CLASS in self.get_children():
@@ -86,7 +93,8 @@ func move_element(element_name: String, pos: int) -> bool:
 	var element := self._find_element_container(element_name)
 	if not element: 
 		return false
-	self.move_child(element, pos)
+	
+	self._move_item(element, pos)
 	return true
 
 # Name of element. Used during save/load

@@ -9,9 +9,9 @@ enum Type {
 static func create_new(type: Type):
 	var menu: GuiTabMenuBase = null
 	if type == Type.TAB:
-		menu = load("../gui_tab_menu/gui_tab_menu.tscn").instantiate()
+		menu = preload("../gui_tab_menu/gui_tab_menu.tscn").instantiate()
 	elif type == Type.SIDE:
-		menu = load("../gui_side_menu/gui_side_menu.tscn").instantiate()
+		menu = preload("../gui_side_menu/gui_side_menu.tscn").instantiate()
 	
 	return menu
 
@@ -45,8 +45,8 @@ func get_tab(_tab_name: String) -> GuiContainerBase:
 func select_tab(_tab_name: String) -> bool:
 	return false
 
-## Push tab to front of tab menu
-func push_tab_to_front(_tab_name: String) -> void:
+## Move tab to new position in tab menu. Negative values are counted from the back
+func move_tab(_tab_name: String, pos: int) -> void:
 	pass
 
 ## Load data from dictionary. The function should call element_node.load_data(element_data) 

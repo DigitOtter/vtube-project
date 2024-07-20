@@ -11,9 +11,9 @@ const ElementData = GuiElement.ElementData
 static func create_new(type: Type) -> GuiContainerBase:
 	var container: GuiContainerBase = null
 	if type == Type.SIMPLE:
-		container = load("../gui_container_simple/gui_container_simple.tscn").instantiate()
+		container = preload("../gui_container_simple/gui_container_simple.tscn").instantiate()
 	elif type == Type.ARRANGEABLE:
-		container = load("../gui_arrangeable_container/gui_arrangeable_container.tscn").instantiate()
+		container = preload("../gui_arrangeable_container/gui_arrangeable_container.tscn").instantiate()
 	
 	return container
 

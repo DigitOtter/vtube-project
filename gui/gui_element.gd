@@ -37,6 +37,9 @@ class MenuSelectData:
 	# SetDataSignal should be and array [ emitting_node: Node, signal_name: String ]
 	var UpdateMenuSignal: Array = []
 
+class GuiContainerData:
+	var GuiContainerNode: GuiContainerBase = null
+
 class GuiTabMenuData:
 	var GuiTabMenuNode: GuiTabMenuBase = null
 
@@ -152,6 +155,12 @@ static func _create_menu_select_element(element: ElementData):
 	
 	return menu_select
 
+static func _create_gui_container_element(element: ElementData):
+	assert(element.Data is GuiContainerData)
+	var gui_container: GuiContainerBase = element.Data.GuiContainerNode
+	gui_container.set_element_name(element.Name)
+	return gui_container
+
 static func _create_gui_tab_menu_element(element: ElementData):
 	assert(element.Data is GuiTabMenuData)
 	var gui_container: GuiTabMenuBase = element.Data.GuiTabMenuNode
@@ -193,6 +202,8 @@ static func create_element(element_data: ElementData)-> Control:
 		element_node = GuiElement._create_text_edit_element(element_data)
 	elif element_data.Data is MenuSelectData:
 		element_node = GuiElement._create_menu_select_element(element_data)
+	elif element_data.Data is GuiContainerData:
+		element_node = GuiElement._create_gui_container_element(element_data)
 	elif element_data.Data is GuiTabMenuData:
 		element_node = GuiElement._create_gui_tab_menu_element(element_data)
 	elif element_data.Data is CustomData:

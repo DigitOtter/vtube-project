@@ -1,6 +1,6 @@
 [gd_resource type="VisualShader" load_steps=40 format=3 uid="uid://c6xmm7v0op1ie"]
 
-[ext_resource type="Texture2D" uid="uid://dbpmxbpki3ojp" path="res://effects/post_processing/ascii_shading/shaders/ascii-sample-texture.png" id="1_6hbby"]
+[ext_resource type="Texture2D" uid="uid://kwswc4pntm7j" path="res://effects/post_processing/ascii_shading/shaders/ascii-sample-texture.png" id="1_6hbby"]
 [ext_resource type="Texture2D" uid="uid://d3880tk5vv6ea" path="res://effects/post_processing/ascii_shading/shaders/ShaderCurve.tres" id="2_pidiu"]
 
 [sub_resource type="VisualShaderNodeVectorOp" id="VisualShaderNodeVectorOp_1r1x1"]
@@ -162,7 +162,7 @@ function = 1
 
 [resource]
 code = "shader_type canvas_item;
-render_mode blend_mix;
+render_mode blend_disabled;
 
 uniform bool color = true;
 uniform int pixelization : hint_range(0, 10000) = 100;
@@ -338,6 +338,7 @@ void fragment() {
 }
 "
 mode = 1
+modes/blend = 5
 flags/light_only = false
 nodes/fragment/0/position = Vector2(2980, 180)
 nodes/fragment/3/node = SubResource("VisualShaderNodeInput_y31ew")
@@ -403,7 +404,7 @@ nodes/fragment/50/position = Vector2(-1920, 60)
 nodes/fragment/51/node = SubResource("VisualShaderNodeCurveTexture_oiw2f")
 nodes/fragment/51/position = Vector2(22.4822, 262)
 nodes/fragment/52/node = SubResource("VisualShaderNodeComment_xfpcd")
-nodes/fragment/52/position = Vector2(-480, -200)
+nodes/fragment/52/position = Vector2(-460, -200)
 nodes/fragment/54/node = SubResource("VisualShaderNodeBooleanParameter_ttpvt")
 nodes/fragment/54/position = Vector2(1400, 0)
 nodes/fragment/55/node = SubResource("VisualShaderNodeTexture2DParameter_2txen")

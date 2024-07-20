@@ -1,8 +1,9 @@
-[gd_scene load_steps=4 format=3 uid="uid://cuq4vikw5v2in"]
+[gd_scene load_steps=5 format=3 uid="uid://cuq4vikw5v2in"]
 
 [ext_resource type="Script" path="res://effects/effects.gd" id="1_y7ij7"]
 [ext_resource type="PackedScene" uid="uid://bpnntcicb02go" path="res://effects/props_control/props_control.tscn" id="2_mjkjb"]
 [ext_resource type="PackedScene" uid="uid://256jl38xtujs" path="res://effects/external_lighting/scenes/external_lighting_viewport.tscn" id="2_rsdas"]
+[ext_resource type="PackedScene" uid="uid://btfeiwbvgrjgi" path="res://effects/post_processing_manager/post_processing_manager.tscn" id="4_ugtg3"]
 
 [node name="Effects" type="Node"]
 script = ExtResource("1_y7ij7")
@@ -11,4 +12,7 @@ script = ExtResource("1_y7ij7")
 unique_name_in_owner = true
 
 [node name="PropsControl" parent="." instance=ExtResource("2_mjkjb")]
+unique_name_in_owner = true
+
+[node name="PostProcessingManager" parent="." instance=ExtResource("4_ugtg3")]
 unique_name_in_owner = true

@@ -1,9 +1,10 @@
-[gd_scene load_steps=2 format=3 uid="uid://d1fs57g0uhl04"]
+[gd_scene load_steps=3 format=3 uid="uid://d1fs57g0uhl04"]
 
+[ext_resource type="Material" uid="uid://cypxe62r5fxen" path="res://effects/post_processing/ascii_shading/shaders/TextShaderMaterial.tres" id="1_0woic"]
 [ext_resource type="Script" path="res://effects/post_processing/ascii_shading/ascii_shading.gd" id="1_04bct"]
 
 [node name="AsciiShading" type="ColorRect"]
-visible = false
+material = ExtResource("1_0woic")
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0

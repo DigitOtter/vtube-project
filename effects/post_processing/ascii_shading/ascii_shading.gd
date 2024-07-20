@@ -1,32 +1,25 @@
-extends "../scripts/post_processing_base.gd"
+class_name AsciiShading
+extends PostProcessingBase
 
 const GUI_TAB_NAME: String = "Ascii Shader"
 const ASCII_SHADER_MATERIAL: ShaderMaterial = preload("./shaders/TextShaderMaterial.tres")
 
-signal ascii_shader_toggled
 signal ascii_color_toggled
 signal ascii_pixelization_changed
 
 var _color_enabled: bool = true
 var _pixelization: float = 75.0
 
-func _on_ascii_toggle(enable: bool):
-	var main: Main = get_node(Main.MAIN_NODE_PATH)
-	if enable:
-		main.get_avatar_viewport_container().visible = false
-		self.visible = true
-		
-		# Add shader
-		self.material = ASCII_SHADER_MATERIAL
-		self.material.setup_local_to_scene()
-		self.material.set_shader_parameter(&"view", main.get_avatar_viewport().get_texture())
-		self._apply_material_settings()
-	else:
-		main.get_avatar_viewport_container().visible = true
-		self.visible = false
-		
-		# Remove shader from scene
-		self.material = null
+## Generate effect data. This is used by [PostProcessingManager] to create effect nodes on demand
+static func generate_effect_data() -> PostProcessingData:
+	var effect_data := PostProcessingData.new()
+	effect_data.effect_name = GUI_TAB_NAME
+	effect_data.create_fcn = AsciiShading.create
+	return effect_data
+
+## Create effect node
+static func create() -> PostProcessingBase:
+	return preload("./ascii_shading.tscn").instantiate()
 
 func _on_color_toggle(enable: bool):
 	self._color_enabled = enable
@@ -38,22 +31,7 @@ func _on_pixelization_change(pixelization_amount: float):
 	if self.material:
 		self.material.set_shader_parameter(&"pixelization", pixelization_amount)
 
-func _apply_material_settings():
-	self._on_color_toggle(self._color_enabled)
-	self._on_pixelization_change(self._pixelization)
-
-func _init_gui():
-	# Toggle Shading
-	var ascii_toggle := GuiElement.ElementData.new()
-	ascii_toggle.Name = "Enable ASCII Shading"
-	ascii_toggle.OnDataChangedCallable = self._on_ascii_toggle
-	ascii_toggle.SetDataSignal = [ self, &"ascii_shader_toggled" ]
-	ascii_toggle.OnLoadData = func(enabled: bool) -> bool: return enabled
-	ascii_toggle.OnSaveData = func(enabled: bool) -> bool: return enabled
-	var ascii_toggle_data := GuiElement.CheckBoxData.new()
-	ascii_toggle_data.Default = false
-	ascii_toggle.Data = ascii_toggle_data
-	
+func _init_gui(gui_menu: GuiTabMenuBase):
 	# Toggle Color
 	var color_toggle := GuiElement.ElementData.new()
 	color_toggle.Name = "Enable Color"
@@ -83,20 +61,32 @@ func _init_gui():
 	pixelization_range_data.MaxValue = 1000
 	pixelization_range.Data = pixelization_range_data
 	
-	var tab_elements: Array[GuiElement.ElementData] = [ascii_toggle, color_toggle, pixelization_range]
-	
-	var gui_menu: GuiTabMenuBase = get_node(Gui.GUI_NODE_PATH).get_gui_menu()
+	var tab_elements: Array[GuiElement.ElementData] = [color_toggle, pixelization_range]
 	gui_menu.add_elements_to_tab(GUI_TAB_NAME, tab_elements)
 
 func _ready():
 	super()
-	self._init_gui()
-
-func toggle_ascii_shader(enabled: bool):
-	self.emit_signal(&"ascii_shader_toggled", enabled, true)
 
 func toggle_ascii_color(enabled: bool):
 	self.emit_signal(&"ascii_color_toggled", enabled, true)
 
 func set_ascii_pixelization(pixelization_amount: float):
 	self.emit_signal(&"ascii_pixelization_changed", pixelization_amount, true)
+
+## Updates effect node. Called when effect order has been rearranged and [param_name input_texture] 
+## has changed. If [param_name input_texture] is null, assume screen_texture
+func update_input_texture(input_texture: Texture2D):
+	self.material.setup_local_to_scene()
+	self.material.set_shader_parameter(&"view", input_texture)
+
+## Get output texture of this effect. If null, assume screen_texture
+func get_output_texture() -> Texture2D:
+	return null
+
+## Add gui elements when starting post-processing effect
+func add_gui(post_processing_gui_menu: GuiTabMenuBase):
+	self._init_gui(post_processing_gui_menu)
+
+## Remove gui elements when stopping post-processing effect
+func remove_gui(post_processing_gui_menu: GuiTabMenuBase):
+	post_processing_gui_menu.remove_tab(GUI_TAB_NAME)

@@ -80,7 +80,7 @@ func _init_gui():
 	
 	elements.append_array([save_button, load_button])
 	gui_menu.add_elements_to_tab(CONFIG_GUI_TAB_NAME, elements)
-	#gui_menu.push_tab_to_front(CONFIG_GUI_TAB_NAME)
+	#gui_menu.move_tab(CONFIG_GUI_TAB_NAME, 0)
 
 func _init_default_dialog_path():
 	var path: String = OS.get_executable_path()
