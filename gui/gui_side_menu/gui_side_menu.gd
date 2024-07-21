@@ -229,7 +229,7 @@ func save_data():
 	for tab_item: TAB_ITEM_CLASS in tab_list.get_children():
 		var container: GuiContainerBase = containers.get_child(tab_item.tab_id)
 		
-		var container_data = container.call(&"save_data")
+		var container_data = container.save_data()
 		if container_data != null:
 			data[tab_item.name] = container_data
 	

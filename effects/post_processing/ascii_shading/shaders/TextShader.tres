@@ -150,7 +150,7 @@ op_type = 4
 
 [sub_resource type="VisualShaderNodeTexture2DParameter" id="VisualShaderNodeTexture2DParameter_ojg5h"]
 parameter_name = "view"
-color_default = 1
+texture_source = 1
 
 [sub_resource type="VisualShaderNodeVectorDecompose" id="VisualShaderNodeVectorDecompose_wwkef"]
 
@@ -166,7 +166,7 @@ render_mode blend_disabled;
 
 uniform bool color = true;
 uniform int pixelization : hint_range(0, 10000) = 100;
-uniform sampler2D view : hint_default_black;
+uniform sampler2D view : hint_screen_texture;
 uniform sampler2D curve_frg_51 : repeat_disable;
 uniform int character_count : hint_range(0, 100);
 uniform sampler2D character_set : source_color, hint_default_black;

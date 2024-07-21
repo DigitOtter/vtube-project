@@ -1,9 +1,9 @@
 class_name TrackerVrmUtils
 
-static func get_vrm_ik_bone_names(avatar_root: Node) -> PuppeteerSkeletonIk.IkTargetBoneNames:
+static func get_vrm_ik_bone_names(_avatar_root: Node) -> PuppeteerSkeletonIk.IkTargetBoneNames:
 	var ik_bone_names:= PuppeteerSkeletonIk.IkTargetBoneNames.new()
 	
-	var vrm_bone_map: BoneMap = PuppeteerBase.get_vrm_bone_mappings(avatar_root)
+	#var vrm_bone_map: BoneMap = PuppeteerBase.get_vrm_bone_mappings(avatar_root)
 	#if vrm_bone_map:
 		#var armature_name:= vrm_bone_map.get_skeleton_bone_name(&"Hips")
 		#if armature_name: ik_bone_names.hip = armature_name

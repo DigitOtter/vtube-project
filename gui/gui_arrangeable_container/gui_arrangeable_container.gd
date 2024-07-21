@@ -49,9 +49,6 @@ func _find_element_container(element: String) -> ARRANGEABLE_ITEM_CLASS:
 			return single_container
 	return null
 
-func _ready():
-	self.set_element_name("ArrangeableList")
-
 ## Create a new tab with the given input elements
 func add_element(element: GuiElement.ElementData) -> GuiElementBase:
 	var element_container := self._create_element_container(element.Name, element)
@@ -96,10 +93,6 @@ func move_element(element_name: String, pos: int) -> bool:
 	
 	self._move_item(element, pos)
 	return true
-
-# Name of element. Used during save/load
-func get_element_name() -> String:
-	return self.element_name
 
 ## Load data from variant
 func load_data(data: Dictionary) -> void:

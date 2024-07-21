@@ -26,11 +26,11 @@ func add_elements(elements: Array[GuiElement.ElementData]) -> Array[GuiElementBa
 
 #################################################
 ## Create a new tab with the given input elements
-func add_element(element: GuiElement.ElementData) -> GuiElementBase:
+func add_element(_element: GuiElement.ElementData) -> GuiElementBase:
 	return null
 
 ## Remove element
-func remove_element(element_name: String):
+func remove_element(_element_name: String):
 	pass
 
 ## Get number of elements in container
@@ -42,13 +42,13 @@ func get_elements() -> Array[GuiElementBase]:
 	return []
 
 ## Move element to new position
-func move_element(_element_name: String, pos: int) -> bool:
+func move_element(_element_name: String, _pos: int) -> bool:
 	return false
 
 ## Calls each control element's [method ElementData.OnLoadData]. 
 ## For each control element, we look for a key in [param data] with node.get_element_name()
 ## and pass that to the element.
-func load_data(data: Dictionary) -> void:
+func load_data(_data: Dictionary) -> void:
 	pass
 
 ## Calls each control element's [method ElementData.OnSaveData]. The results are

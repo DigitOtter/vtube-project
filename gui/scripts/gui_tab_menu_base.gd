@@ -46,7 +46,7 @@ func select_tab(_tab_name: String) -> bool:
 	return false
 
 ## Move tab to new position in tab menu. Negative values are counted from the back
-func move_tab(_tab_name: String, pos: int) -> void:
+func move_tab(_tab_name: String, _pos: int) -> void:
 	pass
 
 ## Load data from dictionary. The function should call element_node.load_data(element_data) 

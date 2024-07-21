@@ -41,8 +41,6 @@ func _on_gui_reorder(effect_name: String, new_gui_pos: int):
 	# Move node to new pos in chain
 	var new_node_pos: int = self._compute_element_node_pos(effect_data)
 	self._parent_effect_node.move_child(effect_data.get_effect_node(), new_node_pos)
-	
-	self._update_texture_chain()
 
 func _create_effect_node(effect_data: PostProcessingData) -> PostProcessingBase:
 	var effect_node: PostProcessingBase = effect_data.get_effect_node()
@@ -70,16 +68,6 @@ func _reorder_effect_nodes():
 			continue
 		self._parent_effect_node.move_child(effect_node, node_id)
 		node_id += 1
-	
-	self._update_texture_chain()
-
-func _update_texture_chain():
-	# Update input texture and node visibilities	
-	var prev_node: Control = self._input_node
-	var input_texture := self._input_texture
-	for effect_node: PostProcessingBase in self._parent_effect_node.get_children():
-		effect_node.update_input_texture(input_texture)
-		input_texture = effect_node.get_output_texture()
 
 func _on_effect_toggled(effect_name: String, enabled: bool):
 	if enabled:
@@ -110,9 +98,6 @@ func _stop_effect(effect_name: StringName):
 	effect_node.owner = null
 	effect_node.queue_free()
 	old_effect_data.set_effect_node(null)
-	
-	# Update textures
-	self._update_texture_chain()
 
 func _find_effect_data(effect_name: StringName) -> PostProcessingData:
 	for effect_data: PostProcessingData in self._available_effects:

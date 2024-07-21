@@ -58,16 +58,6 @@ func toggle_ascii_color(enabled: bool):
 func set_ascii_pixelization(pixelization_amount: float):
 	self.emit_signal(&"ascii_pixelization_changed", pixelization_amount, true)
 
-## Updates effect node. Called when effect order has been rearranged and [param_name input_texture] 
-## has changed. If [param_name input_texture] is null, assume screen_texture
-func update_input_texture(input_texture: Texture2D):
-	self.material.setup_local_to_scene()
-	self.material.set_shader_parameter(&"view", input_texture)
-
-## Get output texture of this effect. If null, assume screen_texture
-func get_output_texture() -> Texture2D:
-	return null
-
 ## Add gui elements when starting post-processing effect
 func add_gui(post_processing_gui_menu: GuiTabMenuBase):
 	self._init_gui(post_processing_gui_menu)

@@ -87,7 +87,7 @@ func load_data(data: Dictionary) -> void:
 	var tab_container: TabContainer = self as Node
 	for tab_id: int in range(0, tab_container.get_tab_count()):
 		var tab_name: String = tab_container.get_tab_title(tab_id)
-		var tab_data: Dictionary = data.get(tab_name, null)
+		var tab_data = data.get(tab_name, null)
 		if tab_data == null:
 			continue
 		
@@ -103,8 +103,8 @@ func save_data():
 	var tab_container: TabContainer = self as Node
 	for tab_id: int in range(0, tab_container.get_tab_count()):
 		var container: GuiContainerBase = tab_container.get_tab_control(tab_id)
-		var tab_data: Dictionary = container.call(&"save_data")
-		if tab_data != null:
+		var tab_data: Dictionary = container.save_data()
+		if tab_data == null:
 			continue
 		
 		var tab_name: String = tab_container.get_tab_title(tab_id)

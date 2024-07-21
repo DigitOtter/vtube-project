@@ -54,7 +54,7 @@ func init_tracker() -> void:
 	
 	get_node(Main.MAIN_NODE_PATH).connect_avatar_loaded(self.restart_tracker)
 
-func start_tracker(avatar_scene: Node) -> void:
+func start_tracker(_avatar_scene: Node) -> void:
 	self.add_gui()
 
 func stop_tracker():

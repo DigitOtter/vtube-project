@@ -1,8 +1,12 @@
 extends HSplitContainer
 
 func get_element_name() -> String:
-	if self.get_child_count() < 2:
+	var element: GuiElementBase = self.get_element()
+	if not element:
 		return ""
-	
-	var element: GuiElementBase = self.get_child(1)
 	return element.get_element_name()
+
+func get_element() -> GuiElementBase:
+	if self.get_child_count() < 2:
+		return null
+	return self.get_child(1)

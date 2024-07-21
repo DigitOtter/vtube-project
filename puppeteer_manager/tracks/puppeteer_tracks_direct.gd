@@ -85,7 +85,7 @@ func _apply_animation_track(animation_track: AnimationTrack):
 		val += animation_track.tracking_data.cur_val * morph.value
 		b.mesh.set_blend_shape_value(b.blend_shape_id, val)
 
-func initialize(anim_player: AnimationPlayer, reset_track: StringName = "RESET", ):
+func initialize(anim_player: AnimationPlayer, reset_track_name: StringName = "RESET", ):
 	self.animation_player = anim_player
 	self.animation_player.speed_scale = 0.0
 	
@@ -93,7 +93,7 @@ func initialize(anim_player: AnimationPlayer, reset_track: StringName = "RESET",
 	# only actively updates and not accidentally set after update_puppet was called
 	self.animation_player.set_process_callback(AnimationPlayer.ANIMATION_PROCESS_MANUAL)
 	
-	self.reset_track = reset_track
+	self.reset_track = reset_track_name
 
 func populate_tracks(animations: AnimationPlayer, animation_tracks: Array[String]):
 	for track_name in animation_tracks:
