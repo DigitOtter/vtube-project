@@ -2,18 +2,9 @@ class_name GuiTabMenuBase
 extends GuiElementBase
 
 enum Type {
+	SIDE,
 	TAB,
-	SIDE
 }
-
-static func create_new(type: Type):
-	var menu: GuiTabMenuBase = null
-	if type == Type.TAB:
-		menu = preload("../gui_tab_menu/gui_tab_menu.tscn").instantiate()
-	elif type == Type.SIDE:
-		menu = preload("../gui_side_menu/gui_side_menu.tscn").instantiate()
-	
-	return menu
 
 ## Get tab or create it if it doesn't exist yet
 func get_or_create_tab(tab_name: String) -> GuiContainerBase:

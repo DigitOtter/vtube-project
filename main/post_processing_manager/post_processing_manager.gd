@@ -1,5 +1,5 @@
 class_name PostProcessingManager
-extends Node
+extends Control
 
 const GUI_TAB_NAME := &"PostProcessing"
 const PostProcessingData = PostProcessingBase.PostProcessingData
@@ -7,19 +7,26 @@ const PostProcessingData = PostProcessingBase.PostProcessingData
 signal effect_toggle(effect_name: String, enable: bool)
 
 ## Effect node. All post-processing effects should be children of this node 
-var _parent_effect_node: Control = null
+var _parent_effect_node: Node = null
 
 ## Input node for all post-processing effects
-var _input_node: Control = null
+var _input_node: SubViewportContainer = null
 
 ## Input texture for first effect in chain. If null, assume screen_texture
 var _input_texture: Texture2D = null
 
 var _post_processing_order_gui: GuiArrangeableContainer = GuiContainerBase.create_new(GuiContainerBase.Type.ARRANGEABLE)
-var _post_processing_gui: GuiTabMenu = GuiTabMenuBase.create_new(GuiTabMenuBase.Type.TAB)
+var _post_processing_gui: GuiTabMenu = GuiMenuFactory.create_new(GuiMenuFactory.Type.TAB)
 
 ## List of available effects. Can be toggled via GUI.
 var _available_effects: Array[PostProcessingData] = []
+
+func _on_input_resized():
+	var size := self._input_node.size
+	for effect: PostProcessingBase in self._parent_effect_node.get_children():
+		effect.resize_effect(size)
+	
+	self._update_texture_chain()
 
 func _compute_element_node_pos(effect_data: PostProcessingData):
 	var node_pos: int = 0
@@ -41,6 +48,8 @@ func _on_gui_reorder(effect_name: String, new_gui_pos: int):
 	# Move node to new pos in chain
 	var new_node_pos: int = self._compute_element_node_pos(effect_data)
 	self._parent_effect_node.move_child(effect_data.get_effect_node(), new_node_pos)
+	
+	self._update_texture_chain()
 
 func _create_effect_node(effect_data: PostProcessingData) -> PostProcessingBase:
 	var effect_node: PostProcessingBase = effect_data.get_effect_node()
@@ -68,6 +77,35 @@ func _reorder_effect_nodes():
 			continue
 		self._parent_effect_node.move_child(effect_node, node_id)
 		node_id += 1
+	
+	self._update_texture_chain()
+
+func _update_texture_chain():
+	var prev_texture: Texture2D = self._input_texture
+	for effect: PostProcessingBase in self._parent_effect_node.get_children():
+		effect.update_input_texture(prev_texture)
+		prev_texture = effect.get_output_texture()
+	
+	self.material.set_shader_parameter(&"view_texture", prev_texture)
+	
+	# Adjust visibility
+	var effect_visible: bool = self._parent_effect_node.get_child_count() > 0
+	self.visible = effect_visible
+	#if self._input_node:
+		## When toggling visibility, the update_mode is automatically set to disabled.
+		## As we still want the avatar to be updated, re-enable update_mode
+		#self._input_node.visible = !effect_visible
+		#self._input_node.set_process_input(true)
+		#self._input_node.set_process_unhandled_input(true)
+		#self._input_node.set_process(true)
+		#self._input_node.set_physics_process(true)
+		#var input_view_port: SubViewport = self._input_node.get_child(0)
+		#if input_view_port:
+			#input_view_port.set_update_mode(SubViewport.UPDATE_ALWAYS)
+			#input_view_port.set_process_input(true)
+			#input_view_port.set_process_unhandled_input(true)
+			#input_view_port.set_process(true)
+			#input_view_port.set_physics_process(true)
 
 func _on_effect_toggled(effect_name: String, enabled: bool):
 	if enabled:
@@ -87,6 +125,10 @@ func _start_effect(effect_name: StringName):
 		effect_node.connect(&"tree_exiting", func():
 			effect_node.remove_gui(self._post_processing_gui)
 		)
+		
+		# Set to proper size on start
+		if self._input_node:
+			effect_node.resize_effect(self._input_node.size)
 
 func _stop_effect(effect_name: StringName):
 	var old_effect_data := self._find_effect_data(effect_name)
@@ -98,6 +140,8 @@ func _stop_effect(effect_name: StringName):
 	effect_node.owner = null
 	effect_node.queue_free()
 	old_effect_data.set_effect_node(null)
+	
+	self._update_texture_chain()
 
 func _find_effect_data(effect_name: StringName) -> PostProcessingData:
 	for effect_data: PostProcessingData in self._available_effects:
@@ -137,7 +181,7 @@ func _init_gui():
 
 func _ready():
 	var main: Main = get_node(Main.MAIN_NODE_PATH)
-	self._parent_effect_node = main.get_post_processing_node()
+	self.set_effect_parent_node(main.get_post_processing_node())
 	
 	var input_node := main.get_avatar_viewport_container()
 	var input_texture := main.get_avatar_viewport().get_texture()
@@ -149,10 +193,20 @@ func _ready():
 	for class_type in effect_classes:
 		self.register_effect(class_type)
 
+func set_effect_parent_node(effect_parent_node: Node):
+	self._parent_effect_node = effect_parent_node
+
 func set_input_node(input_node: Control, input_texture: Texture2D = null):
-	self._input_node = input_node
-	self._input_texture = input_texture
+	# Disconnect old signal
+	if self._input_node:
+		self._input_node.disconnect(&"resized", self._on_input_resized)
 	
+	# Reconnect resize signal
+	self._input_node = input_node
+	if self._input_node:
+		self._input_node.connect(&"resized", self._on_input_resized)
+	
+	self._input_texture = input_texture
 	self._reorder_effect_nodes()
 
 func register_effect(effect_data: PostProcessingData):

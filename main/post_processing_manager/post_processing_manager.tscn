@@ -1,0 +1,19 @@
+[gd_scene load_steps=5 format=3 uid="uid://btfeiwbvgrjgi"]
+
+[ext_resource type="Shader" path="res://main/post_processing_manager/texture_display.gdshader" id="1_5r3ji"]
+[ext_resource type="Script" path="res://main/post_processing_manager/post_processing_manager.gd" id="1_x0tuo"]
+[ext_resource type="Texture2D" uid="uid://dbpmxbpki3ojp" path="res://main/post_processing/ascii_shading/shaders/ascii-sample-texture.png" id="2_m1va2"]
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_1n2yl"]
+resource_local_to_scene = true
+shader = ExtResource("1_5r3ji")
+shader_parameter/view_texture = ExtResource("2_m1va2")
+
+[node name="PostProcessingManager" type="ColorRect"]
+material = SubResource("ShaderMaterial_1n2yl")
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_x0tuo")

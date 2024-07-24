@@ -19,10 +19,10 @@ static func create() -> PostProcessingBase:
 	return preload("./ascii_shading.tscn").instantiate()
 
 func _on_color_toggle(enable: bool):
-	self.material.set_shader_parameter(&"color", enable)
+	%Effect.material.set_shader_parameter(&"color", enable)
 
 func _on_pixelization_change(pixelization_amount: float):
-	self.material.set_shader_parameter(&"pixelization", pixelization_amount)
+	%Effect.material.set_shader_parameter(&"pixelization", pixelization_amount)
 
 func _init_gui(gui_menu: GuiTabMenuBase):
 	# Toggle Color
@@ -31,7 +31,7 @@ func _init_gui(gui_menu: GuiTabMenuBase):
 	color_toggle.OnDataChangedCallable = self._on_color_toggle
 	color_toggle.SetDataSignal = [ self, &"ascii_color_toggled" ]
 	var color_toggle_data := GuiElement.CheckBoxData.new()
-	color_toggle_data.Default = self.material.get_shader_parameter(&"color")
+	color_toggle_data.Default = %Effect.material.get_shader_parameter(&"color")
 	color_toggle.Data = color_toggle_data
 	
 	# Set _pixelization
@@ -40,7 +40,7 @@ func _init_gui(gui_menu: GuiTabMenuBase):
 	pixelization_range.OnDataChangedCallable = self._on_pixelization_change
 	pixelization_range.SetDataSignal = [ self, &"ascii_pixelization_changed" ]
 	var pixelization_range_data := GuiElement.SliderData.new()
-	pixelization_range_data.Default  = self.material.get_shader_parameter(&"pixelization")
+	pixelization_range_data.Default  = %Effect.material.get_shader_parameter(&"pixelization")
 	pixelization_range_data.Step     = 1
 	pixelization_range_data.MinValue = 0
 	pixelization_range_data.MaxValue = 1000
@@ -57,6 +57,20 @@ func toggle_ascii_color(enabled: bool):
 
 func set_ascii_pixelization(pixelization_amount: float):
 	self.emit_signal(&"ascii_pixelization_changed", pixelization_amount, true)
+
+## Called when input texture was changed
+func update_input_texture(input_texture: Texture2D):
+	%Effect.material.set_shader_parameter(&"view", input_texture)
+
+## Return output of effect
+func get_output_texture() -> Texture2D:
+	return self.get_texture()
+
+## Called when effect should be resized
+func resize_effect(size: Vector2):
+	#return
+	self.size = size
+	%Effect.size = size
 
 ## Add gui elements when starting post-processing effect
 func add_gui(post_processing_gui_menu: GuiTabMenuBase):

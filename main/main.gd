@@ -52,7 +52,7 @@ func _on_config_pressed(toggle: bool, save_mode: bool):
 		)
 		
 		config_loader.current_dir = self.get_default_config_dialog_path()
-	else:	
+	else:
 		# Set save/load mode of dialog
 		config_loader.set_save_file_mode(save_mode)
 
@@ -136,6 +136,9 @@ func get_avatar_root_node() -> Node:
 
 func get_post_processing_node() -> Control:
 	return %PostProcessing
+
+func get_post_processing_manager() -> PostProcessingManager:
+	return %PostProcessingManager
 
 func set_default_config_dialog_path(path: String):
 	self._default_dialog_path = path

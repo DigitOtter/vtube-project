@@ -1,0 +1,21 @@
+[gd_scene load_steps=3 format=3 uid="uid://djcdxqv320maf"]
+
+[ext_resource type="Script" path="res://main/post_processing/pixelate/pixelate.gd" id="1_fohdc"]
+[ext_resource type="Material" uid="uid://8mypqk6dvgy3" path="res://main/post_processing/pixelate/pixelate.material" id="2_71abv"]
+
+[node name="PostProcessingBase" type="SubViewport"]
+disable_3d = true
+transparent_bg = true
+handle_input_locally = false
+gui_disable_input = true
+script = ExtResource("1_fohdc")
+
+[node name="Effect" type="ColorRect" parent="."]
+unique_name_in_owner = true
+material = ExtResource("2_71abv")
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2

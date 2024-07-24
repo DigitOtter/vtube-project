@@ -1,7 +1,7 @@
 [gd_resource type="VisualShader" load_steps=40 format=3 uid="uid://c6xmm7v0op1ie"]
 
-[ext_resource type="Texture2D" uid="uid://kwswc4pntm7j" path="res://effects/post_processing/ascii_shading/shaders/ascii-sample-texture.png" id="1_6hbby"]
-[ext_resource type="Texture2D" uid="uid://d3880tk5vv6ea" path="res://effects/post_processing/ascii_shading/shaders/ShaderCurve.tres" id="2_pidiu"]
+[ext_resource type="Texture2D" uid="uid://dbpmxbpki3ojp" path="res://main/post_processing/ascii_shading/shaders/ascii-sample-texture.png" id="1_m3my2"]
+[ext_resource type="Texture2D" uid="uid://d3880tk5vv6ea" path="res://main/post_processing/ascii_shading/shaders/ShaderCurve.tres" id="2_8k0kd"]
 
 [sub_resource type="VisualShaderNodeVectorOp" id="VisualShaderNodeVectorOp_1r1x1"]
 output_port_for_preview = 0
@@ -72,7 +72,7 @@ operator = 2
 [sub_resource type="VisualShaderNodeTexture" id="VisualShaderNodeTexture_k3bqr"]
 output_port_for_preview = 0
 source = 5
-texture = ExtResource("1_6hbby")
+texture = ExtResource("1_m3my2")
 
 [sub_resource type="VisualShaderNodeVectorOp" id="VisualShaderNodeVectorOp_jy7ja"]
 default_input_values = [0, Vector2(0, 0), 1, Vector2(0, 0)]
@@ -125,7 +125,7 @@ default_value_enabled = true
 default_value = 100
 
 [sub_resource type="VisualShaderNodeCurveTexture" id="VisualShaderNodeCurveTexture_oiw2f"]
-texture = ExtResource("2_pidiu")
+texture = ExtResource("2_8k0kd")
 
 [sub_resource type="VisualShaderNodeComment" id="VisualShaderNodeComment_xfpcd"]
 size = Vector2(1284.85, 409.625)
@@ -150,7 +150,6 @@ op_type = 4
 
 [sub_resource type="VisualShaderNodeTexture2DParameter" id="VisualShaderNodeTexture2DParameter_ojg5h"]
 parameter_name = "view"
-texture_source = 1
 
 [sub_resource type="VisualShaderNodeVectorDecompose" id="VisualShaderNodeVectorDecompose_wwkef"]
 
@@ -166,7 +165,7 @@ render_mode blend_disabled;
 
 uniform bool color = true;
 uniform int pixelization : hint_range(0, 10000) = 100;
-uniform sampler2D view : hint_screen_texture;
+uniform sampler2D view;
 uniform sampler2D curve_frg_51 : repeat_disable;
 uniform int character_count : hint_range(0, 100);
 uniform sampler2D character_set : source_color, hint_default_black;

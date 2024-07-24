@@ -3,7 +3,7 @@
 ## and [method PostProcessingBase.create] methods. If the effect should automatically
 ## be added to [PostProcessingManager], adjust [method PostProcessingBase.available_effects]
 class_name PostProcessingBase
-extends Control
+extends SubViewport
 
 const PostProcessingData = preload("./post_processing_data.gd")
 
@@ -11,6 +11,7 @@ const PostProcessingData = preload("./post_processing_data.gd")
 static func available_effects() -> Array[PostProcessingData]:
 	return [
 		AsciiShading.generate_effect_data(),
+		Pixelate.generate_effect_data(),
 	]
 
 func _ready():
@@ -26,6 +27,18 @@ static func generate_effect_data() -> PostProcessingData:
 ## Create effect node
 static func create() -> PostProcessingBase:
 	return null
+
+## Called when input texture was changed
+func update_input_texture(input_texture: Texture2D):
+	pass
+
+## Return output of effect
+func get_output_texture() -> Texture2D:
+	return self.get_texture()
+
+## Called when effect should be resized
+func resize_effect(size: Vector2):
+	self.size = size
 
 ## Add gui elements when starting post-processing effect
 func add_gui(_post_processing_gui_menu: GuiTabMenuBase):
