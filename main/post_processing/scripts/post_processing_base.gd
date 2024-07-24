@@ -38,7 +38,7 @@ func get_output_texture() -> Texture2D:
 
 ## Called when effect should be resized
 func resize_effect(size: Vector2):
-	self.size = size
+	self.set_deferred(&"size", size)
 
 ## Add gui elements when starting post-processing effect
 func add_gui(_post_processing_gui_menu: GuiTabMenuBase):

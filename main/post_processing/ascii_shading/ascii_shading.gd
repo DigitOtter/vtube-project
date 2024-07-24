@@ -62,16 +62,6 @@ func set_ascii_pixelization(pixelization_amount: float):
 func update_input_texture(input_texture: Texture2D):
 	%Effect.material.set_shader_parameter(&"view", input_texture)
 
-## Return output of effect
-func get_output_texture() -> Texture2D:
-	return self.get_texture()
-
-## Called when effect should be resized
-func resize_effect(size: Vector2):
-	#return
-	self.size = size
-	%Effect.size = size
-
 ## Add gui elements when starting post-processing effect
 func add_gui(post_processing_gui_menu: GuiTabMenuBase):
 	self._init_gui(post_processing_gui_menu)

@@ -6,8 +6,6 @@ const PostProcessingData = PostProcessingBase.PostProcessingData
 
 signal effect_toggle(effect_name: String, enable: bool)
 
-## Effect node. All post-processing effects should be children of this node 
-var _parent_effect_node: Node = null
 
 ## Input node for all post-processing effects
 var _input_node: SubViewportContainer = null
@@ -23,7 +21,7 @@ var _available_effects: Array[PostProcessingData] = []
 
 func _on_input_resized():
 	var size := self._input_node.size
-	for effect: PostProcessingBase in self._parent_effect_node.get_children():
+	for effect: PostProcessingBase in self.get_children():
 		effect.resize_effect(size)
 	
 	self._update_texture_chain()
@@ -47,7 +45,7 @@ func _on_gui_reorder(effect_name: String, new_gui_pos: int):
 	
 	# Move node to new pos in chain
 	var new_node_pos: int = self._compute_element_node_pos(effect_data)
-	self._parent_effect_node.move_child(effect_data.get_effect_node(), new_node_pos)
+	self.move_child(effect_data.get_effect_node(), new_node_pos)
 	
 	self._update_texture_chain()
 
@@ -60,8 +58,8 @@ func _create_effect_node(effect_data: PostProcessingData) -> PostProcessingBase:
 	if not effect_node:
 		return null
 	
-	self._parent_effect_node.add_child(effect_node)
-	effect_node.owner = self._parent_effect_node
+	self.add_child(effect_node)
+	effect_node.owner = self
 	effect_data.set_effect_node(effect_node)
 	
 	self._reorder_effect_nodes()
@@ -75,21 +73,21 @@ func _reorder_effect_nodes():
 		var effect_node := effect_data.get_effect_node()
 		if not effect_node:
 			continue
-		self._parent_effect_node.move_child(effect_node, node_id)
+		self.move_child(effect_node, node_id)
 		node_id += 1
 	
 	self._update_texture_chain()
 
 func _update_texture_chain():
 	var prev_texture: Texture2D = self._input_texture
-	for effect: PostProcessingBase in self._parent_effect_node.get_children():
+	for effect: PostProcessingBase in self.get_children():
 		effect.update_input_texture(prev_texture)
 		prev_texture = effect.get_output_texture()
 	
 	self.material.set_shader_parameter(&"view_texture", prev_texture)
 	
 	# Adjust visibility
-	var effect_visible: bool = self._parent_effect_node.get_child_count() > 0
+	var effect_visible: bool = self.get_child_count() > 0
 	self.visible = effect_visible
 	#if self._input_node:
 		## When toggling visibility, the update_mode is automatically set to disabled.
@@ -136,7 +134,7 @@ func _stop_effect(effect_name: StringName):
 		return
 	
 	var effect_node := old_effect_data.get_effect_node()
-	self._parent_effect_node.remove_child(effect_node)
+	self.remove_child(effect_node)
 	effect_node.owner = null
 	effect_node.queue_free()
 	old_effect_data.set_effect_node(null)
@@ -181,8 +179,6 @@ func _init_gui():
 
 func _ready():
 	var main: Main = get_node(Main.MAIN_NODE_PATH)
-	self.set_effect_parent_node(main.get_post_processing_node())
-	
 	var input_node := main.get_avatar_viewport_container()
 	var input_texture := main.get_avatar_viewport().get_texture()
 	self.set_input_node(input_node, input_texture)
@@ -192,9 +188,6 @@ func _ready():
 	var effect_classes := PostProcessingBase.available_effects()
 	for class_type in effect_classes:
 		self.register_effect(class_type)
-
-func set_effect_parent_node(effect_parent_node: Node):
-	self._parent_effect_node = effect_parent_node
 
 func set_input_node(input_node: Control, input_texture: Texture2D = null):
 	# Disconnect old signal

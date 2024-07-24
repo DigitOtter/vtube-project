@@ -134,9 +134,6 @@ func is_avatar_loaded() -> bool:
 func get_avatar_root_node() -> Node:
 	return %AvatarRoot
 
-func get_post_processing_node() -> Control:
-	return %PostProcessing
-
 func get_post_processing_manager() -> PostProcessingManager:
 	return %PostProcessingManager
 
