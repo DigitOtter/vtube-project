@@ -1,10 +1,17 @@
-[gd_scene load_steps=6 format=3 uid="uid://b7hlr6meefqd1"]
+[gd_scene load_steps=9 format=3 uid="uid://b7hlr6meefqd1"]
 
 [ext_resource type="Script" path="res://main/main.gd" id="1_kqe0r"]
 [ext_resource type="PackedScene" uid="uid://dbuemci54ncn2" path="res://main/scenes/avatar_root/avatar_root.tscn" id="4_iadoo"]
 [ext_resource type="PackedScene" uid="uid://btfeiwbvgrjgi" path="res://main/post_processing_manager/post_processing_manager.tscn" id="5_hlbmf"]
 [ext_resource type="PackedScene" uid="uid://dw3gfo2unxnp" path="res://main/scenes/orbital_camera.tscn" id="5_yy42a"]
 [ext_resource type="PackedScene" uid="uid://t613d0caqf5g" path="res://main/scenes/lighting.tscn" id="6_a44qy"]
+[ext_resource type="Shader" path="res://main/post_processing_manager/texture_display.gdshader" id="6_uimws"]
+[ext_resource type="Texture2D" uid="uid://dbpmxbpki3ojp" path="res://main/post_processing/ascii_shading/shaders/ascii-sample-texture.png" id="7_7pciy"]
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_j8kew"]
+resource_local_to_scene = true
+shader = ExtResource("6_uimws")
+shader_parameter/view_texture = ExtResource("7_7pciy")
 
 [node name="Main" type="Control"]
 layout_mode = 3
@@ -52,5 +59,6 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.64273, 1.31505)
 
 [node name="PostProcessingManager" parent="." instance=ExtResource("5_hlbmf")]
 unique_name_in_owner = true
+material = SubResource("ShaderMaterial_j8kew")
 layout_mode = 1
 mouse_filter = 2

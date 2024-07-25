@@ -1,0 +1,32 @@
+[gd_scene load_steps=3 format=3 uid="uid://72jgjtu1tqv7"]
+
+[ext_resource type="Script" path="res://puppeteer_manager/skeleton/puppeteer_skeleton_ik.gd" id="1_qxppi"]
+[ext_resource type="Script" path="res://addons/renik/renik.gd" id="2_ns1jp"]
+
+[node name="PuppeteerSkeletonIk" type="Node"]
+script = ExtResource("1_qxppi")
+
+[node name="RenIk" type="Node" parent="."]
+script = ExtResource("2_ns1jp")
+arm_elbow_direction_offset = 1.22173
+arm_upper_arm_twisting = 0.5
+arm_upper_arm_twist_offset = -0.87264
+arm_forearm_twisting = 0.66666
+arm_forearm_twist_offset = -0.87264
+arm_twist_inflection_point = 0.349066
+arm_twist_overflow = 0.785398
+arm_pole_offset = Quaternion(0.113039, -0.0652631, 0.495722, 0.858616)
+arm_target_position_influence = Vector3(2, -1.5, -1)
+arm_target_rotation_influence = 0.33
+arm_shoulder_offset = Quaternion(0, 0, 0, 1)
+arm_shoulder_pole_offset = Quaternion(0, 0, 0, 1)
+leg_thigh_twisting = 0.25
+leg_lower_leg_twisting = 0.25
+leg_lower_leg_twist_offset = 3.14159
+leg_twist_overflow = 0.785398
+leg_pole_offset = Quaternion(0, 0, 1, -4.37114e-08)
+leg_target_rotation_influence = 0.5
+torso_spine_curve = Vector3(0, 27.485, -3.38)
+torso_upper_spine_stiffness = 0.5
+torso_lower_spine_stiffness = 0.5
+torso_spine_twist = 1.0

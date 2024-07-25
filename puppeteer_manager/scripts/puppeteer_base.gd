@@ -22,7 +22,7 @@ static func create_new(type: Type, tracker_name: String, puppeteer_name: String)
 	if type == Type.SKELETON_DIRECT:
 		puppeteer = PuppeteerSkeletonDirect.new()
 	elif type == Type.SKELETON_IK:
-		puppeteer = PuppeteerSkeletonIk.new()
+		puppeteer = preload("../skeleton/puppeteer_skeleton_ik.tscn").instantiate()
 	elif type == Type.BLEND_SHAPES_DIRECT:
 		puppeteer = PuppeteerBlendShapesDirect.new()
 	elif type == Type.TRACK_RESET:

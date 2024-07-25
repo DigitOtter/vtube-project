@@ -29,7 +29,7 @@ static func create() -> PostProcessingBase:
 	return null
 
 ## Called when input texture was changed
-func update_input_texture(input_texture: Texture2D):
+func update_input_texture(_input_texture: Texture2D):
 	pass
 
 ## Return output of effect
@@ -37,8 +37,8 @@ func get_output_texture() -> Texture2D:
 	return self.get_texture()
 
 ## Called when effect should be resized
-func resize_effect(size: Vector2):
-	self.set_deferred(&"size", size)
+func resize_effect(view_size: Vector2):
+	self.set_deferred(&"size", view_size)
 
 ## Add gui elements when starting post-processing effect
 func add_gui(_post_processing_gui_menu: GuiTabMenuBase):

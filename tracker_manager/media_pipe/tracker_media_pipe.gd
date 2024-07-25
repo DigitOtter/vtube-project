@@ -101,14 +101,18 @@ func start_tracker(avatar_scene: Node) -> void:
 	
 	self._setup_puppeteers(avatar_scene)
 	
+	if self.mediapipe:
+		self.mediapipe.stop()
+	
 	self.mediapipe = MediaPipe.start(null)
-	self.mediapipe.connect("data_received", self.handle_mediapipe)
+	self.mediapipe.connect(&"data_received", self.handle_mediapipe)
 	
 	super(avatar_scene)
 
 func stop_tracker() -> void:
 	if self.mediapipe:
 		self.mediapipe.stop()
+		self.mediapipe = null
 	
 	super()
 

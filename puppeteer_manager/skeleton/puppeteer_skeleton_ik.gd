@@ -46,7 +46,8 @@ var ik_targets_parent: Node3D = null
 @export var reset_left_foot := Transform3D.IDENTITY
 @export var reset_right_foot := Transform3D.IDENTITY
 
-var ren_ik: RenIK3D = RenIK3D.new()
+@onready
+var ren_ik: RenIK3D = $RenIk
 
 func _set_skeleton_a_pose() -> Error:
 	if self.ren_ik.skeleton == null:
@@ -105,6 +106,13 @@ func _add_ik_target_to_parent(parent: Node3D, target_name: StringName) -> Node3D
 	ik_target.name = target_name
 	parent.add_child(ik_target)
 	ik_target.owner = parent
+	
+	var sphere := MeshInstance3D.new()
+	sphere.mesh = SphereMesh.new()
+	(sphere.mesh as SphereMesh).radius = 0.1
+	(sphere.mesh as SphereMesh).height = 0.2
+	ik_target.add_child(sphere)
+	
 	return ik_target
 
 func _initialize_lerp_nodes():
@@ -128,12 +136,13 @@ func _setup_ik_targets(ik_target_config: Dictionary) -> Node3D:
 	var ik_parent_name: StringName = IK_TARGETS_NODE_PARENT_NAME
 	self.ik_targets_parent = skeleton_node.find_child(ik_parent_name, false)
 	if self.ik_targets_parent:
+		# If ik parent already exists, remove old ik targets
 		for child in self.ik_targets_parent.get_children():
 			child.owner = null
 			self.ik_targets_parent.remove_child(child)
 			child.queue_free()
 	else:
-		# Create node and add to tree
+		# Create ik parent node
 		self.ik_targets_parent = Node3D.new()
 		self.ik_targets_parent.name = ik_parent_name
 		skeleton_node.add_child(self.ik_targets_parent)
@@ -244,7 +253,18 @@ func initialize(skeleton_node: Skeleton3D, ik_target_bone_names: IkTargetBoneNam
 	self.set_reset_poses()
 
 func update_puppet(_delta: float):
+	print()
+	var skeleton := self.ren_ik.skeleton
+	var idx := skeleton.find_bone(self.ren_ik.armature_head)
+	print("Head: {}".format([skeleton.get_bone_global_pose(idx)], "{}"))
+	print("Head: {}".format([self.head_target.global_target], "{}"))
+	idx = skeleton.find_bone(self.ren_ik.armature_hip)
+	print("Hip: {}".format([skeleton.get_bone_global_pose(idx)], "{}"))
+	print("Hip: {}".format([self.hip_target.global_target], "{}"))
+	
 	self.ren_ik.update_ik()
+	
+	#skeleton.reset_bone_poses()
 
 func set_reset_poses():
 	self.reset_head = self.head_target.global_target
