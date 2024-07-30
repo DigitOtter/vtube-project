@@ -29,9 +29,9 @@ var _media_pipe_base_head_pose = null
 static func get_type_name() -> StringName:
 	return &"MediaPipe"
 
-func _setup_ik(avatar_root: Node) -> Error:
-	var skeleton = avatar_root.find_child("GeneralSkeleton", false)
-	self.puppeteer_skeleton.initialize(skeleton, TrackerVrmUtils.get_vrm_ik_bone_names(avatar_root), {})
+func _setup_ik(avatar_base: AvatarBase) -> Error:
+	var skeleton = avatar_base.get_skeleton()
+	self.puppeteer_skeleton.initialize(skeleton, TrackerVrmUtils.get_vrm_ik_bone_names(avatar_base), {})
 	
 	# Get initial poses
 	var initial_poses := self.puppeteer_skeleton.get_skeleton_poses()
@@ -68,14 +68,15 @@ func _setup_ik(avatar_root: Node) -> Error:
 	
 	return OK
 
-func _setup_blend_shapes(avatar_root: Node, reset_track: StringName) -> void:
-	var animations: AnimationPlayer = avatar_root.find_child("AnimationPlayer", true)
-	if animations:
-		var animation_tracks: Array[String] = Array(Array(animations.get_animation_list()), TYPE_STRING, &"", null)
+func _setup_blend_shapes(avatar_base: AvatarBase, reset_track: StringName) -> void:
+	var anim_player: AnimationPlayer = avatar_base.get_animation_player()
+	var anim_tree: AvatarAnimationTree = avatar_base.get_animation_tree()
+	if anim_tree:
+		var animation_tracks: Array[String] = Array(Array(anim_player.get_animation_list()), TYPE_STRING, &"", null)
 		animation_tracks.erase(reset_track as String)
-		self.puppeteer_track.initialize(animations, animation_tracks, reset_track)
+		self.puppeteer_track.initialize(anim_tree, animation_tracks, reset_track)
 
-func _setup_puppeteers(avatar_scene: Node):
+func _setup_puppeteers(avatar_base: AvatarBase):
 	var puppeteer_manager = get_node(PuppeteerManager.PUPPETEER_MANAGER_NODE_PATH)
 	# Remove old puppeteers
 	if self.puppeteer_track:
@@ -88,23 +89,22 @@ func _setup_puppeteers(avatar_scene: Node):
 	
 	# Initialize skeleton and blendshape puppeteers
 	# TODO: For now, only one avatar is loaded. Maybe change this in the future?
-	var avatar_root = avatar_scene.get_child(0)
-	self._setup_blend_shapes(avatar_root, "RESET")
-	self._setup_ik(avatar_root)
+	self._setup_blend_shapes(avatar_base, "")
+	self._setup_ik(avatar_base)
 
-func _on_avatar_loaded(avatar_scene: Node):
-	self.restart_tracker(avatar_scene)
+func _on_avatar_loaded(avatar_base: AvatarBase):
+	self.restart_tracker(avatar_base)
 
-func start_tracker(avatar_scene: Node) -> void:
+func start_tracker(avatar_base: AvatarBase) -> void:
 	if self.mediapipe:
 		self.mediapipe.stop()
 	
-	self._setup_puppeteers(avatar_scene)
+	self._setup_puppeteers(avatar_base)
 	
 	self.mediapipe = MediaPipe.start(null)
 	self.mediapipe.connect("data_received", self.handle_mediapipe)
 	
-	super(avatar_scene)
+	super(avatar_base)
 
 func stop_tracker() -> void:
 	if self.mediapipe:

@@ -1,0 +1,6 @@
+[gd_scene load_steps=2 format=3 uid="uid://dskfslwib4kfh"]
+
+[ext_resource type="Script" path="res://main/avatar/avatar_base/avatar_base.gd" id="1_p5mxa"]
+
+[node name="AvatarBase" type="Node3D"]
+script = ExtResource("1_p5mxa")

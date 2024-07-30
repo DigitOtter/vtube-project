@@ -24,9 +24,6 @@ var _expression_mappings := {}
 # Private functions
 #-----------------------------------------------------------------------------#
 
-func _find_animation_player(avatar_root: Node) -> AnimationPlayer:
-	return avatar_root.find_child("AnimationPlayer", true, false)
-
 func _create_ik_armature(armature_name: String, bone_name: String) -> void:
 	var bone_idx := skeleton.find_bone(bone_name)
 	if bone_idx < 0:
@@ -181,15 +178,15 @@ func _setup_ik() -> Error:
 # Public functions
 #-----------------------------------------------------------------------------#
 
-func setup_tracker_handler(avatar_scene: Node) -> void:
+func setup_tracker_handler(avatar_base: AvatarBase) -> void:
 	if puppet_data == null:
 		self.puppet_data = VRMPuppetData.new()
 	
-	skeleton = self._find_skeleton(avatar_scene)
+	skeleton = avatar_base.get_skeleton()
 	if skeleton == null:
 		push_error("Unable to find skeleton, bailing out early")
 		return
-	_animation_player = self._find_animation_player(avatar_scene)
+	_animation_player = avatar_base.get_animation_player()
 	if _animation_player == null:
 		push_error("Unable to find animation player, bailing out early")
 		return

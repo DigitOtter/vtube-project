@@ -17,10 +17,10 @@ func _get_child_meshes(node: Node) -> Array[MeshInstance3D]:
 	
 	return ret
 
-func _on_model_loaded(avatar_root: Node):
+func _on_model_loaded(avatar_base: AvatarBase):
 	# Reset avatar meshes
 	self.selectable_meshes.clear()
-	self.selectable_meshes = self._get_child_meshes(avatar_root)
+	self.selectable_meshes = self._get_child_meshes(avatar_base)
 
 func _ready():
 	get_node(Main.MAIN_NODE_PATH).connect_avatar_loaded(self._on_model_loaded)

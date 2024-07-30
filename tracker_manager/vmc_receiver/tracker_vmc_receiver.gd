@@ -32,8 +32,8 @@ func _on_port_input_changed(data: float):
 	if self.vmc_receiver.port != new_port:
 		self.emit_signal(&"port_input_change", self.vmc_receiver.port, false)
 
-func _on_avatar_loaded(avatar_scene: Node):
-	self.restart_tracker(avatar_scene)
+func _on_avatar_loaded(avatar_base: AvatarBase):
+	self.restart_tracker(avatar_base)
 
 func _ready():
 	# Only start processing after tracker was started
@@ -82,7 +82,7 @@ func remove_gui():
 	var gui_menu: GuiTabMenuBase = trackers_node.get_tracker_gui()
 	gui_menu.remove_tab(GUI_TAB_NAME)
 
-func start_tracker(avatar_scene: Node) -> void:
+func start_tracker(avatar_base: AvatarBase) -> void:
 	var puppeteer_manager = get_node(PuppeteerManager.PUPPETEER_MANAGER_NODE_PATH)
 	if self.puppeteer_skeleton:
 		puppeteer_manager.remove_puppeteer(self.puppeteer_skeleton)
@@ -96,9 +96,8 @@ func start_tracker(avatar_scene: Node) -> void:
 	
 	# Setup skeleton puppeteer
 	# TODO: What happens if there are multiple avatars?
-	var avatar_root: Node = avatar_scene.get_child(0)
-	var skeleton = avatar_scene.find_child("GeneralSkeleton")
-	self.puppeteer_skeleton.initialize(skeleton, PuppeteerBase.get_vrm_bone_mappings(avatar_root))
+	var skeleton = avatar_base.get_skeleton()
+	self.puppeteer_skeleton.initialize(skeleton, PuppeteerBase.get_vrm_bone_mappings(avatar_base))
 	
 	# Forward bone_poses to puppeteer
 	# TODO: This is not thread-safe. In the future, should the VmcReceiver be altered to run in a
@@ -106,14 +105,15 @@ func start_tracker(avatar_scene: Node) -> void:
 	self.puppeteer_skeleton.bone_poses = self.vmc_receiver.bone_poses
 	
 	# Setup animation tracks puppeteer
-	var animations = avatar_scene.find_child("AnimationPlayer")
-	var animation_tracks: Array[String] = Array(Array(animations.get_animation_list()), TYPE_STRING, &"", null)
+	var anim_player := avatar_base.get_animation_player()
+	var anim_tree := avatar_base.get_animation_tree()
+	var animation_tracks: Array[String] = Array(Array(anim_player.get_animation_list()), TYPE_STRING, &"", null)
 	animation_tracks.erase("RESET")
-	self.puppeteer_tracks.initialize(animations, animation_tracks, &"RESET")
+	self.puppeteer_tracks.initialize(anim_tree, animation_tracks, &"RESET")
 	
 	self.set_process(true)
 	
-	super(avatar_scene)
+	super(avatar_base)
 
 func stop_tracker():
 	self.set_process(false)

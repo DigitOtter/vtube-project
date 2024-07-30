@@ -39,19 +39,22 @@ static func create_new(type: Type, tracker_name: String, puppeteer_name: String)
 	
 	return puppeteer
 
-static func get_vrm_animation_player(avatar_root: Node) -> AnimationPlayer:
-	return avatar_root.find_child("AnimationPlayer")
+static func get_vrm_animation_player(avatar_base: AvatarBase) -> AnimationPlayer:
+	return avatar_base.get_animation_player()
 
-static func get_vrm_bone_mappings(avatar_root: Node) -> BoneMap:
-	if avatar_root.get("vrm_meta"):
-		return avatar_root.vrm_meta.humanoid_bone_mapping
-	
-	return null
+static func get_vrm_bone_mappings(avatar_base: AvatarBase) -> BoneMap:
+	var vrm_meta := avatar_base.get_vrm_meta()
+	return vrm_meta.humanoid_bone_mapping if vrm_meta else null
 
 func _ready():
 	# Add GUI on creation, remove on deletion
 	self.add_gui()
 	self.connect(&"tree_exiting", self.remove_gui)
+
+## Override if the puppeteer uses an AnimationNode in the avatar's AnimationTree. The
+## PuppeteerManager uses this to keep the AnimationTree's order consistent with puppeteer order.
+func get_animation_node_name() -> String:
+	return ""
 
 func add_gui():
 	pass

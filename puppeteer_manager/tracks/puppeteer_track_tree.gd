@@ -3,7 +3,7 @@ extends PuppeteerBase
 
 signal toggle_gaze_update(toggle: bool, propagate: bool)
 
-var animation_tree:= AnimationTree.new()
+var _blend_tree := AnimationNodeBlendTree.new()
 
 var _gaze_computation := GazeComputation.new()
 var _compute_gaze := false
@@ -40,18 +40,22 @@ func remove_gui():
 
 ## Initialize the animation_tree. If reset_track is set, this puppeteer will reset the puppet
 ## before applying any other blend_tracks.
-func initialize(animations: AnimationPlayer, blend_tracks: Array[String], reset_track: StringName = &""):
-	self.animation_tree.anim_player = animations.get_path()
+func initialize(animation_tree: AvatarAnimationTree, 
+				blend_tracks: Array[String], reset_track: StringName = &""):
 	
-	var blend_tree := AnimationNodeBlendTree.new()
-	var blend_data := TrackUtils.setup_animation_tree(blend_tree, blend_tracks, reset_track)
+	self._blend_tree = AnimationNodeBlendTree.new()
+	var animations: Array[AnimationNodeAnimation] = []
+	for track in blend_tracks:
+		animations.push_back(animation_tree.create_animation_node(track))
+	var reset_anim := animation_tree.create_animation_node(reset_track) if !reset_track.is_empty() else null
+	var blend_data := TrackUtils.setup_animation_tree(self._blend_tree, animations, reset_anim)
 	
 	# Convert keys to lowercase to remove amiguity later on
 	self._blend_nodes.clear()
 	for k: String in blend_data.keys():
 		self._blend_nodes[k.to_lower()] = blend_data[k]
 	
-	self.animation_tree.tree_root = blend_tree
+	animation_tree.push_node(self.name, self._blend_tree)
 
 func set_track_targets(track_targets: Array[TrackUtils.TrackTarget]) -> void:
 	for t in track_targets:

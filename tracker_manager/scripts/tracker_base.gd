@@ -48,13 +48,14 @@ func remove_gui():
 ## Connect tracker to avatar_loaded. On load, the tracker is automatically
 ## reconfigured to target the new avatar.
 func init_tracker() -> void:
+	# TODO: For now, we're only loading one avatar, but future use should select the correct avatar
 	var main_node: Main = get_node_or_null(Main.MAIN_NODE_PATH)
 	if main_node and main_node.is_avatar_loaded():
-		self.start_tracker(main_node.get_avatar_root_node())
+		self.start_tracker(main_node.get_avatar_root_node().get_avatars()[0])
 	
 	get_node(Main.MAIN_NODE_PATH).connect_avatar_loaded(self.restart_tracker)
 
-func start_tracker(_avatar_scene: Node) -> void:
+func start_tracker(_avatar_base: AvatarBase) -> void:
 	self.add_gui()
 
 func stop_tracker():
@@ -64,6 +65,6 @@ func stop_tracker():
 	
 	self.remove_gui()
 
-func restart_tracker(avatar_scene: Node) -> void:
+func restart_tracker(avatar_base: AvatarBase) -> void:
 	self.stop_tracker()
-	self.start_tracker(avatar_scene)
+	self.start_tracker(avatar_base)

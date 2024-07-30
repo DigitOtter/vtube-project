@@ -131,7 +131,7 @@ func connect_avatar_unloaded(fcn: Callable) -> Error:
 func is_avatar_loaded() -> bool:
 	return %AvatarRoot.is_avatar_loaded()
 
-func get_avatar_root_node() -> Node:
+func get_avatar_root_node() -> AvatarRoot:
 	return %AvatarRoot
 
 func get_post_processing_manager() -> PostProcessingManager:

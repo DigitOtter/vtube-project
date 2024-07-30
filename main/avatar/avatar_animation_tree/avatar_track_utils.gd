@@ -1,4 +1,4 @@
-class_name TrackUtils
+class_name AvatarTrackUtils
 
 class TrackTarget:
 	var name: StringName
@@ -13,22 +13,25 @@ class BlendData:
 const ANIMATION_NODE_PREFIX := &"Animation_"
 const ANIMATION_NODE_EMPTY = preload("./animation_node_empty.tres")
 
-static func add_add_node(blend_tree: AnimationNodeBlendTree, node_name: StringName) -> StringName:
+static func _add_add_node(blend_tree: AnimationNodeBlendTree, node_name: StringName) -> StringName:
 	var add_node := AnimationNodeAdd2.new()
 	blend_tree.add_node(node_name, add_node)
 	return node_name
 
-static func add_anim_node(blend_tree: AnimationNodeBlendTree, 
+static func _add_anim_node(blend_tree: AnimationNodeBlendTree, 
 						  node_name: StringName, animation: AnimationNodeAnimation) -> StringName:
 	animation.play_mode = AnimationNodeAnimation.PLAY_MODE_FORWARD
 	blend_tree.add_node(node_name, animation)
 	return node_name
 
-static func add_empty_anim_node(blend_tree: AnimationNodeBlendTree, node_name: StringName) -> StringName:
+static func _add_empty_anim_node(blend_tree: AnimationNodeBlendTree, node_name: StringName) -> StringName:
 	var empty_node: AnimationRootNode = ANIMATION_NODE_EMPTY.duplicate()
 	blend_tree.add_node(node_name, empty_node)
 	return node_name
 
+## Adds animations to blend_tree. Each animation is connected to a AnimationNodeAdd2 node.
+## For each AnimationNodeAnimation in animations, the returned dictionary has an entry
+## { animation.anim: BlendData }.
 static func setup_animation_tree(blend_tree: AnimationNodeBlendTree, 
 								 animations: Array[AnimationNodeAnimation],
 								 reset_animation: AnimationNodeAnimation) -> Dictionary:
@@ -36,10 +39,12 @@ static func setup_animation_tree(blend_tree: AnimationNodeBlendTree,
 	
 	var base_node_name: StringName = &""
 	if reset_animation:
-		base_node_name = add_anim_node(blend_tree, ANIMATION_NODE_PREFIX + reset_animation.animation, 
-									   reset_animation)
+		base_node_name = AvatarTrackUtils._add_anim_node(
+			blend_tree, 
+			ANIMATION_NODE_PREFIX + reset_animation.animation, 
+			reset_animation)
 	else:
-		base_node_name = add_empty_anim_node(blend_tree, &"EmptyStart")
+		base_node_name = AvatarTrackUtils._add_empty_anim_node(blend_tree, &"EmptyStart")
 	
 	var add_node_name: StringName = base_node_name
 	var new_anim_node_name: StringName = &""
@@ -47,8 +52,8 @@ static func setup_animation_tree(blend_tree: AnimationNodeBlendTree,
 	# For each track, add and connect one animation_node with the "add" port of one add_node
 	# The add_node is labelled track_name, and the animation_node gets ANIMATION_NODE_PREFIX + track_name
 	for anim in animations:
-		add_node_name = add_add_node(blend_tree, anim.animation)
-		new_anim_node_name = add_anim_node(blend_tree, ANIMATION_NODE_PREFIX + anim.animation, anim)
+		add_node_name = AvatarTrackUtils._add_add_node(blend_tree, anim.animation)
+		new_anim_node_name = AvatarTrackUtils._add_anim_node(blend_tree, ANIMATION_NODE_PREFIX + anim.animation, anim)
 		
 		blend_tree.connect_node(add_node_name, 0, base_node_name)
 		blend_tree.connect_node(add_node_name, 1, new_anim_node_name)

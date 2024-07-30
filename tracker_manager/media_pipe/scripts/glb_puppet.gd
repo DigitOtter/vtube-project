@@ -13,9 +13,6 @@ var skeleton: Skeleton3D = null
 # Private functions
 #-----------------------------------------------------------------------------#
 
-func _find_skeleton(avatar_root: Node) -> Skeleton3D:
-	return avatar_root.find_child("*Skeleton*", true, false)
-
 #-----------------------------------------------------------------------------#
 # Public functions
 #-----------------------------------------------------------------------------#

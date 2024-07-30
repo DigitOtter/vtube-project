@@ -46,14 +46,14 @@ func _init_gui():
 	
 	gui_menu.add_elements_to_tab("Trackers", elements)
 
-func _on_avatar_loaded(avatar_root: Node):
+func _on_avatar_loaded(avatar_base: AvatarBase):
 	# Restart all trackers
 	for child in self.get_children():
 		if child is TrackerBase:
 			var c = child as TrackerBase
-			c.restart_tracker(avatar_root)
+			c.restart_tracker(avatar_base)
 
-func _on_avatar_unloaded(_avatar_root: Node):
+func _on_avatar_unloaded(_avatar_base: AvatarBase):
 	# Stop all trackers
 	for child in self.get_children():
 		if child is TrackerBase:

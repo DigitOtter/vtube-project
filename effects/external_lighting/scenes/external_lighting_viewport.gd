@@ -121,9 +121,9 @@ func _ready():
 	self._init_input()
 	get_node(Main.MAIN_NODE_PATH).connect_avatar_loaded(update_reactive_materials)
 
-func update_reactive_materials(model_node: Node):
+func update_reactive_materials(avatar_base: AvatarBase):
 	var find_materials: FindMaterialsWithParam = FindMaterialsWithParam.new(LIGHTING_SHADER_PARAM)
-	self.reactive_materials = find_materials.find_materials_with_parameter(model_node)
+	self.reactive_materials = find_materials.find_materials_with_parameter(avatar_base)
 	for mat in self.reactive_materials:
 		mat.set_shader_parameter(LIGHTING_SHADER_PARAM, self._active_lighting_texture)
 	

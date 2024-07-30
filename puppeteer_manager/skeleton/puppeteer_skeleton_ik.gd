@@ -209,7 +209,7 @@ func get_skeleton_poses() -> Dictionary:
 ## Initialize IK. Sets up RenIk and initializes LerpNode3D targets.
 ## skeleton_node The skeleton to control.
 ## ik_target_bone_names Name of bones that RenIk needs to function. If this is a 
-##                      VRM file, the bone mappings can be found in avatar_root.vrm_meta.humanoid_bone_mapping
+##                      VRM file, the bone mappings can be found in avatar_base.get_avatar().vrm_meta.humanoid_bone_mapping
 ## ik_target_config (Optional) dictionary of lerp configuration for various bones. Should contain elements of the form
 ##                  PuppeteerSkeletonIk.IkTarget: LerpNode3D.Config
 func initialize(skeleton_node: Skeleton3D, ik_target_bone_names: IkTargetBoneNames, ik_target_config: Dictionary = {}):

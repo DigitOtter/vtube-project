@@ -1,15 +1,25 @@
+## Puppeteer control. Manages active puppeteers.
+##
+## Trackers can use various puppeteers to control avatars. When a new tracker is instantiated,
+## it should request new puppeteers with [method request_new_puppeteer]. The new puppeteers are
+## added as child nodes to [PuppeteerManager]. If multiple trackers are active, the puppeteers
+## are executed in tracker registration oder.
+##
+## [PuppeteerManager] also instantiates an emotion control puppeteer that runs after the tracker
+## puppeteers.
 #class_name PuppeteerManager
 extends Node
 
 const PUPPETEER_MANAGER_NODE_PATH: NodePath = "/root/PuppeteerManager"
-const EMOTION_CONTROL_NODE_NAME := &"Emotion Control"
+const EMOTION_CONTROL_NAME := &"Emotion Control"
+const ANIMATION_TREE_NAME := &"PuppeteerTree"
 
 enum PuppeteerType {
 	SKELETON,
 	BLEND_SHAPES
 }
 
-signal puppeteer_ready(avatar_root: Node)
+signal puppeteer_ready(avatar_base: AvatarBase)
 signal toggle_emotion_control(enable: bool, propagate: bool)
 
 ## Should have the form TrackerBase: Array[ PuppeteerBase ]
@@ -54,31 +64,32 @@ func _get_or_add_tracker(tracker: TrackerBase) -> Array[PuppeteerBase]:
 	
 	return reg_puppeteers
 
-func _setup_track_reset(avatar_root: Node):
+func _setup_track_reset(avatar_base: AvatarBase):
 	if self._track_reset:
 		self.remove_puppeteer(self._track_reset)
 		self._track_reset = null
-	if not avatar_root:
+	if not avatar_base:
 		return
 	
 	self._track_reset = self.request_new_puppeteer(self._pre_puppeteers,
 												   PuppeteerBase.Type.TRACK_RESET,
 												   "TrackReset")
-	var anim_player: AnimationPlayer = avatar_root.find_child("AnimationPlayer", true)
-	self._track_reset.initialize(anim_player, &"RESET")
+	var anim_tree: AvatarAnimationTree = avatar_base.get_animation_tree()
+	self._track_reset.initialize(anim_tree, &"RESET")
 
-func _setup_emotion_control(avatar_root: Node):
+func _setup_emotion_control(avatar_base: AvatarBase):
 	if self._emotion_puppeteer:
 		self.remove_puppeteer(self._emotion_puppeteer)
 		self._emotion_puppeteer = null
-	if not self._emotion_control_enabled or not avatar_root:
+	if not self._emotion_control_enabled or not avatar_base:
 		return
 	
 	self._emotion_puppeteer = self.request_new_puppeteer(self._post_puppeteers, 
 														 PuppeteerBase.Type.TRACK_EMOTION, 
-														 EMOTION_CONTROL_NODE_NAME)
+														 EMOTION_CONTROL_NAME)
 	
-	var anim_player: AnimationPlayer = avatar_root.find_child("AnimationPlayer", true)
+	var anim_player: AnimationPlayer = avatar_base.get_animation_player()
+	var anim_tree: AvatarAnimationTree = avatar_base.get_animation_tree()
 	
 	# Find avatar's emotions
 	var available_emotions: Array[String] = []
@@ -88,19 +99,20 @@ func _setup_emotion_control(avatar_root: Node):
 		if tn.to_lower() in emotion_list:
 			available_emotions.append(tn)
 
-	self._emotion_puppeteer.initialize(anim_player, available_emotions)
+	self._emotion_puppeteer.initialize(anim_tree, available_emotions)
 
-func _on_avatar_loaded(avatar_root: Node):
-	self.emit_signal(&"puppeteer_ready", avatar_root)
+func _on_avatar_loaded(avatar_base: AvatarBase):
+	self.emit_signal(&"puppeteer_ready", avatar_base)
 	
-	self._setup_emotion_control(avatar_root)
+	self._setup_emotion_control(avatar_base)
 
 func _on_emotion_control_toggled(enabled: bool):
 	self._emotion_control_enabled = enabled
 	
+	# TODO: For now, we're only loading one avatar, but future use should select the correct avatar
 	var main: Main = get_node(Main.MAIN_NODE_PATH)
 	if main.is_avatar_loaded():
-		self._setup_emotion_control(main.get_avatar_root_node())
+		self._setup_emotion_control(main.get_avatar_root_node().get_avatars()[0])
 
 func _init_gui():
 	var gui_menu: GuiTabMenuBase = get_node(Gui.GUI_NODE_PATH).get_gui_menu()

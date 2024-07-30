@@ -8,7 +8,8 @@ var available_assets: Array[String]
 
 var file_type_loads: Dictionary = {
 	".png": self._load_png,
-	".tscn": self._load_tscn
+	".tscn": self._load_tscn,
+	".tscn.remap": self._load_tscn
 }
 
 func _ready():

@@ -1,11 +1,12 @@
+class_name AvatarRoot
 extends Node
 
 const MODEL_IMPORTER = preload("./scripts/model_importer.gd")
 const MODEL_LOADER_NODE_NAME := &"ModelLoaderDialog"
 
 signal open_dialog_requested(toggle: bool, propagate: bool)
-signal avatar_loaded(avatar_node: Node)
-signal avatar_unloaded(avatar_node: Node)
+signal avatar_loaded(avatar_base: AvatarBase)
+signal avatar_unloaded(avatar_base: AvatarBase)
 
 var _loaded_model_path: String = ""
 
@@ -53,7 +54,7 @@ func _init_gui():
 	button_data.Text = "Load Model"
 	button_model_load.Data = button_data
 	
-	Gui.get_gui_menu().add_elements_to_tab("Model Control", [ button_model_load ])
+	Gui.get_gui_menu().add_elements_to_tab("Model Control", [ button_model_load ] as Array[GuiElement.ElementData])
 	Gui.get_gui_menu().move_tab("Model Control", 0)
 
 func _ready():
@@ -70,21 +71,35 @@ func load_model(model_path: String):
 	
 	self.unload_model()
 	
-	self.add_child(avatar_model)
-	avatar_model.owner = self
+	var avatar_base :=  AvatarBase.create_new()
+	avatar_base.set_vrm_avatar(avatar_model)
+	
+	self.add_child(avatar_base)
+	avatar_base.owner = self
 	
 	self._loaded_model_path = model_path
 	
-	self.emit_signal(&"avatar_loaded", self)
+	self.emit_signal(&"avatar_loaded", avatar_base)
 
 func unload_model():
-	# Remove old avatar
+	# TODO: In the future, maybe only unload a single avatar?
+	# Remove old avatar(s)
 	for child in self.get_children():
+		if not child is AvatarBase:
+			continue
+		
 		child.owner = null
 		self.remove_child(child)
 		child.queue_free()
-	
-	self.emit_signal(&"avatar_unloaded", self)
+		
+		self.emit_signal(&"avatar_unloaded", child)
 
 func is_avatar_loaded() -> bool:
 	return !self._loaded_model_path.is_empty()
+
+func get_avatars() -> Array[AvatarBase]:
+	var avatars: Array[AvatarBase] = []
+	for c in self.get_children():
+		if c is AvatarBase:
+			avatars.push_back(c)
+	return avatars

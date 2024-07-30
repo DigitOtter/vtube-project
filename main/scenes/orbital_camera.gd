@@ -9,10 +9,10 @@ var _default_tf: Transform3D = self.transform
 @onready
 var _default_pivot_pos: Vector3 = self.global_transform.origin
 
-func _on_avatar_loaded(avatar_root: Node):
+func _on_avatar_loaded(avatar_base: AvatarBase):
 	var cam_pose: Transform3D = Transform3D()
 	
-	var look_node: Node3D = avatar_root.find_child(LOOK_POSITION_NODE_NAME)
+	var look_node: Node3D = avatar_base.find_child(LOOK_POSITION_NODE_NAME)
 	if look_node:
 		cam_pose = look_node.global_transform
 		cam_pose.origin += cam_pose.basis * Vector3(0.0, 0.0, DEFAULT_CAM_HEAD_DISTANCE)

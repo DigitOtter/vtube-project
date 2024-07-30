@@ -36,5 +36,5 @@ func _iterate_over_material_passes(material: Material):
 func _init(shader_param_to_find: String):
 	self.shader_param = shader_param_to_find
 
-func find_materials_with_parameter(node: Node) -> Array[ShaderMaterial]:
-	return self._iterate_over_node(node)
+func find_materials_with_parameter(avatar_base: AvatarBase) -> Array[ShaderMaterial]:
+	return self._iterate_over_node(avatar_base.get_avatar_root())

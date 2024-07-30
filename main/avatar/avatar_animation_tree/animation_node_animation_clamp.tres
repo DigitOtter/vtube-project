@@ -1,0 +1,9 @@
+[gd_resource type="AnimationNodeAnimationClamp" load_steps=2 format=3 uid="uid://c1qv08o0ht4xc"]
+
+[sub_resource type="AnimationSharedWeight" id="AnimationSharedWeight_andj0"]
+min_clamp = inf_neg
+max_clamp = inf
+
+[resource]
+animation = &"EyeLookOutRight"
+shared_weight = SubResource("AnimationSharedWeight_andj0")

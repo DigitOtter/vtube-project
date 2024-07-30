@@ -11,16 +11,13 @@ const DEFAULT_EMOTION_NAMES: Array[String] = [
 
 signal emotion_toggle(emotion_name: String, enabled: bool, propagate: bool)
 
-var animation_tree:= AnimationTree.new()
-
 ## Contains all blend nodes. Each element links a track_name to its corresponding node and blend rate
 ## Elements should be of the form StringName: BlendData
 var _blend_nodes: Dictionary = {}
 
+var _blend_tree := AnimationNodeBlendTree.new()
+
 func _ready():
-	self.add_child(self.animation_tree)
-	self.animation_tree.owner = self
-	
 	super()
 
 func add_gui():
@@ -62,16 +59,23 @@ func _on_emotion_toggled(emotion_name: String, enabled: bool):
 
 ## Initialize the animation_tree. If reset_track is set, this puppeteer will reset the puppet
 ## before applying any other blend_tracks.
-func initialize(animations: AnimationPlayer, emotion_tracks: Array[String], reset_track: StringName = &""):
-	self.animation_tree.anim_player = animations.get_path()
+func initialize(animation_tree: AvatarAnimationTree, 
+				emotion_tracks: Array[String], reset_track: StringName = &""):
+	self._blend_tree = AnimationNodeBlendTree.new()
+	var animations: Array[AnimationNodeAnimation] = []
+	for track in emotion_tracks:
+		var anim := animation_tree.create_animation_node(track)
+		animations.push_back(anim)
 	
-	var blend_tree = AnimationNodeBlendTree.new()
-	self._blend_nodes = TrackUtils.setup_animation_tree(blend_tree, emotion_tracks, reset_track)
+	var reset_anim := animation_tree.create_animation_node(reset_track) if !reset_track.is_empty() \
+						else null
+	
+	self._blend_nodes = TrackUtils.setup_animation_tree(self._blend_tree, animations, reset_anim)
 	
 	for track in emotion_tracks:
 		self._add_emotion_to_gui(track, false)
 	
-	self.animation_tree.tree_root = blend_tree
+	animation_tree.push_node(self.name, self._blend_tree)
 
 func set_track_targets(track_targets: Array[TrackUtils.TrackTarget]) -> void:
 	for t in track_targets:
