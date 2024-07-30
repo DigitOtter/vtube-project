@@ -1,7 +1,7 @@
 class_name Main
 extends Node
 
-const MAIN_NODE_PATH: NodePath = "/root/Main"
+const MAIN_NODE_PATH: NodePath = ^"/root/Main"
 const CONFIG_GUI_TAB_NAME := &"Config"
 
 const CONFIG_DIALOG_SCRIPT: GDScript = preload("./scripts/config_loader.gd")
@@ -18,16 +18,6 @@ func _on_config_file_selected(file_name: String, config_loader: ConfigLoader):
 		self.save_config(file_name)
 	else:
 		self.load_config(file_name)
-
-#func _on_config_dialog_canceled(config_loader: ConfigLoader):
-	## We're checking owner instead of the parent because, for some reason,
-	## the dialog is cancelled twice before the node can be removed from the tree, 
-	## causing a node busy error.
-	#if config_loader.owner == self:
-		#config_loader.owner = null
-		#config_loader.hide()
-		#self.remove_child(config_loader)
-		#config_loader.queue_free()
 
 ## Open config file dialog. If [param_name save_mode] is true, save the config. Else, load it.
 func _on_config_pressed(toggle: bool, save_mode: bool):
@@ -110,7 +100,7 @@ func _ready():
 	self._init_input()
 	
 	# Open gui once program has finished loading
-	var root_node: = get_node("/root")
+	var root_node: = get_node(^"/root")
 	root_node.connect(&"ready", func():
 		var gui := get_node(Gui.GUI_NODE_PATH)
 		gui.call_deferred(&"open_gui_window")
@@ -131,7 +121,7 @@ func connect_avatar_unloaded(fcn: Callable) -> Error:
 func is_avatar_loaded() -> bool:
 	return %AvatarRoot.is_avatar_loaded()
 
-func get_avatar_root_node() -> AvatarRoot:
+func get_avatar_root_node() -> Node:
 	return %AvatarRoot
 
 func get_post_processing_manager() -> PostProcessingManager:
