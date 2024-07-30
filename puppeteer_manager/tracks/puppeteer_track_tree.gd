@@ -57,7 +57,7 @@ func initialize(animation_tree: AvatarAnimationTree,
 		var bd: AvatarTrackUtils.BlendData = blend_data[k]
 		self._blend_nodes[k.to_lower()] = bd
 	
-	animation_tree.push_node(node_name, self._blend_tree)
+	animation_tree.add_or_replace_node(node_name, self._blend_tree)
 
 func set_track_targets(track_targets: Array[AvatarTrackUtils.TrackTarget]) -> void:
 	for t in track_targets:

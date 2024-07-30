@@ -42,6 +42,21 @@ func _set_add_node_amount(add_id: int, amount: float):
 	var add_node := AvatarAnimationTree._get_add_node_name(add_id)
 	self.set(&"parameters/" + add_node + &"/add_amount", 1.0)
 
+func _replace_or_add_sub_animation(anim_name: StringName, animation: AnimationRootNode):
+	var anim_id: int = -1
+	for id: int in range(0, self._sub_animations.size()):
+		if self._sub_animations[id] == anim_name:
+			anim_id = id
+			break
+	
+	if anim_id < 0:
+		return self._add_sub_animation(anim_name, animation)
+	
+	self.tree_root.remove_node(self._sub_animations[anim_id])
+	self.tree_root.add_node(anim_name, animation)
+	self.tree_root.connect_node(AvatarAnimationTree._get_add_node_name(anim_id), 1, anim_name)
+	self._sub_animations[anim_id] = anim_name
+
 func _add_sub_animation(anim_name: StringName, animation: AnimationRootNode):
 	# Create new AnimationNode2Add and connect animation to add port
 	var new_add_node := AvatarAnimationTree._get_add_node_name(self._sub_animations.size())
@@ -144,9 +159,8 @@ func initialize_clamped_animations(anim_names: Array[StringName], reset_name: St
 	self._set_base_input_node(blend_tree)
 	self._base_blend_data = blend_data
 
-## Add node to back
-func push_node(node_name: StringName, node: AnimationRootNode):
-	self._add_sub_animation(node_name, node)
+func add_or_replace_node(node_name: StringName, node: AnimationRootNode):
+	self._replace_or_add_sub_animation(node_name, node)
 
 func create_animation_node(track: StringName) -> AnimationNodeAnimation:
 	return AvatarAnimationTree._create_animation_node(track)

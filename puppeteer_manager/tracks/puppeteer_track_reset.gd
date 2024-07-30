@@ -20,7 +20,7 @@ func initialize(animation_tree: AvatarAnimationTree, reset_track: StringName = &
 	
 	var node_name = self.name
 	AvatarTrackUtils.adjust_blend_data_param_to_subtree(self._blend_nodes, node_name)
-	animation_tree.push_node(node_name, self._blend_tree)
+	animation_tree.add_or_replace_node(node_name, self._blend_tree)
 
 func update_puppet(_delta: float) -> void:
 	## AnimationTree resets the tracks automatically, no need to do anything here

@@ -3,9 +3,11 @@ extends PuppeteerBase
 
 ## Elements must be lower-case
 const DEFAULT_EMOTION_NAMES: Array[String] = [
-	"angry",
 	"happy",
+	"angry",
 	"sad",
+	"relaxed",
+	"surprised",
 	# TODO: Complete list with default emotions
 ]
 
@@ -79,7 +81,7 @@ func initialize(animation_tree: AvatarAnimationTree,
 	
 	var node_name := self.name
 	AvatarTrackUtils.adjust_blend_data_param_to_subtree(self._blend_nodes, node_name)
-	animation_tree.push_node(self.name, self._blend_tree)
+	animation_tree.add_or_replace_node(self.name, self._blend_tree)
 	self._animation_tree = animation_tree
 
 func set_track_targets(track_targets: Array[AvatarTrackUtils.TrackTarget]) -> void:
