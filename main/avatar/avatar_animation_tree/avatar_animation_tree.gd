@@ -17,6 +17,9 @@ var _sub_animations: Array[StringName] = []
 ## Clamped animations. Dictionary should be of the form { track_name: AnimationSharedWeight }
 var _clamped_animation_weights: Dictionary = {}
 
+static func create_new() -> AvatarAnimationTree:
+	return preload("./avatar_animation_tree.tscn").instantiate()
+
 static func _get_add_node_name(id: int) -> StringName:
 	return ADD_ANIM_NODE_PREFIX + String.num(id)
 
@@ -26,7 +29,8 @@ static func _create_animation_node(track_name: StringName) -> AnimationNodeAnima
 	return animation
 
 func _set_base_input_node(animation_node: AnimationRootNode):
-	self.tree_root.remove_node(BASE_ANIM_NODE_NAME)
+	if self.tree_root.has_node(BASE_ANIM_NODE_NAME):
+		self.tree_root.remove_node(BASE_ANIM_NODE_NAME)
 	self.tree_root.add_node(BASE_ANIM_NODE_NAME, animation_node)
 	
 	var out_node := AvatarAnimationTree._get_add_node_name(0) if not self._sub_animations.is_empty() else &"output"
@@ -35,8 +39,8 @@ func _set_base_input_node(animation_node: AnimationRootNode):
 	self._base_node = animation_node
 
 func _set_add_node_amount(add_id: int, amount: float):
-	var add_node := AvatarAnimationTree._get_add_node_name(self._sub_animations.size())
-	self.tree_root.set_parameter(&"parameters/" + add_node + &"/add_amount", amount)
+	var add_node := AvatarAnimationTree._get_add_node_name(add_id)
+	self.set(&"parameters/" + add_node + &"/add_amount", 1.0)
 
 func _add_sub_animation(anim_name: StringName, animation: AnimationRootNode):
 	# Create new AnimationNode2Add and connect animation to add port
@@ -45,15 +49,15 @@ func _add_sub_animation(anim_name: StringName, animation: AnimationRootNode):
 	self.tree_root.add_node(new_add_node, AnimationNodeAdd2.new())
 	self.tree_root.connect_node(new_add_node, 1, anim_name)
 	
-	self._set_add_node_amount(self._sub_animations.size(), 1.0)
-	
 	# Insert add node at end of tree
-	var prev_last_add_node := AvatarAnimationTree._get_add_node_name(self._sub_animations.size()-1)
+	var prev_last_add_node := AvatarAnimationTree._get_add_node_name(self._sub_animations.size()-1) \
+								if self._sub_animations.size() > 0 else BASE_ANIM_NODE_NAME
 	self.tree_root.disconnect_node(&"output", 0)
 	self.tree_root.connect_node(&"output", 0, new_add_node)
 	self.tree_root.connect_node(new_add_node, 0, prev_last_add_node)
 	
 	# Save name of stored animation
+	self._set_add_node_amount(self._sub_animations.size(), 1.0)
 	self._sub_animations.push_back(anim_name)
 
 func _find_sub_animation_id(anim_name: StringName) -> int:
@@ -106,19 +110,26 @@ func _remove_sub_animation(anim: StringName):
 		if anim_id < self._sub_animations.size()-1 else &"output"
 	self.tree_root.connect_node(output_node, 0, add_node)
 
-func _reset_blend_tree(reset_track: StringName = RESET_TRACK_NAME):
+func _ready():
+	self.reset_blend_tree()
+
+### Workaround. Setting add nodes immediately after creating them currently results in an error.
+### Right now we're activating them every process cycle
+#func _process(_delta):
+	#for id: int in range(0, self._sub_animations.size()):
+		#self._set_add_node_amount(id, 1.0)
+
+func reset_blend_tree(reset_track: StringName = RESET_TRACK_NAME):
 	var blend_tree := AnimationNodeBlendTree.new()
 	self.tree_root = blend_tree
 	self._sub_animations = []
 	
-	self._set_base_input_node(ANIMATION_NODE_EMPTY.new())
+	self._set_base_input_node(AnimationRootNode.new())
 
-func _ready():
-	self._reset_blend_tree()
-
-#func _process(_delta):
-#	for clamp_val: AnimationSharedWeight in self._clamped_animation_weights.values():
-#		clamp_val.reset_weight()
+func set_avatar_animation_player(avatar_base: AvatarBase):
+	var p_anim_player := avatar_base.get_animation_player()
+	self.anim_player = p_anim_player.get_path()
+	self.root_node = avatar_base.get_avatar_root().get_path()
 
 func initialize_clamped_animations(anim_names: Array[StringName], reset_name: StringName):
 	var animations: Array[AnimationNodeAnimation] = []

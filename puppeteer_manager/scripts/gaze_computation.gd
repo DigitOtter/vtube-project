@@ -35,9 +35,9 @@ static func get_gaze_direction_from_blend_shapes(blend_nodes: Dictionary) -> Arr
 	
 	return [ horizontal_ratio, vertical_ratio ]
 
-static func _compute_gaze(gaze: Array[float]) -> Array[TrackUtils.TrackTarget]:
-	const TrackTarget = TrackUtils.TrackTarget
-	var gaze_shapes: Array[TrackUtils.TrackTarget] = [
+static func _compute_gaze(gaze: Array[float]) -> Array[AvatarTrackUtils.TrackTarget]:
+	const TrackTarget = AvatarTrackUtils.TrackTarget
+	var gaze_shapes: Array[AvatarTrackUtils.TrackTarget] = [
 		TrackTarget.new(), TrackTarget.new(), TrackTarget.new(), TrackTarget.new()
 	]
 	gaze_shapes[0].name = "lookdown"
@@ -112,14 +112,14 @@ func generate_gui_elements() -> Array[GuiElement.ElementData]:
 	
 	return elements
 
-func compute_gaze_from_mp(blend_shapes: Array[MediaPipeCategory]) -> Array[TrackUtils.TrackTarget]:
+func compute_gaze_from_mp(blend_shapes: Array[MediaPipeCategory]) -> Array[AvatarTrackUtils.TrackTarget]:
 	var gaze := GazeComputation.get_gaze_direction_from_mp(blend_shapes)
 	self._apply_gaze_parameters(gaze)
 	return GazeComputation._compute_gaze(gaze)
 
 ## Computes gaze direction from PerfectSync blendshapes
 ## Input is PuppeteerTrackTree._blend_nodes
-func compute_gaze_from_blend_shapes(blend_nodes: Dictionary) -> Array[TrackUtils.TrackTarget]:
+func compute_gaze_from_blend_shapes(blend_nodes: Dictionary) -> Array[AvatarTrackUtils.TrackTarget]:
 	var gaze := GazeComputation.get_gaze_direction_from_blend_shapes(blend_nodes)
 	self._apply_gaze_parameters(gaze)
 	return GazeComputation._compute_gaze(gaze)

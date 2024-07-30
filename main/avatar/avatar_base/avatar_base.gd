@@ -32,14 +32,15 @@ func get_animation_tree() -> AvatarAnimationTree:
 	if not animation_player:
 		return null
 	
-	var animation_tree: AnimationTree = animation_player.find_child(ANIMATION_TREE_NODE_NAME, false)
+	var animation_tree: AvatarAnimationTree = animation_player.find_child(ANIMATION_TREE_NODE_NAME, false)
 	if not animation_tree:
-		animation_tree = AnimationTree.new()
+		animation_tree = AvatarAnimationTree.create_new()
 		animation_player.add_child(animation_tree)
 		animation_tree.owner = animation_player
 		animation_tree.name = ANIMATION_TREE_NODE_NAME
 		
-		animation_tree.anim_player = animation_player.get_path()
+		animation_tree.set_avatar_animation_player(self)
+		animation_tree.reset_blend_tree()
 	
 	return animation_tree
 

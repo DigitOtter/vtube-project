@@ -1,0 +1,6 @@
+[gd_scene load_steps=2 format=3 uid="uid://mfaxodm7ecr5"]
+
+[ext_resource type="Script" path="res://main/avatar/avatar_animation_tree/avatar_animation_tree.gd" id="1_mr02c"]
+
+[node name="AvatarAnimationTree" type="AnimationTree"]
+script = ExtResource("1_mr02c")

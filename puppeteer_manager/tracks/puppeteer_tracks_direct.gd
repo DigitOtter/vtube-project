@@ -1,3 +1,5 @@
+## Apply tracks manually instead of using an [AvatarAnimationTree]. This puppeteer only supports pure
+## blendshape tracks. Also, it's probably slower than [PuppeteerTrackTree], so use that one instead.
 class_name PuppeteerTracksDirect
 extends PuppeteerBase
 

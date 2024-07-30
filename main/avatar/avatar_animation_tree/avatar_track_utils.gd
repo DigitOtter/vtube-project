@@ -7,7 +7,7 @@ class TrackTarget:
 class BlendData:
 	var node: AnimationNodeAdd2 = null
 	var param: StringName
-	var rate: float = 0.1 * 60
+	var rate: float = 0.3 * 60
 	var target: float = 0.0
 
 const ANIMATION_NODE_PREFIX := &"Animation_"
@@ -69,3 +69,11 @@ static func setup_animation_tree(blend_tree: AnimationNodeBlendTree,
 	blend_tree.connect_node(&"output", 0, add_node_name)
 	
 	return track_blend_data
+
+## Adjusts the param name of blend_data returned by [method AvatarTrackUtils.setup_animation_tree].
+## This is useful if the blend_tree created by [method AvatarTrackUtils.setup_animation_tree] is 
+## added as a subtree of a larger [AnimationTree].
+static func adjust_blend_data_param_to_subtree(blend_data: Dictionary, anim_subtree_name: StringName):
+	for bd: BlendData in blend_data.values():
+		var param = "parameters/" + anim_subtree_name + "/" + bd.param.split("/", true, 1)[1]
+		bd.param = param

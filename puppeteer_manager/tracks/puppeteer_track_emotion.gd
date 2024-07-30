@@ -11,6 +11,8 @@ const DEFAULT_EMOTION_NAMES: Array[String] = [
 
 signal emotion_toggle(emotion_name: String, enabled: bool, propagate: bool)
 
+var _animation_tree: AvatarAnimationTree = null
+
 ## Contains all blend nodes. Each element links a track_name to its corresponding node and blend rate
 ## Elements should be of the form StringName: BlendData
 var _blend_nodes: Dictionary = {}
@@ -53,7 +55,7 @@ func _add_emotion_to_gui(emotion_name: String, enabled_by_default: bool = false)
 	gui_menu.add_element_to_tab(self.name, emotion_toggle_data)
 
 func _on_emotion_toggled(emotion_name: String, enabled: bool):
-	var emotion_node: TrackUtils.BlendData = self._blend_nodes.get(emotion_name, null)
+	var emotion_node: AvatarTrackUtils.BlendData = self._blend_nodes.get(emotion_name, null)
 	if emotion_node:
 		emotion_node.target = 1.0 if enabled else 0.0
 
@@ -70,20 +72,23 @@ func initialize(animation_tree: AvatarAnimationTree,
 	var reset_anim := animation_tree.create_animation_node(reset_track) if !reset_track.is_empty() \
 						else null
 	
-	self._blend_nodes = TrackUtils.setup_animation_tree(self._blend_tree, animations, reset_anim)
+	self._blend_nodes = AvatarTrackUtils.setup_animation_tree(self._blend_tree, animations, reset_anim)
 	
 	for track in emotion_tracks:
 		self._add_emotion_to_gui(track, false)
 	
+	var node_name := self.name
+	AvatarTrackUtils.adjust_blend_data_param_to_subtree(self._blend_nodes, node_name)
 	animation_tree.push_node(self.name, self._blend_tree)
+	self._animation_tree = animation_tree
 
-func set_track_targets(track_targets: Array[TrackUtils.TrackTarget]) -> void:
+func set_track_targets(track_targets: Array[AvatarTrackUtils.TrackTarget]) -> void:
 	for t in track_targets:
-		var blend_data: TrackUtils.BlendData = self._blend_nodes.get(t.name.to_lower(), null)
+		var blend_data: AvatarTrackUtils.BlendData = self._blend_nodes.get(t.name.to_lower(), null)
 		if blend_data:
 			blend_data.target = t.target
 
 func update_puppet(delta: float) -> void:
-	for bd: TrackUtils.BlendData in self._blend_nodes.values():
-		var add: float = lerpf(self.animation_tree.get(bd.param), bd.target, bd.rate * delta)
-		self.animation_tree.set(bd.param, add)
+	for bd: AvatarTrackUtils.BlendData in self._blend_nodes.values():
+		var add: float = lerpf(self._animation_tree.get(bd.param), bd.target, bd.rate * delta)
+		self._animation_tree.set(bd.param, add)
