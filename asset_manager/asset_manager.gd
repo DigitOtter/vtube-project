@@ -9,7 +9,7 @@ var available_assets: Array[String]
 var file_type_loads: Dictionary = {
 	".png": self._load_png,
 	".tscn": self._load_tscn,
-	".tscn.remap": self._load_tscn
+	".tscn.remap": self._load_tscn_remap
 }
 
 func _ready():
@@ -38,6 +38,11 @@ func _load_png(file_path: String) -> Sprite3D:
 
 func _load_tscn(file_path: String) -> Node3D:
 	return load(file_path).instantiate()
+
+func _load_tscn_remap(file_path: String) -> Node3D:
+	const REMAP := &".remap"
+	var scene_file_path := file_path.erase(file_path.length()-REMAP.length(), REMAP.length())
+	return self._load_tscn(scene_file_path)
 
 func list_available_assets() -> Array[String]:
 	return self.available_assets
