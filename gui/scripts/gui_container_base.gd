@@ -30,7 +30,7 @@ func add_element(_element: GuiElement.ElementData) -> GuiElementBase:
 	return null
 
 ## Remove element
-func remove_element(_element_name: String):
+func remove_element(__element_name: String):
 	pass
 
 ## Get number of elements in container
@@ -42,7 +42,7 @@ func get_elements() -> Array[GuiElementBase]:
 	return []
 
 ## Move element to new position
-func move_element(_element_name: String, _pos: int) -> bool:
+func move_element(__element_name: String, _pos: int) -> bool:
 	return false
 
 ## Calls each control element's [method ElementData.OnLoadData]. 

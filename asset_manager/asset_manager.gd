@@ -41,8 +41,8 @@ func _load_tscn(file_path: String) -> Node3D:
 
 func _load_tscn_remap(file_path: String) -> Node3D:
 	const REMAP := &".remap"
-	var scene_file_path := file_path.erase(file_path.length()-REMAP.length(), REMAP.length())
-	return self._load_tscn(scene_file_path)
+	var p_scene_file_path := file_path.erase(file_path.length()-REMAP.length(), REMAP.length())
+	return self._load_tscn(p_scene_file_path)
 
 func list_available_assets() -> Array[String]:
 	return self.available_assets

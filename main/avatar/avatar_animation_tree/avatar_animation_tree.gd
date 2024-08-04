@@ -14,9 +14,6 @@ var _base_blend_data: Dictionary = {}
 ## TODO: Post Godot feature request for looking up connections between nodes
 var _sub_animations: Array[StringName] = []
 
-## Clamped animations. Dictionary should be of the form { track_name: AnimationSharedWeight }
-var _clamped_animation_weights: Dictionary = {}
-
 static func create_new() -> AvatarAnimationTree:
 	return preload("./avatar_animation_tree.tscn").instantiate()
 
@@ -40,7 +37,7 @@ func _set_base_input_node(animation_node: AnimationRootNode):
 
 func _set_add_node_amount(add_id: int, amount: float):
 	var add_node := AvatarAnimationTree._get_add_node_name(add_id)
-	self.set(&"parameters/" + add_node + &"/add_amount", 1.0)
+	self.set(&"parameters/" + add_node + &"/add_amount", amount)
 
 func _replace_or_add_sub_animation(anim_name: StringName, animation: AnimationRootNode):
 	var anim_id: int = -1
@@ -148,8 +145,8 @@ func set_avatar_animation_player(avatar_base: AvatarBase):
 
 func initialize_clamped_animations(anim_names: Array[StringName], reset_name: StringName):
 	var animations: Array[AnimationNodeAnimation] = []
-	for name in anim_names:
-		animations.push_back(AvatarAnimationTree._create_animation_node(name))
+	for anim_name in anim_names:
+		animations.push_back(AvatarAnimationTree._create_animation_node(anim_name))
 	var reset_anim := AvatarAnimationTree._create_animation_node(reset_name) if !reset_name.is_empty() \
 						else null
 	

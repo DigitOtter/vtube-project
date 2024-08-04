@@ -7,7 +7,7 @@ class Config:
 @export var target_node: Node3D          = null
 
 @export var global_target: Transform3D = Transform3D.IDENTITY
-@export var lerp_rate: float           = 10
+@export var lerp_rate: float           = 7.5
 
 func _physics_process(delta):
 	# For the future, maybe use https://blog.pkh.me/p/41-fixing-the-iterative-damping-interpolation-in-video-games.html

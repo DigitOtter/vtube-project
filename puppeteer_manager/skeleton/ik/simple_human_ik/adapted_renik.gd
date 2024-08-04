@@ -17,8 +17,8 @@ func update_skeleton():
 	super()
 	self._simple_human_ik.skeleton = self.skeleton
 	
-	self._simple_human_ik.target_head = get_node(self.armature_head_target)
-	self._simple_human_ik.target_hip = get_node(self.armature_hip_target)
+	self._simple_human_ik.target_head = get_node_or_null(self.armature_head_target)
+	self._simple_human_ik.target_hip = get_node_or_null(self.armature_hip_target)
 	
 	self._simple_human_ik.head_bone_name = self.armature_head
 	self._simple_human_ik.hip_bone_name = self.armature_hip

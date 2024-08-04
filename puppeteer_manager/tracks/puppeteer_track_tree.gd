@@ -13,6 +13,8 @@ var _compute_gaze := false
 ## Elements should be of the form StringName: BlendData
 var _blend_nodes: Dictionary = {}
 
+var _mp_values: Array[MediaPipeCategory] = []
+
 func _ready():
 	super()
 
@@ -75,6 +77,7 @@ func set_track_targets_dict(track_targets: Dictionary) -> void:
 			blend_data.target = track_targets[vmc_name]
 
 func set_track_targets_mp(track_targets: Array[MediaPipeCategory]) -> void:
+	self._mp_values = track_targets
 	for t in track_targets:
 		var blend_data: AvatarTrackUtils.BlendData = self._blend_nodes.get(t.category_name.to_lower(), null)
 		if blend_data: 
@@ -90,7 +93,8 @@ func set_vertical_gaze_strength(val: float):
 	self._gaze_computation.emit_signal(&"set_vertical_gaze_strength", val, true)
 
 func update_gaze_from_perfect_sync():
-	var gazes := self._gaze_computation.compute_gaze_from_blend_shapes(self._blend_nodes)
+	#var gazes := self._gaze_computation.compute_gaze_from_blend_shapes(self._blend_nodes)
+	var gazes := self._gaze_computation.compute_gaze_from_mp(self._mp_values)
 	self.set_track_targets(gazes)
 
 func update_puppet(delta: float) -> void:

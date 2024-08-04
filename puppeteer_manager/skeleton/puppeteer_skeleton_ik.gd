@@ -214,6 +214,8 @@ func get_skeleton_poses() -> Dictionary:
 ## ik_target_config (Optional) dictionary of lerp configuration for various bones. Should contain elements of the form
 ##                  PuppeteerSkeletonIk.IkTarget: LerpNode3D.Config
 func initialize(skeleton_node: Skeleton3D, ik_target_bone_names: IkTargetBoneNames, ik_target_config: Dictionary = {}):
+	skeleton_node.reset_bone_poses()
+	
 	self._initialize_lerp_nodes()
 	
 	if not self.is_ancestor_of(self.ren_ik):

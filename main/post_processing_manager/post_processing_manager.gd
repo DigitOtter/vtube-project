@@ -20,9 +20,9 @@ var _post_processing_gui: GuiTabMenu = GuiMenuFactory.create_new(GuiMenuFactory.
 var _available_effects: Array[PostProcessingData] = []
 
 func _on_input_resized():
-	var size := self._input_node.size
+	var p_size := self._input_node.size
 	for effect: PostProcessingBase in self.get_children():
-		effect.resize_effect(size)
+		effect.resize_effect(p_size)
 	
 	self._update_texture_chain()
 
