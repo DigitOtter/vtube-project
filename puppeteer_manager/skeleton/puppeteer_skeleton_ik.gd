@@ -46,7 +46,8 @@ var ik_targets_parent: Node3D = null
 @export var reset_left_foot := Transform3D.IDENTITY
 @export var reset_right_foot := Transform3D.IDENTITY
 
-var ren_ik: RenIK3D = RenIK3D.new()
+#var ren_ik: RenIK3D = RenIK3D.new()
+var ren_ik: AdaptedRenik = AdaptedRenik.new()
 
 func _set_skeleton_a_pose() -> Error:
 	if self.ren_ik.skeleton == null:
@@ -240,6 +241,8 @@ func initialize(skeleton_node: Skeleton3D, ik_target_bone_names: IkTargetBoneNam
 	self._set_skeleton_a_pose()
 	
 	self._setup_ik_targets(ik_target_config)
+	self.ren_ik.update_skeleton()
+	
 	self._align_target_with_skeleton()
 	self.set_reset_poses()
 
