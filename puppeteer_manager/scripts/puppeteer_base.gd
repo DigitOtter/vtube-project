@@ -3,6 +3,7 @@ extends Node
 
 enum Type {
 	SKELETON_DIRECT,
+	SKELETON_VMC_DIRECT,
 	SKELETON_IK,
 	BLEND_SHAPES_DIRECT,
 	TRACK_RESET,
@@ -21,6 +22,8 @@ static func create_new(type: Type, tracker_name: String, puppeteer_name: String)
 	var puppeteer: PuppeteerBase = null
 	if type == Type.SKELETON_DIRECT:
 		puppeteer = PuppeteerSkeletonDirect.new()
+	elif type == Type.SKELETON_VMC_DIRECT:
+		puppeteer = PuppeteerSkeletonVmcDirect.new()
 	elif type == Type.SKELETON_IK:
 		puppeteer = PuppeteerSkeletonIk.new()
 	elif type == Type.BLEND_SHAPES_DIRECT:

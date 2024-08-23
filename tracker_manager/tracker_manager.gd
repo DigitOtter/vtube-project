@@ -5,8 +5,10 @@ const TRACKER_MANAGER_NODE_PATH: NodePath = "/root/TrackerManager"
 
 signal toggle_vmc_receiver(enabled: bool, propagate: bool)
 signal toggle_media_pipe(enabled: bool, propagate: bool)
+signal toggle_mp_pose(enabled: bool, propagate: bool)
 
 var _tracker_gui_menu := Gui.GUI_TAB_MENU_SCENE.instantiate()
+var _mp_camera_manager := MpCameraManager.new()
 
 func _on_tracker_toggle(enabled: bool, tracker_type: TrackerBase.Type):
 	var tracker_name := TrackerBase.get_tracker_name(tracker_type)
@@ -37,6 +39,7 @@ func _init_gui():
 	var elements: Array[GuiElement.ElementData] = []
 	elements.append(self._init_tracker_gui(TrackerBase.Type.VMC_RECEIVER, &"toggle_vmc_receiver", false))
 	elements.append(self._init_tracker_gui(TrackerBase.Type.MEDIA_PIPE, &"toggle_media_pipe", false))
+	elements.append(self._init_tracker_gui(TrackerBase.Type.MP_POSE, &"toggle_mp_pose", false))
 	
 	var tracker_menu_data := GuiElement.ElementData.new()
 	tracker_menu_data.Name = "Tracker Settings"
@@ -60,6 +63,9 @@ func _on_avatar_unloaded(_avatar_base: AvatarBase):
 			var c = child as TrackerBase
 			c.stop_tracker()
 
+func _cleanup():
+	self.get_mp_camera_manager().cleanup()
+
 func _ready():
 	self._init_gui()
 	
@@ -69,3 +75,6 @@ func _ready():
 
 func get_tracker_gui() -> GuiTabMenuBase:
 	return self._tracker_gui_menu
+
+func get_mp_camera_manager() -> MpCameraManager:
+	return self._mp_camera_manager

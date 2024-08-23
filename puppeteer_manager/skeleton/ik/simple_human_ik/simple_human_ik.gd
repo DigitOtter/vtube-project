@@ -11,6 +11,9 @@ class SpineChain:
 	var root_leaf_normal: Vector3
 	var local_bone_normals: Array[Vector3] = []
 
+## Use rest_bone_poses as initial skeleton pose when computing ik 
+@export var use_rest_bone_poses: bool = true 
+
 @export var target_head: Node3D = null
 @export var target_hip: Node3D = null
 
@@ -139,7 +142,7 @@ static func _perform_head_ik(spine_chain: SpineChain, leaf_pose: Transform3D, bo
 		# Compute adjusted pose of last bone
 		bone_poses[-1] = prev_old_to_new_global_tf * bone_poses[-1]
 
-static func _compute_total_twist(spine_chain: SpineChain, leaf_pose: Transform3D, bone_poses: Array[Transform3D]) -> float:
+static func _compute_total_twist(_spine_chain: SpineChain, leaf_pose: Transform3D, bone_poses: Array[Transform3D]) -> float:
 	var rot_tf: Basis = bone_poses[-1].basis.inverse() * leaf_pose.basis
 	var rot_angle: float = rot_tf.get_euler(EULER_ORDER_YXZ)[1]
 	return rot_angle
@@ -165,7 +168,7 @@ static func _perform_twist(spine_chain: SpineChain, total_twist: float, bone_pos
 		
 		prev_twist_rot = bone_poses[id].basis
 
-static func _perform_ccd_ik(spine_chain:SpineChain, leaf_pose: Transform3D, bone_poses: Array[Transform3D]):
+static func _perform_ccd_ik(_spine_chain:SpineChain, leaf_pose: Transform3D, bone_poses: Array[Transform3D]):
 	var prev_old_to_new_tf := Transform3D.IDENTITY
 	var old_bone_leaf_pose: Transform3D = bone_poses[-1]
 	for id: int in range(0, bone_poses.size()-1):
@@ -200,11 +203,13 @@ func _perform_simple_head_ik(spine_chain: SpineChain, leaf_pose_node: Node3D):
 	# without translation, and that makes neck movements look weird. Instead, we're adjusting the
 	# head movement locally. If you're using this outside of MediaPipe, you can try uncommenting the
 	# following three lines and see how it looks.
-	var leaf_bone_pos: Vector3 = self.skeleton.get_bone_global_pose(spine_chain.bone_chain[-1]).origin
-	var root_bone_pose: Transform3D = self.skeleton.get_bone_global_pose(spine_chain.bone_chain[0])
+	var leaf_bone_pos: Vector3 = self.skeleton.get_bone_global_pose(spine_chain.bone_chain[-1]).origin \
+		if not self.use_rest_bone_poses else self.skeleton.get_bone_global_rest(spine_chain.bone_chain[-1]).origin
+	var root_bone_pose: Transform3D = self.skeleton.get_bone_global_pose(spine_chain.bone_chain[0]) \
+		if not self.use_rest_bone_poses else self.skeleton.get_bone_global_rest(spine_chain.bone_chain[0])
 	leaf_pose.origin = root_bone_pose * (Basis.IDENTITY.slerp(leaf_pose_node.basis, 0.075) * (root_bone_pose.inverse() * leaf_bone_pos))
 	
-	var bone_poses: Array[Transform3D] = self._get_bone_poses(spine_chain)
+	var bone_poses: Array[Transform3D] = self._get_bone_poses(spine_chain, self.use_rest_bone_poses)
 	
 	## Twist the skeleton to align attitude
 	var total_twist: float = SimpleHumanIk._compute_total_twist(spine_chain, leaf_pose, bone_poses)
@@ -221,12 +226,16 @@ func _perform_simple_head_ik(spine_chain: SpineChain, leaf_pose_node: Node3D):
 	bone_poses[-1].basis = leaf_pose.basis
 	self._set_bone_poses(spine_chain, bone_poses)
 
-func _get_bone_poses(spine_chain: SpineChain) -> Array[Transform3D]:
+func _get_bone_poses(spine_chain: SpineChain, use_rest_poses: bool) -> Array[Transform3D]:
 	var bone_count: int = spine_chain.bone_chain.size()
 	var bone_poses: Array[Transform3D] = []
 	bone_poses.resize(bone_count)
-	for id: int in range(0, bone_count):
-		bone_poses[id] = self.skeleton.get_bone_global_pose(spine_chain.bone_chain[id])
+	if use_rest_poses:
+		for id: int in range(0, bone_count):
+			bone_poses[id] = self.skeleton.get_bone_global_rest(spine_chain.bone_chain[id])
+	else:
+		for id: int in range(0, bone_count):
+			bone_poses[id] = self.skeleton.get_bone_global_pose(spine_chain.bone_chain[id])
 	return bone_poses
 
 func _set_bone_poses(spine_chain: SpineChain, bone_poses: Array[Transform3D]):
@@ -237,17 +246,17 @@ func _set_bone_poses(spine_chain: SpineChain, bone_poses: Array[Transform3D]):
 	for id: int in range(0, bone_chain.size()):
 		# Get bone pose in local space
 		var cur_local_pose: Transform3D = prev_bone_pose.inverse() * bone_poses[id]
-		self.skeleton.set_bone_pose_position(bone_chain[id], cur_local_pose.origin)
+		#self.skeleton.set_bone_pose_position(bone_chain[id], cur_local_pose.origin)
 		self.skeleton.set_bone_pose_rotation(bone_chain[id], cur_local_pose.basis.get_rotation_quaternion())
 		prev_bone_pose = bone_poses[id]
 
 func _ready():
-	self._init_skeleton_bones(self.head_bone_name, self.hip_bone_name)
+	self.setup_ik()
 
 func setup_ik():
 	self._init_skeleton_bones(self.head_bone_name, self.hip_bone_name)
 
 func update_ik():
 	# TODO: Remove reset_bone_poses
-	self.skeleton.reset_bone_poses()
+	#self.skeleton.reset_bone_poses()
 	self._perform_simple_head_ik(self._spine_chain, self.target_head)

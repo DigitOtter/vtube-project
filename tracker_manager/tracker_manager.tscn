@@ -2,5 +2,7 @@
 
 [ext_resource type="Script" path="res://tracker_manager/tracker_manager.gd" id="1_jiro1"]
 
-[node name="Trackers" type="Node"]
+[node name="TrackerManager" type="Node"]
 script = ExtResource("1_jiro1")
+
+[connection signal="tree_exiting" from="." to="." method="_cleanup"]

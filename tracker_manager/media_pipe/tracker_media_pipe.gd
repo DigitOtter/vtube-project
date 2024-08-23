@@ -11,7 +11,7 @@ class InitialPoses:
 	var left_leg:= Transform3D.IDENTITY
 	var right_leg:= Transform3D.IDENTITY
 
-var mediapipe: MediaPipe = null
+var mediapipe_face: MediaPipeFace = null
 
 var puppeteer_skeleton: PuppeteerSkeletonIk = null
 var puppeteer_track: PuppeteerTrackTree = null
@@ -27,7 +27,7 @@ var initial_right_foot := Transform3D.IDENTITY
 var _media_pipe_base_head_pose = null
 
 static func get_type_name() -> StringName:
-	return &"MediaPipe"
+	return &"MediaPipeFace"
 
 func _setup_ik(avatar_base: AvatarBase) -> Error:
 	var skeleton = avatar_base.get_skeleton()
@@ -96,19 +96,26 @@ func _on_avatar_loaded(avatar_base: AvatarBase):
 	self.restart_tracker(avatar_base)
 
 func start_tracker(avatar_base: AvatarBase) -> void:
-	if self.mediapipe:
-		self.mediapipe.stop()
+	if self.mediapipe_face:
+		self.mediapipe_face.stop()
 	
 	self._setup_puppeteers(avatar_base)
 	
-	self.mediapipe = MediaPipe.start(null)
-	self.mediapipe.connect("data_received", self.handle_mediapipe)
+	var mp_camera_manager: MpCameraManager = \
+		get_node(TrackerManager.TRACKER_MANAGER_NODE_PATH).get_mp_camera_manager()
+	var mp_camera_helper := mp_camera_manager.get_camera(MpCameraManager.DEFAULT_CAMERA_INDEX)
+	if not mp_camera_helper:
+		mp_camera_helper = mp_camera_manager.init_camera(MpCameraManager.DEFAULT_CAMERA_INDEX, \
+			MpCameraManager.DEFAULT_CAMERA_SIZE, true)
+	
+	self.mediapipe_face = MediaPipeFace.create_new(mp_camera_helper.mp_helper)
+	self.mediapipe_face.connect("data_received", self.handle_mediapipe)
 	
 	super(avatar_base)
 
 func stop_tracker() -> void:
-	if self.mediapipe:
-		self.mediapipe.stop()
+	if self.mediapipe_face:
+		self.mediapipe_face.stop()
 	
 	super()
 

@@ -6,7 +6,7 @@
 [ext_resource type="PackedScene" uid="uid://dw3gfo2unxnp" path="res://main/scenes/orbital_camera.tscn" id="5_yy42a"]
 [ext_resource type="Shader" path="res://main/post_processing_manager/texture_display.gdshader" id="6_86adh"]
 [ext_resource type="PackedScene" uid="uid://t613d0caqf5g" path="res://main/scenes/lighting.tscn" id="6_a44qy"]
-[ext_resource type="Texture2D" uid="uid://dbpmxbpki3ojp" path="res://main/post_processing/ascii_shading/shaders/ascii-sample-texture.png" id="7_1indx"]
+[ext_resource type="Texture2D" uid="uid://1fqpooeno6qu" path="res://main/post_processing/ascii_shading/shaders/ascii-sample-texture.png" id="7_1indx"]
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_swk0h"]
 resource_local_to_scene = true

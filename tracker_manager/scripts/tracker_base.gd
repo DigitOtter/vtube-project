@@ -5,6 +5,7 @@ enum Type {
 	EMPTY,
 	MEDIA_PIPE,
 	VMC_RECEIVER,
+	MP_POSE,
 }
 
 static func _get_tracker_class(type: Type):
@@ -14,6 +15,8 @@ static func _get_tracker_class(type: Type):
 		return TrackerMediaPipe
 	elif type == Type.VMC_RECEIVER:
 		return TrackerVmcReceiver
+	elif type == Type.MP_POSE:
+		return TrackerMpPose
 	
 	return null
 

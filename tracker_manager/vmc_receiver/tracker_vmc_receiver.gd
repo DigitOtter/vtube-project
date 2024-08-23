@@ -17,7 +17,7 @@ var vmc_renames: Dictionary = {
 @export 
 var vmc_receiver: VmcReceiver = VmcReceiver.new()
 
-var puppeteer_skeleton: PuppeteerSkeletonDirect = null
+var puppeteer_skeleton: PuppeteerSkeletonVmcDirect = null
 var puppeteer_tracks: PuppeteerTrackTree = null
 
 static func get_type_name() -> StringName:
@@ -87,7 +87,7 @@ func start_tracker(avatar_base: AvatarBase) -> void:
 	if self.puppeteer_skeleton:
 		puppeteer_manager.remove_puppeteer(self.puppeteer_skeleton)
 	self.puppeteer_skeleton = \
-		puppeteer_manager.request_new_puppeteer(self, PuppeteerBase.Type.SKELETON_DIRECT, "skel")
+		puppeteer_manager.request_new_puppeteer(self, PuppeteerBase.Type.SKELETON_VMC_DIRECT, "skel")
 	
 	if self.puppeteer_tracks:
 		puppeteer_manager.remove_puppeteer(self.puppeteer_tracks)
