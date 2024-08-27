@@ -10,6 +10,7 @@
 [submodule "third_party/godot-vrm"]
 	path = third_party/godot-vrm
 	url = https://github.com/DigitOtter/godot-vrm.git
+	branch = custom
 [submodule "third_party/renik"]
 	path = third_party/renik
 	url = https://github.com/DigitOtter/renik.git
@@ -20,7 +21,7 @@
 [submodule "third_party/godot"]
 	path = third_party/godot
 	url = https://github.com/DigitOtter/godot.git
-	branch = custom
+	branch = custom_4.3
 [submodule "third_party/texture-share-vk"]
 	path = third_party/texture-share-vk
 	url = https://github.com/DigitOtter/texture-share-vk.git

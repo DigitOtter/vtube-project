@@ -142,7 +142,7 @@ static func _perform_head_ik(spine_chain: SpineChain, leaf_pose: Transform3D, bo
 		# Compute adjusted pose of last bone
 		bone_poses[-1] = prev_old_to_new_global_tf * bone_poses[-1]
 
-static func _compute_total_twist(_spine_chain: SpineChain, leaf_pose: Transform3D, bone_poses: Array[Transform3D]) -> float:
+static func _compute_total_twist(__spine_chain: SpineChain, leaf_pose: Transform3D, bone_poses: Array[Transform3D]) -> float:
 	var rot_tf: Basis = bone_poses[-1].basis.inverse() * leaf_pose.basis
 	var rot_angle: float = rot_tf.get_euler(EULER_ORDER_YXZ)[1]
 	return rot_angle
@@ -168,7 +168,7 @@ static func _perform_twist(spine_chain: SpineChain, total_twist: float, bone_pos
 		
 		prev_twist_rot = bone_poses[id].basis
 
-static func _perform_ccd_ik(_spine_chain:SpineChain, leaf_pose: Transform3D, bone_poses: Array[Transform3D]):
+static func _perform_ccd_ik(__spine_chain:SpineChain, leaf_pose: Transform3D, bone_poses: Array[Transform3D]):
 	var prev_old_to_new_tf := Transform3D.IDENTITY
 	var old_bone_leaf_pose: Transform3D = bone_poses[-1]
 	for id: int in range(0, bone_poses.size()-1):

@@ -60,15 +60,15 @@ func set_step_size(vstep: float):
 
 ########################################################################
 ## Signals
-func _on_slider_value_changed(_value: float):
+func _on_slider_value_changed(p_value: float):
 	var text: SpinBox = $SpinBox
-	text.set_value_no_signal(_value)
-	self.emit_signal("value_changed", _value)
+	text.set_value_no_signal(p_value)
+	self.value_changed.emit(p_value)
 
-func _on_text_changed(_value: float):
+func _on_text_changed(p_value: float):
 	var slider: HSlider = $HSlider
-	slider.set_value_no_signal(_value)
-	self.emit_signal("value_changed", _value)
+	slider.set_value_no_signal(p_value)
+	self.value_changed.emit(p_value)
 
 func _on_external_data_changed(new_val: float, propagate: bool):
 	var slider: HSlider = $HSlider
@@ -77,13 +77,13 @@ func _on_external_data_changed(new_val: float, propagate: bool):
 	text.set_value_no_signal(new_val)
 	
 	if propagate:
-		self.emit_signal("value_changed", value)
+		self.value_changed.emit(value)
 
 func save_data():
 	var save_value = self.value
 	if self.on_save_data_fcn:
 		save_value = self.on_save_data_fcn.call(save_value)
-	
+							
 	return save_value
 
 func load_data(stored_value):

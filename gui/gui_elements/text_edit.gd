@@ -10,13 +10,13 @@ var on_save_data_fcn: Callable
 var on_load_data_fcn: Callable
 
 func _on_text_changed():
-	self.emit_signal(&"text_changed_data", self.text)
+	self.text_changed_data.emit(self.text)
 
 func _on_external_data_changed(new_val: String, propagate: bool):
 	(self as Control as TextEdit).set_text(new_val)
 	
 	if propagate:
-		self.emit_signal(&"text_changed_data", self.text)
+		self.text_changed_data.emit(self.text)
 
 # Called when the node enters the scene tree for the first time.
 func _ready():

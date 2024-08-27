@@ -29,7 +29,7 @@ func _create_element_container(label_name: String,
 
 func _move_item(item: ARRANGEABLE_ITEM_CLASS, pos: int):
 	self.move_child(item, pos)
-	self.emit_signal(&"element_moved", item.get_element_name(), item.get_index())
+	self.element_moved.emit(item.get_element_name(), item.get_index())
 
 func _on_move_item_up(item: ARRANGEABLE_ITEM_CLASS):
 	var idx: int = item.get_index()
@@ -113,4 +113,3 @@ func save_data():
 			data[e.get_element_name()] = element_data
 	
 	return data
-

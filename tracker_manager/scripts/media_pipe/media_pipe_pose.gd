@@ -41,7 +41,7 @@ static func create_new(camera_helper: MediaPipeCameraHelper) -> MediaPipePose:
 	base_options.model_asset_buffer = file.get_buffer(file.get_length())
 
 	r._task = MediaPipePoseLandmarker.new()
-	r._task.initialize(base_options, MediaPipeTask.RUNNING_MODE_LIVE_STREAM, 1, 0.5, 0.5, 0.5, false)
+	r._task.initialize(base_options, MediaPipeTask.RUNNING_MODE_LIVE_STREAM, 1, 0.6, 0.6, 0.6, false)
 	
 	r._camera_helper = camera_helper
 	r._camera_helper.new_frame.connect(func(image: MediaPipeImage) -> void:
@@ -65,6 +65,8 @@ static func get_landmark_pos(pose_landmarks: MediaPipeLandmarks, idx: int) -> Ve
 	return Vector3(landmark.x, landmark.y, landmark.z)
 
 func _on_new_poses_received(result: MediaPipePoseLandmarkerResult, _image: MediaPipeImage, _timestamp_ms: int) -> void:
+	print(result.pose_landmarks.size())
+	print(result.pose_world_landmarks.size())
 	if !result.pose_world_landmarks.is_empty():
 		self.data_received.emit(
 			result.pose_world_landmarks[0],

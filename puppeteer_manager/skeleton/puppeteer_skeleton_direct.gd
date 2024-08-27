@@ -21,6 +21,7 @@ func set_bone_enable(bone_idx: int, bone_enable: bool) -> void:
 	var bone_data: BoneData = self._bone_poses.get(bone_idx, null)
 	if not bone_data:
 		bone_data = BoneData.new()
+		bone_data.tf = self.skeleton.get_bone_rest(bone_idx)
 		self._bone_poses[bone_idx] = bone_data
 	
 	bone_data.enabled = bone_enable
@@ -29,6 +30,7 @@ func set_bone_lerp_rate(bone_idx: int, bone_lerp_rate: float) -> void:
 	var bone_data: BoneData = self._bone_poses.get(bone_idx, null)
 	if not bone_data:
 		bone_data = BoneData.new()
+		bone_data.tf = self.skeleton.get_bone_rest(bone_idx)
 		self._bone_poses[bone_idx] = bone_data
 	
 	bone_data.lerp_rate = bone_lerp_rate
@@ -37,6 +39,7 @@ func set_bone_tf(bone_idx: int, bone_tf: Transform3D) -> void:
 	var bone_data: BoneData = self._bone_poses.get(bone_idx, null)
 	if not bone_data:
 		bone_data = BoneData.new()
+		bone_data.tf = self.skeleton.get_bone_rest(bone_idx)
 		self._bone_poses[bone_idx] = bone_data
 	
 	bone_data.tf = bone_tf

@@ -10,4 +10,4 @@ func _on_toggled(toggled_on: bool):
 		# Prevent disabling
 		self.set_pressed_no_signal(true)
 	else:
-		self.emit_signal(&"tab_selected", self.tab_id)
+		self.tab_selected.emit(self.tab_id)
