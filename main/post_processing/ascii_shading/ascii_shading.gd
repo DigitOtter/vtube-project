@@ -53,10 +53,10 @@ func _ready():
 	super()
 
 func toggle_ascii_color(enabled: bool):
-	self.emit_signal(&"ascii_color_toggled", enabled, true)
+	self.ascii_color_toggled.emit(enabled, true)
 
 func set_ascii_pixelization(pixelization_amount: float):
-	self.emit_signal(&"ascii_pixelization_changed", pixelization_amount, true)
+	self.ascii_pixelization_changed.emit(pixelization_amount, true)
 
 ## Called when input texture was changed
 func update_input_texture(input_texture: Texture2D):

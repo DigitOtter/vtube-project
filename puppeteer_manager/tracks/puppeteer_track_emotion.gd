@@ -43,7 +43,7 @@ func _add_emotion_to_gui(emotion_name: String, enabled_by_default: bool = false)
 	# Connect to emotion_toggle
 	self.connect(signal_name, 
 		func(enabled: bool, propagate: bool): 
-			self.emit_signal(&"emotion_toggle", emotion_name, enabled, propagate))
+			self.emotion_toggle.emit(emotion_name, enabled, propagate))
 	
 	var emotion_toggle_data := GuiElement.ElementData.new()
 	emotion_toggle_data.Name = emotion_name

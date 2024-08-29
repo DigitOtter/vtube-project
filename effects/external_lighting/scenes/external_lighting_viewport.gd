@@ -102,19 +102,19 @@ func _handle_input(event):
 	# Subviewport doesn't handle _input() for some reason, use a parent node instead
 	if event.is_action_pressed(&"external_lighting_toggle"):
 		var lighting_active: bool = self._active_lighting_texture != null
-		self.emit_signal(&"lighting_toggled", !lighting_active, true)
+		self.lighting_toggled.emit(!lighting_active, true)
 	elif event.is_action_pressed(&"external_lighting_flip_h", true):
-		self.emit_signal(&"lighting_flipped_h", !%ExternalTexture.flip_h, true)
+		self.lighting_flipped_h.emit(!%ExternalTexture.flip_h, true)
 	elif event.is_action_pressed(&"external_lighting_min_col_inc", true):
 		var new_col: Color = self._min_color + Color(0.05, 0.05, 0.05)
-		self.emit_signal(&"lighting_min_color_changed", new_col.r, true)
+		self.lighting_min_color_changed.emit(new_col.r, true)
 	elif event.is_action_pressed(&"external_lighting_min_col_dec", true):
 		var new_col: Color = self._min_color + Color(-0.05, -0.05, -0.05)
-		self.emit_signal(&"lighting_min_color_changed", new_col.r, true)
+		self.lighting_min_color_changed.emit(new_col.r, true)
 	elif event.is_action_pressed(&"external_lighting_blur_inc", true):
-		self.emit_signal(&"lighting_blur_changed", self._blur_level + 0.1, true)
+		self.lighting_blur_changed.emit(self._blur_level + 0.1, true)
 	elif event.is_action_pressed(&"external_lighting_blur_dec", true):
-		self.emit_signal(&"lighting_blur_changed", self._blur_level - 0.1, true)
+		self.lighting_blur_changed.emit(self._blur_level - 0.1, true)
 
 func _ready():
 	self._init_gui(get_node(Gui.GUI_NODE_PATH).get_gui_menu())

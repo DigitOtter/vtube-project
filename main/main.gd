@@ -88,9 +88,9 @@ func _init_default_dialog_path():
 
 func _input(event):
 	if event.is_action_pressed(&"save_config"):
-		self.emit_signal(&"save_config_toggle", true, true)
+		self.save_config_toggle.emit(true, true)
 	elif event.is_action_pressed(&"load_config"):
-		self.emit_signal(&"load_config_toggle", true, true)
+		self.load_config_toggle.emit(true, true)
 
 func _ready():
 	get_tree().get_root().set_transparent_background(true)

@@ -22,13 +22,13 @@ func _on_tracker_toggle(enabled: bool, tracker_type: TrackerBase.Type):
 	elif tracker_node:
 		tracker_node.queue_free()
 
-func _init_tracker_gui(tracker_type: TrackerBase.Type, tracker_toggle_signal: StringName, 
+func _init_tracker_gui(tracker_type: TrackerBase.Type, tracker_toggle_signal: Signal, 
 					   default_enable: bool = false) -> GuiElement.ElementData:
 	var tracker_checkbox := GuiElement.ElementData.new()
 	tracker_checkbox.Name = TrackerBase.get_tracker_name(tracker_type) + " Enabled"
 	tracker_checkbox.OnDataChangedCallable = func(enabled: bool):
 		self._on_tracker_toggle(enabled, tracker_type)
-	tracker_checkbox.SetDataSignal = [ self, tracker_toggle_signal ]
+	tracker_checkbox.SetDataSignal = [ self, tracker_toggle_signal.get_name() ]
 	tracker_checkbox.Data = GuiElement.CheckBoxData.new()
 	tracker_checkbox.Data.Default = default_enable
 	
@@ -37,9 +37,9 @@ func _init_tracker_gui(tracker_type: TrackerBase.Type, tracker_toggle_signal: St
 func _init_gui():
 	var gui_menu: GuiTabMenuBase = get_node(Gui.GUI_NODE_PATH).get_gui_menu()
 	var elements: Array[GuiElement.ElementData] = []
-	elements.append(self._init_tracker_gui(TrackerBase.Type.VMC_RECEIVER, &"toggle_vmc_receiver", false))
-	elements.append(self._init_tracker_gui(TrackerBase.Type.MEDIA_PIPE, &"toggle_media_pipe", false))
-	elements.append(self._init_tracker_gui(TrackerBase.Type.MP_POSE, &"toggle_mp_pose", false))
+	elements.append(self._init_tracker_gui(TrackerBase.Type.VMC_RECEIVER, self.toggle_vmc_receiver, false))
+	elements.append(self._init_tracker_gui(TrackerBase.Type.MEDIA_PIPE, self.toggle_media_pipe, false))
+	elements.append(self._init_tracker_gui(TrackerBase.Type.MP_POSE, self.toggle_mp_pose, false))
 	
 	var tracker_menu_data := GuiElement.ElementData.new()
 	tracker_menu_data.Name = "Tracker Settings"

@@ -30,7 +30,7 @@ func _on_port_input_changed(data: float):
 	
 	# Ensure that port binding was successful
 	if self.vmc_receiver.port != new_port:
-		self.emit_signal(&"port_input_change", self.vmc_receiver.port, false)
+		self.port_input_change.emit(self.vmc_receiver.port, false)
 
 func _on_avatar_loaded(avatar_base: AvatarBase):
 	self.restart_tracker(avatar_base)

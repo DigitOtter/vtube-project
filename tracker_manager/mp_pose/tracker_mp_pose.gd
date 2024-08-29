@@ -2,7 +2,7 @@ class_name TrackerMpPose
 extends TrackerBase
 
 const TRACKER_NAME := &"MpPose"
-const DEFAULT_LERP_RATE := 0.05 * 60
+const DEFAULT_LERP_RATE := 0.10 * 60
 
 class ArmBones:
 	# Bones should be shoulder, upper arm, forearm

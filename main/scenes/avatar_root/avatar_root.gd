@@ -62,7 +62,7 @@ func _ready():
 	#self.emit_signal("avatar_loaded", self)
 
 func open_load_model_dialog():
-	self.emit_signal(&"open_dialog_requested", true, true)
+	self.open_dialog_requested.emit(true, true)
 
 func load_model(model_path: String):
 	var avatar_model: Node3D = ModelImporter.import_model_infer_extension(model_path)
@@ -79,7 +79,7 @@ func load_model(model_path: String):
 	
 	self._loaded_model_path = model_path
 	
-	self.emit_signal(&"avatar_loaded", avatar_base)
+	self.avatar_loaded.emit(avatar_base)
 
 func unload_model():
 	# TODO: In the future, maybe only unload a single avatar?
@@ -92,7 +92,7 @@ func unload_model():
 		self.remove_child(child)
 		child.queue_free()
 		
-		self.emit_signal(&"avatar_unloaded", child)
+		self.avatar_unloaded.emit(child)
 
 func is_avatar_loaded() -> bool:
 	return !self._loaded_model_path.is_empty()

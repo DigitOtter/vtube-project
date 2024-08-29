@@ -84,13 +84,13 @@ func set_track_targets_mp(track_targets: Array[MediaPipeCategory]) -> void:
 			blend_data.target = t.score
 
 func enable_gaze_update(enable: bool):
-	self.emit_signal(&"toggle_gaze_update", enable, true)
+	self.toggle_gaze_update.emit(enable, true)
 
 func set_horizontal_gaze_strength(val: float):
-	self._gaze_computation.emit_signal(&"set_horizontal_gaze_strength", val, true)
+	self._gaze_computation.set_horizontal_gaze_strength.emit(val, true)
 
 func set_vertical_gaze_strength(val: float):
-	self._gaze_computation.emit_signal(&"set_vertical_gaze_strength", val, true)
+	self._gaze_computation.set_vertical_gaze_strength.emit(val, true)
 
 func update_gaze_from_perfect_sync():
 	#var gazes := self._gaze_computation.compute_gaze_from_blend_shapes(self._blend_nodes)

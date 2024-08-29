@@ -2,6 +2,8 @@
 class_name AdaptedRenik
 extends RenIK3D
 
+var move_arms_to_a_pose: bool = true
+
 var _simple_human_ik := preload("./simple_human_ik.gd").new()
 
 # Called when the node enters the scene tree for the first time.
@@ -32,11 +34,12 @@ func update_ik() -> void:
 	var spine_global_transforms: SpineGlobalTransforms = SpineGlobalTransforms.new()
 	self._simple_human_ik.update_ik()
 	
-	if hand_left_target_spatial:
-		perform_hand_left_ik(spine_global_transforms.leftArmParentTransform, skel_inverse * hand_left_target_spatial.global_transform)
+	if self.move_arms_to_a_pose:
+		if hand_left_target_spatial:
+			perform_hand_left_ik(spine_global_transforms.leftArmParentTransform, skel_inverse * hand_left_target_spatial.global_transform)
 
-	if hand_right_target_spatial:
-		perform_hand_right_ik(spine_global_transforms.rightArmParentTransform, skel_inverse * hand_right_target_spatial.global_transform)
+		if hand_right_target_spatial:
+			perform_hand_right_ik(spine_global_transforms.rightArmParentTransform, skel_inverse * hand_right_target_spatial.global_transform)
 
 	# TODO: Fix foot placement
 	#if foot_left_target_spatial:

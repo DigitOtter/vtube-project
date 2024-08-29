@@ -102,7 +102,7 @@ func _setup_emotion_control(avatar_base: AvatarBase):
 	self._emotion_puppeteer.initialize(anim_tree, available_emotions)
 
 func _on_avatar_loaded(avatar_base: AvatarBase):
-	self.emit_signal(&"puppeteer_ready", avatar_base)
+	self.puppeteer_ready.emit(avatar_base)
 	
 	self._setup_emotion_control(avatar_base)
 
@@ -121,7 +121,7 @@ func _init_gui():
 	var puppeteer_emotion_control := GuiElement.ElementData.new()
 	puppeteer_emotion_control.Name = "Emotion Toggles"
 	puppeteer_emotion_control.OnDataChangedCallable = self._on_emotion_control_toggled
-	puppeteer_emotion_control.SetDataSignal = [ self, &"toggle_emotion_control" ]
+	puppeteer_emotion_control.SetDataSignal = [ self, self.toggle_emotion_control.get_name() ]
 	puppeteer_emotion_control.Data = GuiElement.CheckBoxData.new()
 	puppeteer_emotion_control.Data.Default = self._emotion_control_enabled
 	elements.append(puppeteer_emotion_control)

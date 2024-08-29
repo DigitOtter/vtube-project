@@ -212,3 +212,5 @@ func register_effect(effect_data: PostProcessingData):
 	self._available_effects.push_back(effect_data)
 	self._generate_toggle_ui(effect_data)
 
+func toggle_effect(effect_name: String) -> void:
+	self.effect_toggle.emit(effect_name, true)

@@ -50,7 +50,7 @@ func list_available_assets() -> Array[String]:
 func add_file(file_path: String):
 	if !self.available_assets.has(file_path):
 		self.available_assets.append(file_path)
-		self.emit_signal("available_assets_changed", self.available_assets)
+		self.available_assets_changed.emit(self.available_assets)
 
 func load_asset(file_path: String) -> Node3D:
 	# Load file with the appropriate loader

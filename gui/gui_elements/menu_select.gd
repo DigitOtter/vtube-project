@@ -14,14 +14,14 @@ var on_load_data_fcn: Callable
 func _on_popup_menu_index_pressed(index):
 	var selected_item: String = $PopupMenu.get_item_text(index)
 	(self as Control as MenuBar).set_menu_title(0, selected_item)
-	self.emit_signal(&"menu_item_selected", selected_item)
+	self.menu_item_selected.emit(selected_item)
 
 func _on_external_data_changed(selected_menu_item: String, propagate: bool):
 	for i in range(0, $PopupMenu.item_count):
 		if $PopupMenu.get_item_text(i) == selected_menu_item:
 			(self as Control as MenuBar).set_menu_title(0, selected_menu_item)
 			if propagate:
-				self.emit_signal(&"menu_item_selected", selected_menu_item)
+				self.menu_item_selected.emit(selected_menu_item)
 			break
 
 func _on_update_menu(menu_items: Array[String], default_selection: int):

@@ -40,3 +40,6 @@ func add_gui(post_processing_gui_menu: GuiTabMenuBase):
 ## Remove gui elements when stopping post-processing effect
 func remove_gui(post_processing_gui_menu: GuiTabMenuBase):
 	post_processing_gui_menu.remove_tab(PIXELATE_EFFECT_NAME)
+
+func set_pixelation_amount(amount: float) -> void:
+	self.pixelation_amount_change.emit(amount, true)

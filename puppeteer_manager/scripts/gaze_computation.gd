@@ -69,7 +69,7 @@ func generate_gui_elements() -> Array[GuiElement.ElementData]:
 	var horizontal_strength := GuiElement.ElementData.new()
 	horizontal_strength.Name = "Horizontal Gaze Strength"
 	horizontal_strength.OnDataChangedCallable = func(val: float): self._horizontal_gaze_strength = val
-	horizontal_strength.SetDataSignal = [ self, &"set_horizontal_gaze_strength"]
+	horizontal_strength.SetDataSignal = [ self, self.set_horizontal_gaze_strength.get_name() ]
 	horizontal_strength.Data = GuiElement.SliderData.new()
 	horizontal_strength.Data.Default = self._horizontal_gaze_strength
 	horizontal_strength.Data.MaxValue = 5.0
@@ -80,7 +80,7 @@ func generate_gui_elements() -> Array[GuiElement.ElementData]:
 	var vertical_strength := GuiElement.ElementData.new()
 	vertical_strength.Name = "Vertical Gaze Strength"
 	vertical_strength.OnDataChangedCallable = func(val: float): self._vertical_gaze_strength = val
-	vertical_strength.SetDataSignal = [ self, &"set_vertical_gaze_strength"]
+	vertical_strength.SetDataSignal = [ self, self.set_vertical_gaze_strength.get_name() ]
 	vertical_strength.Data = GuiElement.SliderData.new()
 	vertical_strength.Data.Default = self._vertical_gaze_strength
 	vertical_strength.Data.MaxValue = 5.0
@@ -91,7 +91,7 @@ func generate_gui_elements() -> Array[GuiElement.ElementData]:
 	var horizontal_offset := GuiElement.ElementData.new()
 	horizontal_offset.Name = "Horizontal Gaze Offset"
 	horizontal_offset.OnDataChangedCallable = func(val: float): self._horizontal_gaze_offset = val
-	horizontal_offset.SetDataSignal = [ self, &"set_horizontal_gaze_offset"]
+	horizontal_offset.SetDataSignal = [ self, self.set_horizontal_gaze_offset.get_name() ]
 	horizontal_offset.Data = GuiElement.SliderData.new()
 	horizontal_offset.Data.Default = self._horizontal_gaze_offset
 	horizontal_offset.Data.MaxValue = 1.0
@@ -102,7 +102,7 @@ func generate_gui_elements() -> Array[GuiElement.ElementData]:
 	var vertical_offset := GuiElement.ElementData.new()
 	vertical_offset.Name = "Vertical Gaze Offset"
 	vertical_offset.OnDataChangedCallable = func(val: float): self._vertical_gaze_offset = val
-	vertical_offset.SetDataSignal = [ self, &"set_vertical_gaze_offset"]
+	vertical_offset.SetDataSignal = [ self, self.set_vertical_gaze_offset.get_name() ]
 	vertical_offset.Data = GuiElement.SliderData.new()
 	vertical_offset.Data.Default = self._vertical_gaze_offset
 	vertical_offset.Data.MaxValue = 1.0

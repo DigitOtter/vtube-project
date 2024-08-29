@@ -8,8 +8,8 @@ const GUI_TAB_NAME: String = "Props"
 const BORDER_HIGHLIGHT_SHADER: ShaderMaterial = preload("./shaders/border_highlighting.material")
 const LOAD_PROP_DIALOG = preload("./scenes/load_prop_dialog.tscn")
 
-signal load_prop_signal
-signal change_prop_to_create_sig
+signal load_prop_signal(toggle: bool, propagate: bool)
+signal change_prop_to_create_sig(prop_name: String, propagate: bool)
 signal update_asset_list(asset_list: Array[String], default: int)
 
 var _prop_file_to_create: String
@@ -98,7 +98,7 @@ func _on_prop_file_selected(prop_path: String):
 func update_prop_list(asset_list: Array[String]):
 	# Update GUI prop selection list
 	var default = asset_list.find(self._prop_file_to_create)
-	self.emit_signal("update_asset_list", asset_list, default if default != null else -1)
+	self.update_asset_list.emit(asset_list, default if default != null else -1)
 
 func _on_selected_prop_changed(selected_prop: String):
 	self._prop_file_to_create = selected_prop
@@ -135,7 +135,7 @@ func _init_gui():
 	var prop_loading := GuiElement.ElementData.new()
 	prop_loading.Name = "Load prop"
 	prop_loading.OnDataChangedCallable = self._on_prop_load_requested
-	prop_loading.SetDataSignal = [ self, "load_prop_signal" ]
+	prop_loading.SetDataSignal = [ self, self.load_prop_signal.get_name() ]
 	var prop_loading_data := GuiElement.ButtonData.new()
 	prop_loading_data.Text = "Load Property"
 	prop_loading.Data = prop_loading_data
@@ -146,7 +146,7 @@ func _init_gui():
 	var prop_selection := GuiElement.ElementData.new()
 	prop_selection.Name = "Current Prop"
 	prop_selection.OnDataChangedCallable = self._on_selected_prop_changed
-	prop_selection.SetDataSignal = [ self, "change_prop_to_create_sig"]
+	prop_selection.SetDataSignal = [ self, self.change_prop_to_create_sig.get_name() ]
 	prop_selection.OnSaveData = self._save_props
 	
 	var prop_selection_data := GuiElement.MenuSelectData.new()
@@ -202,7 +202,7 @@ func set_selected_prop(prop: Node3D):
 	self._highlight_prop(self._selected_prop)
 
 func change_prop_to_create(prop_name: String, propagate: bool = true):
-	self.emit_signal("change_prop_to_create_sig", prop_name, propagate)
+	self.change_prop_to_create_sig.emit(prop_name, propagate)
 
 func delete_prop(prop_node: Node3D):
 	if self._selected_prop as Node3D == prop_node:

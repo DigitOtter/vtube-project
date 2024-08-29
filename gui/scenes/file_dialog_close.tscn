@@ -10,7 +10,6 @@ popup_window = true
 ok_button_text = "Save"
 dialog_hide_on_ok = true
 access = 2
-use_native_dialog = true
 script = ExtResource("1_saam0")
 
 [connection signal="canceled" from="." to="." method="_on_canceled"]

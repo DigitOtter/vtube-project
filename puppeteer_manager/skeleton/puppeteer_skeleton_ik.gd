@@ -27,6 +27,9 @@ enum IkTarget {
 }
 
 const IK_TARGETS_NODE_PARENT_NAME: StringName = &"IkTargets"
+const GUI_NAME: StringName = &"SkeletonIk"
+
+signal toggle_arms_to_a_pose(enable: bool, propagate: bool)
 
 var ik_targets_parent: Node3D = null
 
@@ -250,6 +253,29 @@ func initialize(skeleton_node: Skeleton3D, ik_target_bone_names: IkTargetBoneNam
 
 func update_puppet(_delta: float):
 	self.ren_ik.update_ik()
+
+func add_gui():
+	super()
+	
+	var toggle_a_pose := GuiElement.ElementData.new()
+	toggle_a_pose.Name = "A-Pose Arms"
+	toggle_a_pose.OnDataChangedCallable = func(enabled: bool):
+		self.ren_ik.move_arms_to_a_pose = enabled
+	toggle_a_pose.SetDataSignal = [ self, &"toggle_arms_to_a_pose" ]
+	toggle_a_pose.Data = GuiElement.CheckBoxData.new()
+	(toggle_a_pose.Data as GuiElement.CheckBoxData).Default = self.ren_ik.move_arms_to_a_pose
+	
+	var gui: GuiTabMenuBase = get_node(PuppeteerManager.PUPPETEER_MANAGER_NODE_PATH).get_puppeteer_gui()
+	gui.add_elements_to_tab(PuppeteerSkeletonIk.GUI_NAME, [ toggle_a_pose ])
+
+func remove_gui():
+	super()
+	
+	var gui: GuiTabMenuBase = get_node(PuppeteerManager.PUPPETEER_MANAGER_NODE_PATH).get_puppeteer_gui()
+	gui.remove_tab(PuppeteerSkeletonIk.GUI_NAME)
+
+func toggle_arm_a_pose(enable: bool) -> void:
+	self.toggle_arms_to_a_pose.emit(enable, true)
 
 func set_reset_poses():
 	self.reset_head = self.head_target.global_target

@@ -18,7 +18,7 @@ func _on_external_data_changed(new_val: bool, propagate: bool):
 		(self as Control as Button).set_pressed_no_signal(new_val)
 
 func _on_pressed():
-	self.emit_signal(&"pressed_val", true)
+	self.pressed_val.emit(true)
 
 func save_data():
 	var save_value = (self as Control as Button).is_pressed()
